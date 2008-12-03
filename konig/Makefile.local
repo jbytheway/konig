@@ -1,0 +1,3 @@
+BIN = libkonig.la
+LIBS = -lboost_system-mt -lboost_serialization-mt -lboost_signals-mt
+

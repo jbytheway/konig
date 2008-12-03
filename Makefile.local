@@ -1,0 +1,2 @@
+SUBDIRS := konig konig-server
+
