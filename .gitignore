@@ -5,3 +5,4 @@
 *.la
 /config.mk
 /*/Makefile
+/*/*/Makefile

@@ -1,2 +1,4 @@
-SUBDIRS := konig konig-server
+SUBDIRS := konig konig-server konig-dterm
+
+all-recurse-konig-server all-recurse-konig-dterm: all-recurse-konig
 
