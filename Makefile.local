@@ -1,4 +1,5 @@
-SUBDIRS := konig konig-server konig-dterm
+SUBDIRS := konig konig-simulator konig-server konig-dterm
 
-all-recurse-konig-server all-recurse-konig-dterm: all-recurse-konig
+all-recurse-konig-simulator all-recurse-konig-server all-recurse-konig-dterm: \
+	all-recurse-konig
 

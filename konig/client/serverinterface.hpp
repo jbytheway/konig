@@ -11,7 +11,7 @@
 #include <messaging/error_source.hpp>
 
 #include <konig/message.hpp>
-#include <konig/client/playerinterface.hpp>
+#include <konig/client/clientinterface.hpp>
 
 namespace konig { namespace client {
 
@@ -32,7 +32,7 @@ class ServerInterface {
     void message(const Message<type>&) {          \
       std::ostringstream os;                      \
       os << "warning: ignoring message of type " << type; \
-      for_each_player(boost::bind(&PlayerInterface::warning, _1, os.str())); \
+      for_each_player(boost::bind(&ClientInterface::warning, _1, os.str())); \
     }
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setPlayerProperties)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
@@ -43,7 +43,7 @@ class ServerInterface {
     }
 
     messaging::connection::ptr connection_;
-    std::set<PlayerInterface*> players_;
+    std::set<ClientInterface*> players_;
 };
 
 }}

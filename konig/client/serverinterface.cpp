@@ -29,8 +29,8 @@ void ServerInterface::error(
 {
   std::ostringstream os;
   os << "error: " << es << ": " << ec.message();
-  for_each_player(boost::bind(&PlayerInterface::warning, _1, os.str()));
-  for_each_player(boost::bind(&PlayerInterface::abort, _1));
+  for_each_player(boost::bind(&ClientInterface::warning, _1, os.str()));
+  for_each_player(boost::bind(&ClientInterface::abort, _1));
   if (connection_) connection_->close();
 }
 

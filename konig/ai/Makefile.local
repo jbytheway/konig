@@ -1,0 +1,2 @@
+BIN := libkonig-ai.la
+LIB_DEP_NAMES = konig
