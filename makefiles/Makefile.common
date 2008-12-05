@@ -356,10 +356,9 @@ endif
 
 $(MAKEFRAGS): .makefrags/%.makefrag:
 	@mkdir -p $(dir $@)
-	cpp $(ALL_CPPFLAGS) -MP -M -MF $@.tmp \
-		$(this_srcdir)$(subst _dot_dot,..,$*)
-	@echo "$@ .obj/$(filter-out ./,$(dir $*))`cat $@.tmp`" > $@
-	@rm $@.tmp
+	cpp $(ALL_CPPFLAGS) -MT .obj/$(basename $*).o -MT $@ \
+		-MP -M -MF $@  $(this_srcdir)$(subst _dot_dot,..,$*)
+	printf "\n%s:\n" "$(this_srcdir)$(subst _dot_dot,..,$*)" >> $@
 
 #####################################################
 #
