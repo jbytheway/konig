@@ -66,9 +66,11 @@ int main(int argc, char const* const* const argv) {
     options.chunks.push_back(std::string());
   }
 
+  konig::Ruleset rules = konig::Ruleset::solodreier_only();
   konig::Dealer::Ptr dealer(konig::Dealer::create(options.chunks));
   for (unsigned long i=0; i<options.num_deals; ++i) {
-    konig::Game(ais, dealer->deal());
+    konig::Game game(rules, ais, dealer->deal());
+    game.play();
   }
 }
 

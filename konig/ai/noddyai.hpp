@@ -4,6 +4,8 @@
 namespace konig { namespace ai {
 
 class NoddyAi : public Ai {
+  public:
+    virtual int bid();
 };
 
 }}

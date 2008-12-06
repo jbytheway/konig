@@ -1,17 +1,22 @@
 #ifndef KONIG__GAME_HPP
 #define KONIG__GAME_HPP
 
+#include <vector>
+
 #include <boost/array.hpp>
 
+#include <konig/ruleset.hpp>
 #include <konig/deal.hpp>
 #include <konig/player.hpp>
+#include <konig/outcome.hpp>
 
 namespace konig {
 
 class Game {
   public:
     template<typename ForwardRange>
-    Game(const ForwardRange& players, Deal deal) :
+    Game(const Ruleset& rules, const ForwardRange& players, Deal deal) :
+      rules_(rules),
       players_(boost::begin(players), boost::end(players))
     {
       if (players_.size() != 4) {
@@ -21,8 +26,11 @@ class Game {
       deal.copy_hands(hands_.begin());
       deal.copy_talon(talon_.begin());
     }
+
+    Outcome play() const;
   private:
-    std::vector<Player::Ptr> players_;
+    const Ruleset rules_;
+    const std::vector<Player::Ptr> players_;
     boost::array<Cards, 4> hands_;
     boost::array<Cards, 2> talon_;
 };

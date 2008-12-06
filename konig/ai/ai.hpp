@@ -10,6 +10,16 @@ class Ai : public Player {
     typedef boost::shared_ptr<Ai> Ptr;
 
     static Ptr create(const std::string& description);
+
+    Ai();
+
+    virtual void start_game(const Ruleset&, PlayPosition, const Cards& hand);
+    virtual void notify_bid(int);
+  private:
+    Ruleset rules_;
+    PlayPosition position_;
+    Cards hand_;
+    std::vector<int> bidding_;
 };
 
 }}
