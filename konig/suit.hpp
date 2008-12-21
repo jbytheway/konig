@@ -26,8 +26,12 @@ class Suit {
       max
     };
 
+    Suit() : value_(min) {}
     Suit(const internal_enum v) : value_(v) {}
-    Suit(const KingCall v) : value_(v) {
+
+    explicit Suit(const std::string& s);
+
+    explicit Suit(const KingCall v) : value_(v) {
       if (v == KingCall::fourth_king) {
         throw std::logic_error("not a suit");
       }
@@ -40,6 +44,36 @@ class Suit {
   private:
     uint8_t value_;
 };
+
+inline Suit::Suit(const std::string& s) {
+  if (s.size() != 1) {
+    throw std::logic_error("not a suit");
+  }
+  switch (s[0]) {
+    case 'c':
+    case 'C':
+      value_ = clubs;
+      break;
+    case 'd':
+    case 'D':
+      value_ = diamonds;
+      break;
+    case 'h':
+    case 'H':
+      value_ = hearts;
+      break;
+    case 's':
+    case 'S':
+      value_ = spades;
+      break;
+    case 't':
+    case 'T':
+      value_ = trumps;
+      break;
+    default:
+      throw std::logic_error("not a suit");
+  }
+}
 
 inline std::ostream& operator<<(std::ostream& o, const Suit s) {
   char name;

@@ -26,6 +26,8 @@ class SuitRank {
 
     SuitRank(const internal_enum v) : value_(v) {}
 
+    explicit SuitRank(const std::string& s);
+
     bool valid() const { return value_ >= 7 && value_ <= king; }
 
     operator internal_enum() const { return internal_enum(value_); }
@@ -33,6 +35,51 @@ class SuitRank {
   private:
     uint8_t value_;
 };
+
+inline SuitRank::SuitRank(const std::string& s) {
+  if (s.size() != 1) {
+    throw std::logic_error("not a suit rank");
+  }
+  switch (s[0]) {
+    case 'k':
+    case 'K':
+      value_ = king;
+      break;
+    case 'q':
+    case 'Q':
+      value_ = queen;
+      break;
+    case 'n':
+    case 'N':
+      value_ = knight;
+      break;
+    case 'j':
+    case 'J':
+      value_ = jack;
+      break;
+    case 't':
+    case 'T':
+    case 'a':
+    case 'A':
+    case '1':
+      value_ = ten;
+      break;
+    case '2':
+    case '9':
+      value_ = nine;
+      break;
+    case '3':
+    case '8':
+      value_ = eight;
+      break;
+    case '4':
+    case '7':
+      value_ = seven;
+      break;
+    default:
+      throw std::logic_error("not a suit rank");
+  }
+}
 
 inline std::ostream& operator<<(std::ostream& o, const SuitRank r) {
   char name;
