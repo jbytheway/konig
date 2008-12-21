@@ -1,8 +1,9 @@
 #ifndef KONIG__DEALER_HPP
 #define KONIG__DEALER_HPP
 
+#include <random>
+
 #include <boost/shared_ptr.hpp>
-#include <boost/random/mersenne_twister.hpp>
 
 #include <konig/deal.hpp>
 
@@ -23,7 +24,7 @@ class Dealer {
 
     virtual Deal deal() = 0;
   protected:
-    typedef boost::mt19937 random_engine_type;
+    typedef std::mt19937 random_engine_type;
     random_engine_type random_engine_;
 };
 

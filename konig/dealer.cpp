@@ -12,7 +12,8 @@ Dealer::Ptr Dealer::create(const std::string (& descriptions)[6])
 
 Dealer::Dealer()
 {
-  // TODO: initialize random_engine_ properly
+  std::random_device device("/dev/urandom");
+  random_engine_.seed(device);
 }
 
 }
