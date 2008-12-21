@@ -17,7 +17,7 @@ class Player {
 
     virtual void start_game(Ruleset, PlayPosition, Cards) = 0;
     virtual int bid() = 0;
-    virtual void notify_bid(int) = 0;
+    virtual void notify_bid(PlayPosition, int) = 0;
     virtual KingCall call_king() = 0;
     virtual void notify_call_king(KingCall) = 0;
     virtual void notify_talon(const boost::array<Cards, 2>& talon) = 0;

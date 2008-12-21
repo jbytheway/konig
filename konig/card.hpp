@@ -26,6 +26,7 @@ class Card {
       assert(r.valid());
       assert(!trump());
     }
+    Card(const std::string&);
 
     bool trump() const { return suit_ == Suit::trumps; }
 

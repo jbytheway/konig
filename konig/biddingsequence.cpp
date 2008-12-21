@@ -40,7 +40,7 @@ BiddingSequence::get_bids(const std::vector<Player::Ptr>& players)
   bids_.push_back(current);
   std::for_each(
       players.begin(), players.end(),
-      boost::bind(&Player::notify_bid, _1, current)
+      boost::bind(&Player::notify_bid, _1, position_forehand, current)
     );
 
   size_t num_passes = 0;
@@ -66,7 +66,7 @@ BiddingSequence::get_bids(const std::vector<Player::Ptr>& players)
 
     std::for_each(
         players.begin(), players.end(),
-        boost::bind(&Player::notify_bid, _1, bid)
+        boost::bind(&Player::notify_bid, _1, PlayPosition(player), bid)
       );
   }
 

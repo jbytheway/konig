@@ -37,6 +37,5 @@ Card NoddyAi::play_card() {
   return *i;
 }
 
-
 }}
 

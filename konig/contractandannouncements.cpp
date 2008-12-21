@@ -10,7 +10,9 @@ ContractAndAnnouncements::ContractAndAnnouncements(
   ) :
   contract_(std::move(contract)),
   called_king_(called_king),
-  announcednesses_(contract_->initial_announcednesses())
+  announcednesses_(
+      contract_ ? contract_->initial_announcednesses() : Announcednesses()
+    )
 {}
 
 bool ContractAndAnnouncements::is_legal(

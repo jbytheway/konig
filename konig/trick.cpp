@@ -7,8 +7,7 @@
 
 namespace konig {
 
-bool Trick::legal_play(
-    Card card,
+Cards Trick::legal_plays(
     const Cards& hand,
     bool offence,
     unsigned int trick,
@@ -45,7 +44,7 @@ bool Trick::legal_play(
     real_plays = std::move(constraint_levels[PlayConstraint::avoid_playing]);
   }
   assert(!real_plays.empty());
-  return real_plays.count(card);
+  return std::move(real_plays);
 }
 
 void Trick::determine_winner()

@@ -2,8 +2,12 @@
 #define KONIG__CARDS_HPP
 
 #include <set>
+#include <algorithm>
 
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
+//#include <boost/spirit/home/phoenix/operator/member.hpp>
+//#include <boost/spirit/home/phoenix/operator/comparison.hpp>
 
 #include <konig/card.hpp>
 
@@ -58,6 +62,22 @@ class Cards : public std::set<Card> {
         tally += count(Card(s, rank));
       }
       return tally;
+    }
+
+    using std::set<Card>::find;
+
+    iterator find(const Suit suit) {
+      return std::find_if(
+          begin(), end(), boost::bind(&Card::suit, _1) == suit
+        );
+    }
+
+    iterator find(const SuitRank rank) {
+      return std::find_if(
+          begin(), end(),
+          !boost::bind(&Card::trump, _1) &&
+            boost::bind(&Card::suit_rank, _1) == rank
+        );
     }
 
     using std::set<Card>::insert;

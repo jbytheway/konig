@@ -38,9 +38,9 @@ std::vector<Trick> Contract::play_tricks(
       while (true) {
         c = players[playing]->play_card();
         if (hands[playing].count(c) &&
-            t.legal_play(
-              c, hands[playing], offence[playing], trick_number, whole_contract
-            )) {
+            t.legal_plays(
+              hands[playing], offence[playing], trick_number, whole_contract
+            ).count(c)) {
           break;
         }
       }

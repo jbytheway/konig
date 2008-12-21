@@ -18,8 +18,7 @@ class Trick {
       played_(0)
     {}
 
-    bool legal_play(
-        Card,
+    Cards legal_plays(
         const Cards& hand,
         bool offence,
         unsigned int trick,
@@ -38,6 +37,10 @@ class Trick {
     const boost::array<Card, 4> cards() const {
       assert(complete()); return cards_;
     }
+
+    Suit suit() const { assert(played_); return cards_[0].suit(); }
+
+    uint8_t played() const { return played_; }
 
     PlayPosition winner() const { assert(complete()); return winner_; }
 
