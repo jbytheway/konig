@@ -27,12 +27,10 @@ std::vector<Announcement> NoddyAi::announce() {
 
 Card NoddyAi::play_card() {
   assert(!hand_.empty());
-  if (tricks_.empty() || tricks_.back().complete()) {
-    return *hand_.begin();
-  }
-  std::uniform_int<size_t> card_chooser(0, hand_.size()-1);
+  Cards legal = legal_plays();
+  std::uniform_int<size_t> card_chooser(0, legal.size()-1);
   size_t which = card_chooser(random_engine_);
-  Cards::iterator i = hand_.begin();
+  Cards::iterator i = legal.begin();
   std::advance(i, which);
   return *i;
 }

@@ -2,6 +2,7 @@
 
 #include <konig/ai/noddyai.hpp>
 #include <konig/ai/specificplayai.hpp>
+#include <konig/ai/strongsddefenceai.hpp>
 
 namespace konig { namespace ai {
 
@@ -17,10 +18,12 @@ Ai::Ptr Ai::create(const std::string& description)
   Ai::Ptr p;
   if (ai_name == "") {
     p.reset(new NoddyAi());
+  } else if (ai_name == "strongsddefence") {
+    p.reset(new StrongSdDefenceAi());
   } else if (ai_name == "play") {
     p.reset(new SpecificPlayAi(ai_args));
   } else {
-    throw std::logic_error("no such ai");
+    throw std::logic_error(ai_name+": no such ai");
   }
   return p;
 }
@@ -50,6 +53,7 @@ void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   rejected_.clear();
   discard_.clear();
   tricks_.clear();
+  game_start_hook();
 }
 
 void Ai::notify_bid(PlayPosition p, int bid)

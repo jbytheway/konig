@@ -27,25 +27,25 @@ class Trick {
 
     bool complete() const { return played_ == 4; }
 
-    void add(Card card) {
-      assert(!complete()); cards_[played_++] = card;
-      if (complete()) determine_winner();
-    }
+    void add(Card card);
 
     PlayPosition leader() const { return leader_; }
 
     const boost::array<Card, 4> cards() const {
-      assert(complete()); return cards_;
+      return cards_;
     }
 
     Suit suit() const { assert(played_); return cards_[0].suit(); }
 
     uint8_t played() const { return played_; }
 
-    PlayPosition winner() const { assert(complete()); return winner_; }
+    PlayPosition winner() const {
+      assert(played_);
+      return PlayPosition((leader_+winning_card_)%4);
+    }
 
     Card winning_card() const {
-      assert(complete()); return cards_[(winner_-leader_+4)%4];
+      assert(played_); return cards_[winning_card_];
     }
 
     bool count(const Card& card) const {
@@ -67,7 +67,7 @@ class Trick {
     bool rising_rule_;
     boost::array<Card, 4> cards_;
     uint8_t played_;
-    PlayPosition winner_;
+    uint8_t winning_card_;
 };
 
 std::ostream& operator<<(std::ostream&, const Trick&);

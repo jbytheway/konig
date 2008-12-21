@@ -26,6 +26,8 @@ class Ai : public Player {
     virtual void notify_announcements(std::vector<Announcement>);
     virtual void notify_play_card(PlayPosition, Card);
 
+    virtual void game_start_hook() {}
+
     Cards legal_plays() const;
   protected:
     Ruleset rules_;

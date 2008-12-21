@@ -7,6 +7,21 @@
 
 namespace konig {
 
+void Trick::add(Card card) {
+  assert(!complete());
+  cards_[played_++] = card;
+  if (played_ == 1) {
+    winning_card_ = 0;
+  } else {
+    Suit this_suit = card.suit();
+    if (this_suit == Suit::trumps || this_suit == suit()) {
+      if (cards_[winning_card_] < card) {
+        winning_card_ = played_-1;
+      }
+    }
+  }
+}
+
 Cards Trick::legal_plays(
     const Cards& hand,
     bool offence,
@@ -45,22 +60,6 @@ Cards Trick::legal_plays(
   }
   assert(!real_plays.empty());
   return std::move(real_plays);
-}
-
-void Trick::determine_winner()
-{
-  assert(played_ == 4);
-  Suit trick_suit = cards_[0].suit();
-  uint8_t best_card = 0;
-  for (uint8_t i=1; i<4; ++i) {
-    Suit suit = cards_[i].suit();
-    if (suit == Suit::trumps || suit == trick_suit) {
-      if (cards_[best_card] < cards_[i]) {
-        best_card = i;
-      }
-    }
-  }
-  winner_ = PlayPosition((leader_ + best_card) % 4);
 }
 
 std::ostream& operator<<(std::ostream& o, const Trick& t)

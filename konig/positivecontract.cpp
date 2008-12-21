@@ -211,7 +211,7 @@ bool PositiveContract::valid_first_announcements(
 
 Achievement PositiveContract::result_for(const Cards& declarers_cards)
 {
-  return declarers_cards.total_card_points() >= 36*3 ?
+  return declarers_cards.total_card_points() >= 36*3-1 ?
     Achievement::made : Achievement::off;
 }
 

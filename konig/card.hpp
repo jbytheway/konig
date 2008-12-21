@@ -14,6 +14,12 @@ class Card {
     template<typename OutputIterator>
     static void make_deck(OutputIterator);
 
+    struct CompareRanks {
+      bool operator()(const Card& l, const Card& r) {
+        return l.rank_ < r.rank_;
+      }
+    };
+
     Card() : suit_(Suit::trumps), rank_(TrumpRank::pagat) {}
     explicit Card(const unsigned long r) : suit_(Suit::trumps), rank_(r) {
       static_cast<void>(TrumpRank(r)); // construction checks validity

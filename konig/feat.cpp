@@ -25,7 +25,7 @@ Achievement Feat::result_for(
     case forty_five:
       // Remember to cater for 45 via valat
       return
-        ( our_cards.total_card_points() >= 45*3 ||
+        ( our_cards.total_card_points() >= 45*3-1 ||
           their_cards.size() == 6) ?
         Achievement::made : Achievement::neutral;
     case valat:

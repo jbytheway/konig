@@ -16,12 +16,16 @@ namespace konig { namespace simulator {
 struct Options {
   Options() :
     help(false),
-    num_deals(1)
+    num_deals(1),
+    show_deal(true),
+    show_tricks(true)
   {}
   bool help;
   std::vector<std::string> ais;
   std::vector<std::string> chunks;
   unsigned long num_deals;
+  bool show_deal;
+  bool show_tricks;
 };
 
 void usage(std::ostream& o)
@@ -34,9 +38,13 @@ void usage(std::ostream& o)
 "                Comma-separated list of AI specifications.\n"
 "  -c, --chunks CHUNK,...\n"
 "                Comma-separated list of partial specifications for the\n"
-"                chunks of cards (4 hands, 2 talon-halves)\n"
+"                chunks of cards (4 hands, 2 talon-halves).\n"
 "  -n, --num-deals N\n"
 "                Make N random deals in total (default 1).\n"
+"  -d-, --no-show-deal\n"
+"                Don't show the deal.\n"
+"  -t-, --no-show-tricks\n"
+"                Don't show the tricks.\n"
   << std::flush;
 }
 
@@ -45,10 +53,12 @@ void usage(std::ostream& o)
 int main(int argc, char const* const* const argv) {
   konig::simulator::Options options;
   optimal::OptionsParser parser;
-  parser.addOption("help",      'h', &options.help);
-  parser.addOption("ais",       'a', &options.ais,    ",");
-  parser.addOption("chunks",    'c', &options.chunks, ",");
-  parser.addOption("num-deals", 'n', &options.num_deals);
+  parser.addOption("help",        'h', &options.help);
+  parser.addOption("ais",         'a', &options.ais,    ",");
+  parser.addOption("chunks",      'c', &options.chunks, ",");
+  parser.addOption("num-deals",   'n', &options.num_deals);
+  parser.addOption("show-deal",   'd', &options.show_deal);
+  parser.addOption("show-tricks", 't', &options.show_tricks);
 
   boost::filesystem::path options_file(std::getenv("HOME"));
   options_file /= ".konig";
@@ -90,16 +100,21 @@ int main(int argc, char const* const* const argv) {
   konig::Dealer::Ptr dealer(konig::Dealer::create(options.chunks));
   for (unsigned long i=0; i<options.num_deals; ++i) {
     konig::Deal deal = dealer->deal();
-    std::cout << deal << std::endl;
+    if (options.show_deal) {
+      std::cout << deal << std::endl;
+    }
     konig::Game game(rules, ais, deal);
     konig::Outcome outcome;
     std::vector<konig::Trick> tricks;
     boost::tie(outcome, tricks) = game.play();
-    std::cout << outcome << "\n\n";
-    std::copy(
-        tricks.begin(), tricks.end(),
-        std::ostream_iterator<konig::Trick>(std::cout, "\n")
-      );
+    std::cout << outcome << '\n';
+    if (options.show_tricks) {
+      std::cout << '\n';
+      std::copy(
+          tricks.begin(), tricks.end(),
+          std::ostream_iterator<konig::Trick>(std::cout, "\n")
+        );
+    }
   }
 }
 

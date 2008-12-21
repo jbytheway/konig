@@ -72,6 +72,12 @@ class Cards : public std::set<Card> {
         );
     }
 
+    const_iterator find(const Suit suit) const {
+      return std::find_if(
+          begin(), end(), boost::bind(&Card::suit, _1) == suit
+        );
+    }
+
     iterator find(const SuitRank rank) {
       return std::find_if(
           begin(), end(),
