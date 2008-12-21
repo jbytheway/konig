@@ -95,6 +95,8 @@ class Cards : public std::set<Card> {
     }
 };
 
+std::ostream& operator<<(std::ostream&, const Cards&);
+
 }
 
 #endif // KONIG__CARDS_HPP

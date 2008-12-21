@@ -31,6 +31,14 @@ class Card {
 
     Suit suit() const { return Suit(Suit::internal_enum(suit_)); }
 
+    TrumpRank trump_rank() const {
+      assert(trump()); return TrumpRank(TrumpRank::internal_enum(rank_));
+    }
+
+    SuitRank suit_rank() const {
+      assert(!trump()); return SuitRank(SuitRank::internal_enum(rank_));
+    }
+
     unsigned int card_points() const {
       if (trump()) {
         if (rank_ == TrumpRank::pagat ||

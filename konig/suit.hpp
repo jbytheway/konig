@@ -2,6 +2,7 @@
 #define KONIG__SUIT_HPP
 
 #include <stdexcept>
+#include <ostream>
 
 #include <konig/core.hpp>
 #include <konig/kingcall.hpp>
@@ -39,6 +40,30 @@ class Suit {
   private:
     uint8_t value_;
 };
+
+inline std::ostream& operator<<(std::ostream& o, const Suit s) {
+  char name;
+  switch (s) {
+    case Suit::clubs:
+      name = 'C';
+      break;
+    case Suit::diamonds:
+      name = 'D';
+      break;
+    case Suit::hearts:
+      name = 'H';
+      break;
+    case Suit::spades:
+      name = 'S';
+      break;
+    case Suit::trumps:
+      name = 'T';
+      break;
+    default:
+      throw std::logic_error("invalid suit");
+  }
+  return o << name;
+}
 
 }
 

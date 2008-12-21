@@ -33,6 +33,15 @@ class TrumpRank {
     uint8_t value_;
 };
 
+inline std::ostream& operator<<(std::ostream& o, const TrumpRank r) {
+  if (r == TrumpRank::skus) {
+    o << "Sk";
+  } else {
+    o << int(r);
+  }
+  return o;
+}
+
 }
 
 #endif // KONIG__TRUMPRANK_HPP

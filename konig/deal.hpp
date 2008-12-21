@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 #include <boost/array.hpp>
 #include <boost/range/size.hpp>
+#include <boost/range/value_type.hpp>
 
 #include <konig/cards.hpp>
 
@@ -12,18 +13,27 @@ namespace konig {
 class Deal {
   public:
     template<typename Range>
-    Deal(Range chunks);
+    explicit Deal(
+        Range chunkss,
+        typename boost::enable_if<
+            typename std::is_same<
+              typename boost::range_value<Range>::type,
+              Cards
+            >::type,
+            int
+          >::type = 0
+      );
     
     template<typename Range1, typename Range2>
     Deal(Range1 hands, Range2 talon);
     
     template<typename OutputIterator>
-    void copy_hands(OutputIterator o) {
+    void copy_hands(OutputIterator o) const {
       std::copy(hands_.begin(), hands_.end(), o);
     }
 
     template<typename OutputIterator>
-    void copy_talon(OutputIterator o) {
+    void copy_talon(OutputIterator o) const {
       std::copy(talon_.begin(), talon_.end(), o);
     }
   private:
@@ -34,7 +44,16 @@ class Deal {
 };
 
 template<typename Range>
-Deal::Deal(Range chunks) {
+Deal::Deal(
+    Range chunks,
+    typename boost::enable_if<
+        typename std::is_same<
+          typename boost::range_value<Range>::type,
+          Cards
+        >::type,
+        int
+      >::type
+  ) {
   if (boost::size(chunks) != 6) {
     throw std::logic_error("wrong number chunks");
   }
@@ -64,6 +83,8 @@ Deal::Deal(Range1 hands, Range2 talon) {
 
   sanity_check();
 }
+
+std::ostream& operator<<(std::ostream&, const Deal&);
 
 }
 

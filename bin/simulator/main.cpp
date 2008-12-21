@@ -70,7 +70,9 @@ int main(int argc, char const* const* const argv) {
   konig::Ruleset rules = konig::Ruleset::solodreier_only();
   konig::Dealer::Ptr dealer(konig::Dealer::create(options.chunks));
   for (unsigned long i=0; i<options.num_deals; ++i) {
-    konig::Game game(rules, ais, dealer->deal());
+    konig::Deal deal = dealer->deal();
+    std::cout << deal << std::endl;
+    konig::Game game(rules, ais, deal);
     game.play();
   }
 }

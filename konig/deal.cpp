@@ -16,5 +16,13 @@ void Deal::sanity_check() {
   }
 }
 
+std::ostream& operator<<(std::ostream& o, const Deal& d)
+{
+  typedef std::ostream_iterator<Cards> out;
+  d.copy_hands(out(o, "\n"));
+  d.copy_talon(out(o, "\n"));
+  return o;
+}
+
 }
 
