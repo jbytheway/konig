@@ -2,6 +2,8 @@
 
 #include <boost/bind.hpp>
 
+#include <konig/contract.hpp>
+
 namespace konig {
 
 namespace {
@@ -25,9 +27,8 @@ namespace {
   }
 }
 
-Contract::Ptr BiddingSequence::get_bids(
-    const std::vector<Player::Ptr>& players
-  )
+boost::tuple<boost::shared_ptr<Contract>, PlayPosition>
+BiddingSequence::get_bids(const std::vector<Player::Ptr>& players)
 {
   assert(players.size() == 4);
   bids_.clear();

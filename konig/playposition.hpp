@@ -7,7 +7,7 @@ namespace konig {
 
 enum PlayPosition {
   position_forehand = 0,
-  position_max = 5
+  position_max = 4
 };
 
 inline PlayPosition& operator++(PlayPosition& p) {

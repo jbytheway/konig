@@ -1,4 +1,3 @@
 BIN := konig-server
-INCLUDE = -DPHOENIX_LIMIT=6
 LIB_DEP_NAMES := konig
 

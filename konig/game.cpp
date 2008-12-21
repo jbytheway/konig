@@ -1,6 +1,9 @@
 #include <konig/game.hpp>
 
+#include <boost/tuple/tuple.hpp>
+
 #include <konig/biddingsequence.hpp>
+#include <konig/contract.hpp>
 
 namespace konig {
 
@@ -10,9 +13,12 @@ Outcome Game::play() const
     players_[i]->start_game(rules_, i, hands_[i]);
   }
   BiddingSequence bids(rules_.contracts());
-  Contract::Ptr contract = bids.get_bids(players_);
+  Contract::Ptr contract;
+  PlayPosition declarer;
+  boost::tie(contract, declarer) = bids.get_bids(players_);
+  assert(declarer < 4);
 
-  return contract->play();
+  return contract->play(hands_, talon_, players_, declarer);
 }
 
 }

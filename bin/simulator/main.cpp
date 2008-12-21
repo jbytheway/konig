@@ -55,6 +55,7 @@ int main(int argc, char const* const* const argv) {
 
   while (ais.size() < 4) {
     ais.push_back(konig::ai::Ai::create(""));
+    assert(ais.back());
   }
 
   if (options.chunks.size() > 6) {

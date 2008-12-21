@@ -110,9 +110,9 @@ MAKEFRAGS := \
 # and such things, they should be added to BUILD_CXXFLAGS in a config.mk or to
 # THIS_CXXFLAGS in a Makefile.local (depending on whether they are supposed to
 # apply to a build or a binary respectively).
-GLOBAL_CXXFLAGS ?= -std=gnu++0x -Werror -Wall -Wextra -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -O0 -g3
+GLOBAL_CXXFLAGS ?= -Werror -Wall -Wextra -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -O0 -g3
 GLOBAL_CFLAGS ?= -Werror -O0 -g3
-GLOBAL_CPPFLAGS ?= -std=c++0x
+GLOBAL_CPPFLAGS ?= -std=gnu++0x -DPHOENIX_LIMIT=6
 
 # We replace '-' with '/' in the library name when using it as a directory
 # because e.g. libsakusen-comms is in libsakusen/comms
@@ -120,15 +120,16 @@ GLOBAL_CPPFLAGS ?= -std=c++0x
 LIB_DEP := $(foreach lib,$(LIB_DEP_NAMES), \
 		$(top_builddir)$(subst -,/,$(lib))/lib$(lib).la \
 	)
-INCLUDE := $(BUILD_INCLUDE) -I$(this_srcdir) -I. -I$(top_srcdir) $(INCLUDE)
 
 # Concatenate all the CXXFLAGSs and CFLAGSs together
 
 ALL_CXXFLAGS := \
-	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(INCLUDE) $(THIS_CXXFLAGS)
+	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(THIS_CXXFLAGS)
 ALL_CFLAGS := \
-	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(INCLUDE) $(THIS_CFLAGS)
-ALL_CPPFLAGS := $(GLOBAL_CPPFLAGS) $(INCLUDE)
+	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(THIS_CFLAGS)
+ALL_CPPFLAGS := $(GLOBAL_CPPFLAGS) $(BUILD_CPPFLAGS) $(THIS_CPPFLAGS) \
+	-I$(this_srcdir) -I. -I$(top_srcdir)
+
 
 GAMESDIR := $(DESTDIR)$(PREFIX)/games
 BINDIR := $(DESTDIR)$(PREFIX)/bin
@@ -286,12 +287,12 @@ $(LIBTOOL_OBJS): %.lo: %.o
 
 $(CXX_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
-	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(ALL_CXXFLAGS) -c \
+	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
 
 $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
-	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(ALL_CFLAGS) -c \
+	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(ALL_CPPFLAGS) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
 
 # install the lib
@@ -314,12 +315,12 @@ $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP) $(this_makefile)
 
 $(CXX_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
-	$(CXX) $(ALL_CXXFLAGS) -c \
+	$(CXX) $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
 
 $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
-	$(CC) $(ALL_CFLAGS) -c \
+	$(CC) $(ALL_CPPFLAGS) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
 
 # install the binary unless it was linked with -no-install

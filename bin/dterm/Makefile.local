@@ -1,4 +1,3 @@
 BIN = konig-dterm
-INCLUDE = -DPHOENIX_LIMIT=5
 LIB_DEP_NAMES = konig-client
 THIS_LDFLAGS = -no-install

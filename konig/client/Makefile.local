@@ -1,3 +1,2 @@
 BIN = libkonig-client.la
 LIB_DEP_NAMES = konig
-INCLUDE = -DPHOENIX_LIMIT=6

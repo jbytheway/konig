@@ -14,6 +14,7 @@ class Card {
     template<typename OutputIterator>
     static void make_deck(OutputIterator);
 
+    Card() : suit_(Suit::trumps), rank_(TrumpRank::pagat) {}
     explicit Card(const unsigned long r) : suit_(Suit::trumps), rank_(r) {
       static_cast<void>(TrumpRank(r)); // construction checks validity
     }
@@ -27,6 +28,31 @@ class Card {
     }
 
     bool trump() const { return suit_ == Suit::trumps; }
+
+    Suit suit() const { return Suit(Suit::internal_enum(suit_)); }
+
+    unsigned int card_points() const {
+      if (trump()) {
+        if (rank_ == TrumpRank::pagat ||
+            rank_ == TrumpRank::mond ||
+            rank_ == TrumpRank::skus)
+          return 13;
+        return 1;
+      } else {
+        switch (rank_) {
+          case SuitRank::king:
+            return 13;
+          case SuitRank::queen:
+            return 10;
+          case SuitRank::knight:
+            return 7;
+          case SuitRank::jack:
+            return 4;
+          default:
+            return 1;
+        }
+      }
+    }
 
     bool operator==(const Card& r) const {
       return rank_ == r.rank_ && suit_ == r.suit_;

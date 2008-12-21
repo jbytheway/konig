@@ -23,6 +23,10 @@ class Game {
         throw std::logic_error("must have 4 players");
       }
 
+      for (unsigned int i=0; i<4; ++i) {
+        assert(players_[i]);
+      }
+
       deal.copy_hands(hands_.begin());
       deal.copy_talon(talon_.begin());
     }
