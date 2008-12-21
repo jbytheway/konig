@@ -92,7 +92,14 @@ int main(int argc, char const* const* const argv) {
     konig::Deal deal = dealer->deal();
     std::cout << deal << std::endl;
     konig::Game game(rules, ais, deal);
-    game.play();
+    konig::Outcome outcome;
+    std::vector<konig::Trick> tricks;
+    boost::tie(outcome, tricks) = game.play();
+    std::cout << outcome << "\n\n";
+    std::copy(
+        tricks.begin(), tricks.end(),
+        std::ostream_iterator<konig::Trick>(std::cout, "\n")
+      );
   }
 }
 

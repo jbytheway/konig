@@ -87,6 +87,15 @@ void Card::make_deck(OutputIterator o) {
   }
 }
 
+inline std::ostream& operator<<(std::ostream& o, const Card& c) {
+  if (c.trump()) {
+    o << c.trump_rank();
+  } else {
+    o << c.suit() << c.suit_rank();
+  }
+  return o;
+}
+
 }
 
 #endif // KONIG__CARD_HPP

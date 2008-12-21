@@ -8,13 +8,14 @@
 namespace konig {
 
 PositiveContract::PositiveContract(
+    std::string short_name,
     std::string name,
     const bool partnership,
     const uint8_t talon_halves,
     const bool must_announce_bird,
     const bool no_initial_announcements
   ) :
-  Contract(std::move(name)),
+  Contract(std::move(short_name), std::move(name)),
   partnership_(partnership),
   talon_halves_(talon_halves),
   must_announce_bird_(must_announce_bird),
@@ -22,7 +23,7 @@ PositiveContract::PositiveContract(
 {
 }
 
-Outcome PositiveContract::play(
+boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
     boost::array<Cards, 4> hands, boost::array<Cards, 2> talon,
     const std::vector<Player::Ptr>& players, PlayPosition declarer_position
   )
@@ -157,7 +158,9 @@ Outcome PositiveContract::play(
       hands, declarers_cards, defences_cards,
       players, whole_contract, declarer_position, offence
     );
-  return whole_contract.score(tricks, declarers_cards, defences_cards, offence);
+  Outcome outcome =
+    whole_contract.score(tricks, declarers_cards, defences_cards, offence);
+  return boost::make_tuple(outcome, tricks);
 }
 
 Announcednesses PositiveContract::initial_announcednesses() const
@@ -208,7 +211,7 @@ bool PositiveContract::valid_first_announcements(
 
 Achievement PositiveContract::result_for(const Cards& declarers_cards)
 {
-  return declarers_cards.total_card_points() >= 26 ?
+  return declarers_cards.total_card_points() >= 36*3 ?
     Achievement::made : Achievement::off;
 }
 

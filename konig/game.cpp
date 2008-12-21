@@ -7,7 +7,7 @@
 
 namespace konig {
 
-Outcome Game::play() const
+boost::tuple<Outcome, std::vector<Trick> > Game::play() const
 {
   for (PlayPosition i=position_forehand; i<position_max; ++i) {
     players_[i]->start_game(rules_, i, hands_[i]);

@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/array.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include <konig/outcome.hpp>
 #include <konig/cards.hpp>
@@ -19,9 +20,11 @@ class Contract : public boost::enable_shared_from_this<Contract> {
   public:
     typedef boost::shared_ptr<Contract> Ptr;
 
+    const std::string& short_name() const { return short_name_; }
+
     const std::string& name() const { return name_; }
 
-    virtual Outcome play(
+    virtual boost::tuple<Outcome, std::vector<Trick> > play(
         boost::array<Cards, 4> hands, boost::array<Cards, 2> talon,
         const std::vector<Player::Ptr>& players, PlayPosition declarer_position
       ) = 0;
@@ -50,8 +53,11 @@ class Contract : public boost::enable_shared_from_this<Contract> {
 
     static Ptr solodreier();
   protected:
-    Contract(std::string name) : name_(std::move(name)) {}
+    Contract(std::string short_name, std::string name) :
+      short_name_(std::move(short_name)),
+      name_(std::move(name)) {}
 
+    const std::string short_name_;
     const std::string name_;
 };
 

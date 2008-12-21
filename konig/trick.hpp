@@ -33,6 +33,8 @@ class Trick {
       if (complete()) determine_winner();
     }
 
+    PlayPosition leader() const { return leader_; }
+
     const boost::array<Card, 4> cards() const {
       assert(complete()); return cards_;
     }
@@ -46,6 +48,15 @@ class Trick {
     bool count(const Card& card) const {
       return std::count(cards_.begin(), cards_.begin()+played_, card);
     }
+
+    PlayPosition player_of(const Card& card) const {
+      boost::array<Card, 4>::const_iterator p =
+        std::find(cards_.begin(), cards_.begin()+played_, card);
+      if (p == cards_.begin()+played_) {
+        return position_max;
+      }
+      return PlayPosition((leader_+(p-cards_.begin()))%4);
+    }
   private:
     void determine_winner();
 
@@ -55,6 +66,8 @@ class Trick {
     uint8_t played_;
     PlayPosition winner_;
 };
+
+std::ostream& operator<<(std::ostream&, const Trick&);
 
 }
 

@@ -13,17 +13,24 @@ class Contract;
 
 class Outcome {
   public:
-    Outcome(boost::shared_ptr<Contract>);
-
-    void add(bool offence, Feat, Announcedness, Achievement);
-  private:
-    boost::shared_ptr<Contract> contract_;
     typedef std::map<
         std::pair<Feat, bool>,
         std::pair<Announcedness, Achievement>
       > Results;
+
+    Outcome() {}
+    Outcome(boost::shared_ptr<Contract>);
+
+    const boost::shared_ptr<Contract>& contract() const { return contract_; }
+    const Results& results() const { return results_; }
+
+    void add(bool offence, Feat, Announcedness, Achievement);
+  private:
+    boost::shared_ptr<Contract> contract_;
     Results results_;
 };
+
+std::ostream& operator<<(std::ostream&, const Outcome&);
 
 }
 

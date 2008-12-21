@@ -18,5 +18,31 @@ void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
   results_[std::make_pair(f, offence)] = std::make_pair(an, ac);
 }
 
+std::ostream& operator<<(std::ostream& o, const Outcome& outcome)
+{
+  o << outcome.contract()->short_name();
+  for (Outcome::Results::const_iterator i = outcome.results().begin();
+      i != outcome.results().end(); ++i) {
+    Feat f = i->first.first;
+    bool defensive = !i->first.second;
+    Announcedness announcedness = i->second.first;
+    Achievement achievement = i->second.second;
+    if (announcedness != Announcedness::unannounced ||
+        achievement != Achievement::neutral) {
+      o << f;
+      if (defensive) {
+        o << '!';
+      }
+
+      // Fake the announcedness of the game to get the right output format
+      if (f == Feat::game) {
+        announcedness = Announcedness::unannounced;
+      }
+      o << announcedness.string(achievement);
+    }
+  }
+  return o;
+}
+
 }
 

@@ -65,7 +65,7 @@ std::vector<Trick> Contract::play_tricks(
 
 Contract::Ptr Contract::solodreier()
 {
-  return Ptr(new PositiveContract("solodreier", false, 0, false, false));
+  return Ptr(new PositiveContract("sd", "solodreier", false, 0, false, false));
 }
 
 }

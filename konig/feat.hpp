@@ -86,6 +86,35 @@ class Feat {
     internal_enum value_;
 };
 
+inline std::ostream& operator<<(std::ostream& o, const Feat f) {
+  char name;
+  switch (f) {
+    case Feat::game:
+      return o;
+    case Feat::pagat:
+      name = '1';
+      break;
+    case Feat::uhu:
+      name = '2';
+      break;
+    case Feat::kakadu:
+      name = '3';
+      break;
+    case Feat::forty_five:
+      name = 'f';
+      break;
+    case Feat::valat:
+      name = 'v';
+      break;
+    case Feat::king_ultimo:
+      name = 'k';
+      break;
+    default:
+      throw std::logic_error("invalid feat");
+  }
+  return o << name;
+}
+
 }
 
 #endif // KONIG__FEAT_HPP

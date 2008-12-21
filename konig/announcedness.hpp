@@ -1,9 +1,11 @@
 #ifndef KONIG__ANNOUNCEDNESS_HPP
 #define KONIG__ANNOUNCEDNESS_HPP
 
+#include <string>
+
 #include <boost/shared_ptr.hpp>
 
-#include <konig/core.hpp>
+#include <konig/achievement.hpp>
 
 namespace konig {
 
@@ -12,9 +14,9 @@ class Announcedness {
     enum internal_enum {
       unannounced,
       announced,
-      kontrad,
-      rekontrad,
-      subkontrad
+      kontraed,
+      rekontraed,
+      subkontraed
     };
 
     Announcedness() : value_(unannounced) {}
@@ -26,12 +28,14 @@ class Announcedness {
     // Returns true iff this level of announcedness is announced by the side
     // that didn't originally announce the feat
     bool inverted_side() const {
-      return value_ == kontrad || value_ == subkontrad;
+      return value_ == kontraed || value_ == subkontraed;
     }
 
     Announcedness next_level() const {
       return Announcedness(internal_enum(value_ + 1));
     }
+
+    std::string string(const Achievement) const;
   private:
     internal_enum value_;
 };

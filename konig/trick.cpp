@@ -1,6 +1,7 @@
 #include <konig/trick.hpp>
 
 #include <boost/range/empty.hpp>
+#include <boost/format.hpp>
 
 #include <konig/contractandannouncements.hpp>
 
@@ -61,6 +62,21 @@ void Trick::determine_winner()
     }
   }
   winner_ = PlayPosition((leader_ + best_card) % 4);
+}
+
+std::ostream& operator<<(std::ostream& o, const Trick& t)
+{
+  assert(t.complete());
+  for (PlayPosition p = position_forehand; p < position_max; ++p) {
+    Card c = t.cards()[(p-t.leader()+4)%4];
+    o << boost::format("%2s") % c;
+    if (p == t.winner()) {
+      o << '*';
+    } else {
+      o << ' ';
+    }
+  }
+  return o;
 }
 
 }

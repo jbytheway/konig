@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <boost/array.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include <konig/ruleset.hpp>
 #include <konig/deal.hpp>
@@ -31,7 +32,7 @@ class Game {
       deal.copy_talon(talon_.begin());
     }
 
-    Outcome play() const;
+    boost::tuple<Outcome, std::vector<Trick> > play() const;
   private:
     const Ruleset rules_;
     const std::vector<Player::Ptr> players_;

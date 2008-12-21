@@ -12,13 +12,14 @@ class PositiveContract : public Contract {
   public:
     PositiveContract(
         std::string name,
+        std::string short_name,
         const bool partnership,
         const uint8_t talon_halves,
         const bool must_announce_bird,
         const bool no_initial_announcements
       );
 
-    virtual Outcome play(
+    virtual boost::tuple<Outcome, std::vector<Trick> > play(
         boost::array<Cards, 4> hands, boost::array<Cards, 2> talon,
         const std::vector<Player::Ptr>& players, PlayPosition declarer_position
       );

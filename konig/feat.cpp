@@ -25,7 +25,7 @@ Achievement Feat::result_for(
     case forty_five:
       // Remember to cater for 45 via valat
       return
-        ( our_cards.total_card_points() >= 45 ||
+        ( our_cards.total_card_points() >= 45*3 ||
           their_cards.size() == 6) ?
         Achievement::made : Achievement::neutral;
     case valat:
@@ -50,7 +50,8 @@ Achievement Feat::result_for(
     case kakadu:
       {
         const Trick& trick = tricks[12-constrained_to_trick()];
-        if (trick.count(constrained_card(called_king))) {
+        PlayPosition played_by = trick.player_of(constrained_card(called_king));
+        if (played_by != position_max && offence[played_by] == feat_offensive) {
           bool winning_side = offence[trick.winner()];
           const Card winning_card = trick.winning_card();
           return
