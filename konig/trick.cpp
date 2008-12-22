@@ -59,7 +59,7 @@ Cards Trick::legal_plays(
     real_plays = std::move(constraint_levels[PlayConstraint::avoid_playing]);
   }
   assert(!real_plays.empty());
-  return std::move(real_plays);
+  return real_plays;
 }
 
 std::ostream& operator<<(std::ostream& o, const Trick& t)

@@ -94,7 +94,7 @@ Outcome ContractAndAnnouncements::score(
       );
     o.add(stuff.first.first, stuff.first.second, stuff.second, a);
   }
-  return std::move(o);
+  return o;
 }
 
 }

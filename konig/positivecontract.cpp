@@ -188,7 +188,7 @@ Announcednesses PositiveContract::initial_announcednesses() const
     result.insert(true, Feat::king_ultimo);
   }
 
-  return std::move(result);
+  return result;
 }
 
 bool PositiveContract::valid_first_announcements(

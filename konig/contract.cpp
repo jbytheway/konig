@@ -60,7 +60,7 @@ std::vector<Trick> Contract::play_tricks(
     tricks.push_back(std::move(t));
   }
 
-  return std::move(tricks);
+  return tricks;
 }
 
 Contract::Ptr Contract::solodreier()
