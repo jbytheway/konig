@@ -4,13 +4,13 @@
 #include <boost/spirit/home/phoenix/operator/self.hpp>
 #include <boost/spirit/home/phoenix/object/construct.hpp>
 #include <boost/spirit/home/phoenix/stl/container.hpp>
-#include <boost/spirit/core.hpp>
+#include <boost/spirit/include/classic_core.hpp>
 
 namespace konig {
 
 PartialCards::PartialCards(const std::string& description, size_t size)
 {
-  using namespace boost::spirit;
+  using namespace boost::spirit::classic;
   Suit temp;
   bool x = parse(
       description.c_str(),

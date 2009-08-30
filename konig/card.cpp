@@ -3,13 +3,13 @@
 #include <boost/spirit/home/phoenix/core/reference.hpp>
 #include <boost/spirit/home/phoenix/operator/self.hpp>
 #include <boost/spirit/home/phoenix/object/construct.hpp>
-#include <boost/spirit/core.hpp>
+#include <boost/spirit/include/classic_core.hpp>
 
 namespace konig {
 
 Card::Card(const std::string& description)
 {
-  using namespace boost::spirit;
+  using namespace boost::spirit::classic;
   Suit temp;
   bool x = parse(
       description.c_str(),
