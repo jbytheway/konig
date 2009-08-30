@@ -2,7 +2,8 @@
 
 namespace konig { namespace server {
 
-Server::Server(boost::asio::io_service& io) :
+Server::Server(boost::asio::io_service& io, std::ostream& o) :
+  out_(o),
   message_server_(
       io,
       callback_helper(*this),
