@@ -1,3 +1,4 @@
 BIN = konig-dterm
 LIB_DEP_NAMES = konig-client
+LIBS = -lreadline
 THIS_LDFLAGS = -no-install
