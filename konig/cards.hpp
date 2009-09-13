@@ -57,7 +57,7 @@ class Cards : public std::set<Card> {
     }
 
     size_t count(SuitRank rank) {
-      size_t tally;
+      size_t tally = 0;
       for (Suit s = Suit::min; s<Suit::trumps; ++s) {
         tally += count(Card(s, rank));
       }
