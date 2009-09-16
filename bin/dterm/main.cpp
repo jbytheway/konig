@@ -1,5 +1,6 @@
 #include <konig/client/serverinterface.hpp>
 
+#include "commandhandler.hpp"
 #include "readlinewrapper.hpp"
 
 int main()
@@ -11,7 +12,10 @@ int main()
 
   boost::asio::io_service io;
   konig::client::ServerInterface si(io);
-  konig::dterm::ReadlineWrapper(io, si, home/".konig"/"dterm"/"history");
+  konig::dterm::CommandHandler ch(si);
+  konig::dterm::ReadlineWrapper rw(io, ch, home/".konig"/"dterm"/"history");
+  ch.set_output(rw);
   io.run();
+  ch.unset_output();
 }
 

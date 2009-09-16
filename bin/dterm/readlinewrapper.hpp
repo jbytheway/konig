@@ -1,26 +1,40 @@
 #ifndef KONG_DTERM__READLINEWRAPPER_HPP
 #define KONG_DTERM__READLINEWRAPPER_HPP
 
+#include <list>
+
 #include <boost/asio/io_service.hpp>
+#include <boost/asio/deadline_timer.hpp>
 #include <boost/filesystem/path.hpp>
 
 #include <konig/client/serverinterface.hpp>
 
+#include "commandhandler.hpp"
+
 namespace konig { namespace dterm {
 
-class ReadlineWrapper {
+class ReadlineWrapper : public MessageSink {
   public:
     ReadlineWrapper(
-        asio::io_service& io,
-        client::ServerInterface& si,
+        asio::io_service&,
+        CommandHandler&,
         const boost::filesystem::path& hf
       );
     ~ReadlineWrapper();
-    void line(char const*);
+    void line(char*);
+    virtual void message(std::string const&);
+    virtual void interrupt();
   private:
+    void timer_expired(boost::system::error_code const&);
+    void poll();
+
     asio::io_service& io_;
-    client::ServerInterface& server_interface_;
+    boost::asio::deadline_timer timer_;
+    CommandHandler& command_handler_;
     boost::filesystem::path history_file_;
+    std::string last_line_;
+    bool eof_;
+    std::list<std::string> command_buffer_;
 };
 
 }}
