@@ -28,5 +28,10 @@ void Client::error(
   server_.remove_client(shared_from_this());
 }
 
+void Client::close()
+{
+  connection_->close_gracefully();
+}
+
 }}
 

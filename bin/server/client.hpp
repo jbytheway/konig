@@ -33,6 +33,8 @@ class Client : public boost::enable_shared_from_this<Client> {
     }
     void message(const Message<MessageType::setPlayerProperties>&);
     void error(const messaging::error_source, const boost::system::error_code&);
+
+    void close();
   private:
     Server& server_;
     messaging::connection::ptr connection_;
