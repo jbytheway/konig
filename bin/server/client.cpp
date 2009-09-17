@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <konig/fatal.hpp>
+
 #include "server.hpp"
 
 namespace konig { namespace server {
@@ -14,7 +16,7 @@ Client::~Client()
 
 void Client::message(const Message<MessageType::setPlayerProperties>&)
 {
-  // TODO:
+  KONIG_FATAL("not implemented");
 }
 
 void Client::error(
@@ -22,7 +24,7 @@ void Client::error(
     const boost::system::error_code& ec
   )
 {
-  std::cerr << "error: client: " << es << ": " << ec << std::endl;
+  std::cerr << "error: client: " << es << ": " << ec.message() << std::endl;
   server_.remove_client(shared_from_this());
 }
 
