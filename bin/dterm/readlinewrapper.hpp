@@ -1,5 +1,5 @@
-#ifndef KONG_DTERM__READLINEWRAPPER_HPP
-#define KONG_DTERM__READLINEWRAPPER_HPP
+#ifndef KONIG_DTERM__READLINEWRAPPER_HPP
+#define KONIG_DTERM__READLINEWRAPPER_HPP
 
 #include <list>
 
@@ -40,5 +40,5 @@ class ReadlineWrapper : public MessageSink {
 
 }}
 
-#endif // KONG_DTERM__READLINEWRAPPER_HPP
+#endif // KONIG_DTERM__READLINEWRAPPER_HPP
 
