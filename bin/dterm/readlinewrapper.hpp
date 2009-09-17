@@ -34,6 +34,7 @@ class ReadlineWrapper : public MessageSink {
     boost::filesystem::path history_file_;
     std::string last_line_;
     bool eof_;
+    bool interrupted_;
     std::list<std::string> command_buffer_;
 };
 

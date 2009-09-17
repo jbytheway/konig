@@ -31,7 +31,8 @@ ReadlineWrapper::ReadlineWrapper(
   timer_(io, boost::posix_time::milliseconds(10)),
   command_handler_(ch),
   history_file_(hf),
-  eof_(false)
+  eof_(false),
+  interrupted_(false)
 {
   if (wrapper) {
     throw std::logic_error("Can't install multiple ReadlineWrappers");
@@ -97,12 +98,13 @@ void ReadlineWrapper::message(std::string const& message)
 
 void ReadlineWrapper::interrupt()
 {
+  interrupted_ = true;
   timer_.cancel();
 }
 
 void ReadlineWrapper::timer_expired(boost::system::error_code const& e)
 {
-  if (e) {
+  if (e || interrupted_) {
     message("Readline poller interrupted");
   } else {
     poll();
