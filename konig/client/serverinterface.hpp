@@ -17,7 +17,7 @@ namespace konig { namespace client {
 
 class ServerInterface {
   public:
-    ServerInterface(asio::io_service&);
+    ServerInterface(asio::io_service&, ClientInterface&);
     ~ServerInterface();
 
     void error(
@@ -32,18 +32,15 @@ class ServerInterface {
     void message(const Message<type>&) {          \
       std::ostringstream os;                      \
       os << "warning: ignoring message of type " << type; \
-      for_each_player(boost::bind(&ClientInterface::warning, _1, os.str())); \
+      client_.warning(os.str()); \
     }
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setPlayerProperties)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
-  private:
-    template<typename UnaryFunction>
-    void for_each_player(const UnaryFunction& f) {
-      std::for_each(players_.begin(), players_.end(), f);
-    }
 
+    void close();
+  private:
     messaging::connection::ptr connection_;
-    std::set<ClientInterface*> players_;
+    ClientInterface& client_;
 };
 
 }}

@@ -20,7 +20,7 @@ class Player {
     virtual void notify_bid(PlayPosition, int) = 0;
     virtual KingCall call_king() = 0;
     virtual void notify_call_king(KingCall) = 0;
-    virtual void notify_talon(const boost::array<Cards, 2>& talon) = 0;
+    virtual void notify_talon(boost::array<Cards, 2> const& talon) = 0;
     virtual uint8_t choose_talon_half() = 0;
     virtual void notify_talon_choice(uint8_t) = 0;
     virtual Cards discard() = 0;
@@ -31,7 +31,9 @@ class Player {
     virtual void notify_play_card(PlayPosition, Card) = 0;
   protected:
     Player() {}
-    Player(const Player&) {}
+    Player(Player const&) {}
+    Player& operator=(Player const&) { return *this; }
+    virtual ~Player() = 0;
 };
 
 }
