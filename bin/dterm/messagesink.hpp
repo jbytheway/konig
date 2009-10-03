@@ -9,10 +9,10 @@ class MessageSink {
     virtual void message(std::string const&) = 0;
     virtual void interrupt() = 0;
   protected:
-    MessageSink() {}
-    MessageSink(MessageSink const&) {}
-    MessageSink& operator=(MessageSink const&) { return *this; }
-    ~MessageSink() {}
+    MessageSink() = default;
+    MessageSink(MessageSink const&) = default;
+    MessageSink& operator=(MessageSink const&) = default;
+    ~MessageSink() = default;
 };
 
 }}
