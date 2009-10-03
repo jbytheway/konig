@@ -3,6 +3,7 @@
 #include <messaging/create_connection.hpp>
 #include <messaging/callback_helper.hpp>
 
+#include <konig/fatal.hpp>
 #include <konig/protocol.hpp>
 
 namespace konig { namespace client {
@@ -33,6 +34,11 @@ void ServerInterface::error(
   client_.warning(os.str());
   client_.abort();
   if (connection_) connection_->close();
+}
+
+void ServerInterface::message(Message<MessageType::notifySetting> const&)
+{
+  KONIG_FATAL("not implemented");
 }
 
 void ServerInterface::close()

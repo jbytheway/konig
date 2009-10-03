@@ -1,3 +1,4 @@
 BIN := konig-server
+LIBS = -lsettingstree
 LIB_DEP_NAMES := konig
 

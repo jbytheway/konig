@@ -1,8 +1,12 @@
 #include "server.hpp"
 
+#include <settingstree/make.hpp>
+
 #include <konig/fatal.hpp>
 
 namespace konig { namespace server {
+
+namespace st = settingstree;
 
 // Static stuff for coping with interrupts
 namespace {
@@ -14,6 +18,22 @@ namespace {
   }
 }
 
+// Definition of private Callbacks class (pimpl'd into Server)
+class Server::Callbacks : st::branch_callback {
+  public:
+    Callbacks(Server& s) : server_(s) {}
+    st::branch_callback& branch() { return *this; }
+  private:
+    Server& server_;
+    virtual void children_altered(st::branch& altered) {
+      server_.send_to_clients(
+          Message<MessageType::notifySetting>(
+            altered.name(), altered.child_names()
+          )
+        );
+    }
+};
+
 Server::Server(boost::asio::io_service& io, std::ostream& o) :
   out_(o),
   message_server_(
@@ -21,7 +41,8 @@ Server::Server(boost::asio::io_service& io, std::ostream& o) :
       callback_helper(*this),
       asio::ip::tcp::endpoint(asio::ip::tcp::v4(), Protocol::port)
     ),
-  interrupt_monitor_(io, boost::posix_time::milliseconds(10))
+  interrupt_monitor_(io, boost::posix_time::milliseconds(10)),
+  callbacks_(new Callbacks(*this))
 {
   signal(SIGINT, &interrupt_handler);
   signal(SIGTERM, &interrupt_handler);
@@ -30,6 +51,11 @@ Server::Server(boost::asio::io_service& io, std::ostream& o) :
   interrupt_monitor_.async_wait(boost::bind(
         &Server::check_for_interrupt, this, boost::asio::placeholders::error
       ));
+
+  settings_ =
+    st::make("", callbacks_->branch(),
+      st::make("clients", callbacks_->branch())
+    ).tree_ptr();
 }
 
 Server::~Server()
@@ -47,6 +73,11 @@ void Server::error(
   if (!interrupted) {
     throw std::runtime_error(os.str());
   }
+}
+
+void Server::warning(std::string const& w)
+{
+  out_ << "warning: " << w << std::endl;
 }
 
 void Server::remove_client(const Client::Ptr& client)
@@ -74,6 +105,13 @@ void Server::check_for_interrupt(boost::system::error_code const& e)
     interrupt_monitor_.async_wait(boost::bind(
           &Server::check_for_interrupt, this, boost::asio::placeholders::error
         ));
+  }
+}
+
+template<typename Message>
+void Server::send_to_clients(Message const& m) {
+  BOOST_FOREACH(Client::Ptr const& client, clients_) {
+    client->send(m);
   }
 }
 

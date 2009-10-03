@@ -6,7 +6,7 @@
 
 namespace konig {
 
-#define KONIG_MESSAGETYPE_VALUES() (setPlayerProperties)
+#define KONIG_MESSAGETYPE_VALUES() (setSetting)(notifySetting)
 
 KONIG_UTILITY_ENUM_HEADER(MessageType, KONIG_MESSAGETYPE_VALUES())
 

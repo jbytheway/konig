@@ -34,8 +34,9 @@ class ServerInterface {
       os << "warning: ignoring message of type " << type; \
       client_.warning(os.str()); \
     }
-    KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setPlayerProperties)
+    KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
+    void message(Message<MessageType::notifySetting> const&);
 
     void close();
   private:

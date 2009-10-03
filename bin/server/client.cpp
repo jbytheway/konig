@@ -14,7 +14,16 @@ Client::~Client()
   connection_->close();
 }
 
-void Client::message(const Message<MessageType::setPlayerProperties>&)
+#define KONIG_SERVER_CLIENT_IGNORE(type)              \
+void Client::message(const Message<type>&) {           \
+  std::ostringstream os;                              \
+  os << "warning: ignoring message of type " << type; \
+  server_.warning(os.str());                          \
+}
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifySetting)
+#undef KONIG_SERVER_CLIENT_IGNORE
+
+void Client::message(const Message<MessageType::setSetting>&)
 {
   KONIG_FATAL("not implemented");
 }

@@ -1,6 +1,7 @@
 #ifndef KONIG__FIELDS_HPP
 #define KONIG__FIELDS_HPP
 
+#include <boost/preprocessor/iteration/local.hpp>
 #include <boost/fusion/include/map.hpp>
 #include <boost/fusion/include/for_each.hpp>
 #include <boost/serialization/nvp.hpp>
@@ -10,6 +11,7 @@
 namespace konig { namespace fields {
 
 class name;
+class value;
 
 template<typename Archive>
 class Serializer {
@@ -23,11 +25,19 @@ class Serializer {
     Archive& archive_;
 };
 
-// This serialization function should be found by ADL
-template<class Archive, class T0>
-void serialize(Archive& archive, fusion::map<T0>& m, const unsigned int) {
-  fusion::for_each(m, Serializer<Archive>(archive));
+// This serialization function should be found by ADL when the fusion::map keys
+// are konig::fields.
+// TODO: Switch to nice variadic implementation once it makes it into boost.
+#define BOOST_PP_LOCAL_MACRO(n)                                       \
+template<class Archive, BOOST_PP_ENUM_PARAMS(n, typename T)>          \
+void serialize(                                                       \
+    Archive& archive,                                                 \
+    fusion::map<BOOST_PP_ENUM_PARAMS(n, T)>& m, const unsigned int) { \
+  fusion::for_each(m, Serializer<Archive>(archive));                  \
 }
+
+#define BOOST_PP_LOCAL_LIMITS (1, FUSION_MAX_MAP_SIZE)
+#include BOOST_PP_LOCAL_ITERATE()
 
 }}
 

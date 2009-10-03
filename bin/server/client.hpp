@@ -6,8 +6,10 @@
 #include <messaging/connection.hpp>
 #include <messaging/error_source.hpp>
 #include <messaging/callback_helper.hpp>
+#include <messaging/send.hpp>
 
 #include <konig/message.hpp>
+#include <konig/protocol.hpp>
 
 namespace konig { namespace server {
 
@@ -31,8 +33,14 @@ class Client : public boost::enable_shared_from_this<Client> {
     void message(const Message& m, Connection&) {
       message(m);
     }
-    void message(const Message<MessageType::setPlayerProperties>&);
+    void message(const Message<MessageType::setSetting>&);
+    void message(const Message<MessageType::notifySetting>&);
     void error(const messaging::error_source, const boost::system::error_code&);
+
+    template<typename Message>
+    void send(Message const& m) {
+      messaging::send<konig::Protocol>(m, connection_);
+    }
 
     void close();
   private:
