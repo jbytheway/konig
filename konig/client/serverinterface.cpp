@@ -1,5 +1,7 @@
 #include "serverinterface.hpp"
 
+#include <boost/algorithm/string/join.hpp>
+
 #include <messaging/create_connection.hpp>
 #include <messaging/callback_helper.hpp>
 
@@ -41,9 +43,16 @@ void ServerInterface::message(Message<MessageType::rejection> const&)
   KONIG_FATAL("not implemented");
 }
 
-void ServerInterface::message(Message<MessageType::notifySetting> const&)
+void ServerInterface::message(Message<MessageType::notifySetting> const& m)
 {
-  KONIG_FATAL("not implemented");
+  auto const& name = m.get<fields::name>();
+  auto const& value_set = m.get<fields::value>();
+  if (value_set.empty()) {
+    client_.message("Setting '"+name+"' now empty");
+  } else {
+    std::string values = boost::algorithm::join(value_set, ", ");
+    client_.message("Setting '"+name+"' now has value '"+values+"'");
+  }
 }
 
 void ServerInterface::close()
