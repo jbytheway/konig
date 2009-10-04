@@ -40,6 +40,11 @@ class CommandHandler::CommandParser {
             list_of("q")("quit"), &CommandParser::quit, "Quit client",
             "quit  Disconnect from server and close client"
           ));
+      add_command(Command(
+            list_of("s")("set"), &CommandParser::set_setting,
+            "Request that server changes a setting",
+            "set SETTING VALUE  Request that setting SETTING be set to VALUE"
+          ));
     }
 
     void command(std::list<std::string> tokens) {
@@ -107,6 +112,18 @@ class CommandHandler::CommandParser {
         handler_.end();
       } else {
         handler_.output_->message("Usage: quit");
+      }
+    }
+
+    void set_setting(std::list<std::string> args) {
+      if (args.size() == 2) {
+        std::string& name = args.front();
+        std::string& value = args.back();
+        handler_.server_interface_->send(Message<MessageType::setSetting>(
+              std::move(name), std::move(value)
+            ));
+      } else {
+        handler_.output_->message("Usage: set SETTING VALUE");
       }
     }
 
