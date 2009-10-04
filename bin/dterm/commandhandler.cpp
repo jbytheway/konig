@@ -36,6 +36,10 @@ class CommandHandler::CommandParser {
             list_of("h")("help"), &CommandParser::help, "Get help",
             "help [COMMAND]  Display general help, or specific help on COMMAND"
           ));
+      add_command(Command(
+            list_of("q")("quit"), &CommandParser::quit, "Quit client",
+            "quit  Disconnect from server and close client"
+          ));
     }
 
     void command(std::list<std::string> tokens) {
@@ -95,6 +99,14 @@ class CommandHandler::CommandParser {
         }
       } else {
         handler_.output_->message("Usage: help [COMMAND]");
+      }
+    }
+
+    void quit(std::list<std::string> args) {
+      if (args.empty()) {
+        handler_.end();
+      } else {
+        handler_.output_->message("Usage: quit");
       }
     }
 
