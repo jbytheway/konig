@@ -190,6 +190,12 @@ void CommandHandler::end()
   output_->interrupt();
 }
 
+void CommandHandler::message(std::string const& s)
+{
+  assert(output_);
+  output_->message(s);
+}
+
 void CommandHandler::warning(std::string const& s)
 {
   assert(output_);

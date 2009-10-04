@@ -22,7 +22,8 @@ class CommandHandler : public client::ClientInterface {
     void end();
 
     // Functions used by ServerInterface side
-    virtual void warning(const std::string&);
+    virtual void message(std::string const&);
+    virtual void warning(std::string const&);
     virtual void abort();
     virtual Player& player();
   private:
