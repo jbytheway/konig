@@ -11,6 +11,7 @@ namespace konig { namespace dterm {
 class CommandHandler : public client::ClientInterface {
   public:
     CommandHandler();
+    ~CommandHandler();
     void set_output(MessageSink&);
     void unset_output();
     void set_server_interface(konig::client::ServerInterface&);
@@ -28,6 +29,9 @@ class CommandHandler : public client::ClientInterface {
     konig::client::ServerInterface* server_interface_;
     MessageSink* output_;
     GameTracker tracker_;
+
+    class CommandParser;
+    boost::scoped_ptr<CommandParser> parser_;
 };
 
 }}
