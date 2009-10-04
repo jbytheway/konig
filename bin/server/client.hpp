@@ -18,12 +18,8 @@ namespace konig { namespace server {
 
 class Server;
 
-class Client :
-  public boost::enable_shared_from_this<Client>,
-  private settingstree::user {
+class Client : private settingstree::user {
   public:
-    typedef boost::shared_ptr<Client> Ptr;
-
     template<typename Connection>
     Client(Connection& c, Server& s, ClientId id) :
       settingstree::user("client"+id.to_string()),

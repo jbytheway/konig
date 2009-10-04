@@ -26,8 +26,9 @@ class Server {
 
     template<typename Connection>
     void new_connection(Connection& c) {
-      Client::Ptr client(new Client(c, *this, free_client_id()));
-      clients_[client->id()] = client;
+      std::unique_ptr<Client> client(new Client(c, *this, free_client_id()));
+      ClientId i = client->id();
+      clients_[i] = std::move(client);
       out_ << "Added client\n";
     }
 
@@ -43,7 +44,7 @@ class Server {
         std::string const& address,
         std::string const& val
       );
-    void remove_client(const Client::Ptr&);
+    void remove_client(Client const*);
     void close();
   private:
     void check_for_interrupt(boost::system::error_code const&);
@@ -56,7 +57,8 @@ class Server {
 
     std::ostream& out_;
     messaging::server<Protocol, callback_helper> message_server_;
-    boost::unordered_map<ClientId, Client::Ptr> clients_;
+    typedef boost::unordered_map<ClientId, std::unique_ptr<Client>> Clients;
+    Clients clients_;
     boost::asio::deadline_timer interrupt_monitor_;
     settingstree::tree::ptr settings_;
 

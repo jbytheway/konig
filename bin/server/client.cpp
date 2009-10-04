@@ -39,7 +39,7 @@ void Client::error(
   )
 {
   std::cerr << "error: client: " << es << ": " << ec.message() << std::endl;
-  server_.remove_client(shared_from_this());
+  server_.remove_client(this);
 }
 
 void Client::close()

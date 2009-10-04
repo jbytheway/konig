@@ -89,7 +89,7 @@ std::string Server::set_request(
   return settings_->change_request(address, val, user);
 }
 
-void Server::remove_client(const Client::Ptr& client)
+void Server::remove_client(Client const* client)
 {
   clients_.erase(client->id());
 }
@@ -97,8 +97,7 @@ void Server::remove_client(const Client::Ptr& client)
 void Server::close()
 {
   out_ << "Server interrupted.  Shutting down" << std::endl;
-  std::pair<ClientId, Client::Ptr> client_pair;
-  BOOST_FOREACH(client_pair, clients_) {
+  BOOST_FOREACH(Clients::value_type const& client_pair, clients_) {
     client_pair.second->close();
   }
   message_server_.close_listeners();
@@ -136,8 +135,7 @@ ClientId Server::free_client_id() const
 template<typename Message>
 void Server::send_to_clients(Message const& m)
 {
-  std::pair<ClientId, Client::Ptr> client_pair;
-  BOOST_FOREACH(client_pair, clients_) {
+  BOOST_FOREACH(Clients::value_type const& client_pair, clients_) {
     client_pair.second->send(m);
   }
 }
