@@ -45,6 +45,11 @@ ReadlineWrapper::ReadlineWrapper(
         if (0 == history_set_pos(history_length)) {
           std::cerr << "error setting history position\n";
         }
+        if (history_length > 0) {
+          // Set up last_line_
+          HIST_ENTRY* last = history_get(history_length);
+          if (last) last_line_ = last->line;
+        }
       } else {
         std::cerr << "error reading history\n";
       }
