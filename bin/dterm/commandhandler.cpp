@@ -138,10 +138,17 @@ void CommandHandler::command(std::string const& c)
   if (c.empty()) return;
   assert(output_);
   std::list<std::string> tokenList;
+  // TODO: proper parser
   boost::algorithm::split(
       tokenList, c, boost::implicit_cast<int (*)(int)>(&std::isspace),
       boost::algorithm::token_compress_on
     );
+  while (!tokenList.empty() && tokenList.front().empty()) {
+    tokenList.pop_front();
+  }
+  while (!tokenList.empty() && tokenList.back().empty()) {
+    tokenList.pop_back();
+  }
   parser_->command(std::move(tokenList));
 }
 
