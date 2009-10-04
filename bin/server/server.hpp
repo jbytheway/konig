@@ -10,6 +10,7 @@
 #include <messaging/server.hpp>
 
 #include <settingstree/tree.hpp>
+#include <settingstree/user.hpp>
 
 #include <konig/protocol.hpp>
 #include "client.hpp"
@@ -25,8 +26,8 @@ class Server {
 
     template<typename Connection>
     void new_connection(Connection& c) {
-      Client::Ptr client(new Client(c, *this));
-      clients_.insert(client);
+      Client::Ptr client(new Client(c, *this, free_client_id()));
+      clients_[client->id()] = client;
       out_ << "Added client\n";
     }
 
@@ -36,10 +37,18 @@ class Server {
       );
 
     void warning(std::string const&);
+
+    std::string set_request(
+        settingstree::user&,
+        std::string const& address,
+        std::string const& val
+      );
     void remove_client(const Client::Ptr&);
     void close();
   private:
     void check_for_interrupt(boost::system::error_code const&);
+
+    ClientId free_client_id() const;
 
     // Templated but private so can go in cpp file
     template<typename Message>
@@ -47,7 +56,7 @@ class Server {
 
     std::ostream& out_;
     messaging::server<Protocol, callback_helper> message_server_;
-    std::set<Client::Ptr> clients_;
+    boost::unordered_map<ClientId, Client::Ptr> clients_;
     boost::asio::deadline_timer interrupt_monitor_;
     settingstree::tree::ptr settings_;
 

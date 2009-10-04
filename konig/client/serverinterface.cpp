@@ -36,6 +36,11 @@ void ServerInterface::error(
   if (connection_) connection_->close();
 }
 
+void ServerInterface::message(Message<MessageType::rejection> const&)
+{
+  KONIG_FATAL("not implemented");
+}
+
 void ServerInterface::message(Message<MessageType::notifySetting> const&)
 {
   KONIG_FATAL("not implemented");

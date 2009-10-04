@@ -4,6 +4,9 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 
+#include <boost/fusion/include/at_key.hpp>
+#include <boost/fusion/include/value_at_key.hpp>
+
 #include <konig/messagedata.hpp>
 
 namespace konig {
@@ -74,6 +77,10 @@ class Message {
       >::type Args;
       BOOST_MPL_ASSERT((typename boost::mpl::equal<Values, Args>::type));*/
     }
+
+    template<typename Field>
+    typename boost::fusion::result_of::value_at_key<Data, Field>::type const&
+    get() const { return boost::fusion::at_key<Field>(data_); }
   private:
     friend class boost::serialization::access;
 

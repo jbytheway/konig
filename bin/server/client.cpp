@@ -15,17 +15,22 @@ Client::~Client()
 }
 
 #define KONIG_SERVER_CLIENT_IGNORE(type)              \
-void Client::message(const Message<type>&) {           \
+void Client::message(const Message<type>&) {          \
   std::ostringstream os;                              \
   os << "warning: ignoring message of type " << type; \
   server_.warning(os.str());                          \
 }
+KONIG_SERVER_CLIENT_IGNORE(MessageType::rejection)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifySetting)
 #undef KONIG_SERVER_CLIENT_IGNORE
 
-void Client::message(const Message<MessageType::setSetting>&)
+void Client::message(const Message<MessageType::setSetting>& m)
 {
-  KONIG_FATAL("not implemented");
+  std::string reason =
+    server_.set_request(*this, m.get<fields::name>(), m.get<fields::value>());
+  if (!reason.empty()) {
+    send(Message<MessageType::rejection>(std::move(reason)));
+  }
 }
 
 void Client::error(

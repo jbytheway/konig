@@ -8,19 +8,26 @@
 #include <messaging/callback_helper.hpp>
 #include <messaging/send.hpp>
 
+#include <settingstree/user.hpp>
+
 #include <konig/message.hpp>
 #include <konig/protocol.hpp>
+#include <konig/clientid.hpp>
 
 namespace konig { namespace server {
 
 class Server;
 
-class Client : public boost::enable_shared_from_this<Client> {
+class Client :
+  public boost::enable_shared_from_this<Client>,
+  private settingstree::user {
   public:
     typedef boost::shared_ptr<Client> Ptr;
 
     template<typename Connection>
-    Client(Connection& c, Server& s) :
+    Client(Connection& c, Server& s, ClientId id) :
+      settingstree::user("client"+id.to_string()),
+      id_(id),
       server_(s),
       connection_(c.shared_from_this())
     {
@@ -29,10 +36,13 @@ class Client : public boost::enable_shared_from_this<Client> {
 
     ~Client();
 
+    ClientId id() const { return id_; }
+
     template<typename Message, typename Connection>
     void message(const Message& m, Connection&) {
       message(m);
     }
+    void message(const Message<MessageType::rejection>&);
     void message(const Message<MessageType::setSetting>&);
     void message(const Message<MessageType::notifySetting>&);
     void error(const messaging::error_source, const boost::system::error_code&);
@@ -44,6 +54,7 @@ class Client : public boost::enable_shared_from_this<Client> {
 
     void close();
   private:
+    ClientId id_;
     Server& server_;
     messaging::connection::ptr connection_;
 };

@@ -11,6 +11,7 @@
 namespace konig { namespace fields {
 
 class name;
+class reason;
 class value;
 
 template<typename Archive>

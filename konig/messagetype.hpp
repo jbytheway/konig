@@ -6,7 +6,7 @@
 
 namespace konig {
 
-#define KONIG_MESSAGETYPE_VALUES() (setSetting)(notifySetting)
+#define KONIG_MESSAGETYPE_VALUES() (rejection)(setSetting)(notifySetting)
 
 KONIG_UTILITY_ENUM_HEADER(MessageType, KONIG_MESSAGETYPE_VALUES())
 

@@ -38,6 +38,7 @@ class ServerInterface {
     }
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
+    void message(Message<MessageType::rejection> const&);
     void message(Message<MessageType::notifySetting> const&);
 
     template<typename Message>

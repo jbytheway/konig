@@ -80,16 +80,26 @@ void Server::warning(std::string const& w)
   out_ << "warning: " << w << std::endl;
 }
 
+std::string Server::set_request(
+    st::user& user,
+    std::string const& address,
+    std::string const& val
+  )
+{
+  return settings_->change_request(address, val, user);
+}
+
 void Server::remove_client(const Client::Ptr& client)
 {
-  clients_.erase(client);
+  clients_.erase(client->id());
 }
 
 void Server::close()
 {
   out_ << "Server interrupted.  Shutting down" << std::endl;
-  BOOST_FOREACH(Client::Ptr const& client, clients_) {
-    client->close();
+  std::pair<ClientId, Client::Ptr> client_pair;
+  BOOST_FOREACH(client_pair, clients_) {
+    client_pair.second->close();
   }
   message_server_.close_listeners();
 }
@@ -108,10 +118,27 @@ void Server::check_for_interrupt(boost::system::error_code const& e)
   }
 }
 
+ClientId Server::free_client_id() const
+{
+  // If we really cared about performance this could be faster, but I hope it's
+  // irrelevant
+  ClientId i;
+  do {
+    if (!clients_.count(i)) {
+      return i;
+    }
+    ++i;
+  } while (i.valid());
+
+  throw std::runtime_error("too many clients");
+}
+
 template<typename Message>
-void Server::send_to_clients(Message const& m) {
-  BOOST_FOREACH(Client::Ptr const& client, clients_) {
-    client->send(m);
+void Server::send_to_clients(Message const& m)
+{
+  std::pair<ClientId, Client::Ptr> client_pair;
+  BOOST_FOREACH(client_pair, clients_) {
+    client_pair.second->send(m);
   }
 }
 
