@@ -9,8 +9,10 @@
 
 #include <messaging/connection.hpp>
 #include <messaging/error_source.hpp>
+#include <messaging/send.hpp>
 
 #include <konig/message.hpp>
+#include <konig/protocol.hpp>
 #include <konig/client/clientinterface.hpp>
 
 namespace konig { namespace client {
@@ -37,6 +39,11 @@ class ServerInterface {
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
     void message(Message<MessageType::notifySetting> const&);
+
+    template<typename Message>
+    void send(Message const& m) {
+      messaging::send<konig::Protocol>(m, connection_);
+    }
 
     void close();
   private:
