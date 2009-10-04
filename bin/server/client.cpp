@@ -24,6 +24,20 @@ KONIG_SERVER_CLIENT_IGNORE(MessageType::rejection)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifySetting)
 #undef KONIG_SERVER_CLIENT_IGNORE
 
+void Client::message(const Message<MessageType::getSetting>& m)
+{
+  std::string reason;
+  std::set<std::string> value;
+  settingstree::node const* node;
+  boost::tie(reason, value, node) =
+    server_.get_request(*this, m.get<fields::name>());
+  if (reason.empty()) {
+    send(Message<MessageType::notifySetting>(node->full_name(), value));
+  } else {
+    send(Message<MessageType::rejection>(std::move(reason)));
+  }
+}
+
 void Client::message(const Message<MessageType::setSetting>& m)
 {
   std::string reason =

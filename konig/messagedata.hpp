@@ -20,6 +20,13 @@ struct MessageData<MessageType::rejection> {
 };
 
 template<>
+struct MessageData<MessageType::getSetting> {
+  typedef fusion::map<
+    fusion::pair<fields::name, std::string>
+  > type;
+};
+
+template<>
 struct MessageData<MessageType::setSetting> {
   typedef fusion::map<
     fusion::pair<fields::name, std::string>,

@@ -34,8 +34,9 @@ class ServerInterface {
     void message(const Message<type>&) {          \
       std::ostringstream os;                      \
       os << "warning: ignoring message of type " << type; \
-      client_.warning(os.str()); \
+      client_.warning(os.str());                  \
     }
+    KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::getSetting)
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
     void message(Message<MessageType::rejection> const&);

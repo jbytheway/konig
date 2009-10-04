@@ -37,6 +37,9 @@ class Server {
 
     void warning(std::string const&);
 
+    boost::tuple<std::string, std::set<std::string>, settingstree::node const*>
+    get_request(settingstree::user& user, std::string const& address);
+
     std::string set_request(
         settingstree::user&,
         std::string const& address,

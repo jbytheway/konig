@@ -39,6 +39,7 @@ class Client : private settingstree::user {
       message(m);
     }
     void message(const Message<MessageType::rejection>&);
+    void message(const Message<MessageType::getSetting>&);
     void message(const Message<MessageType::setSetting>&);
     void message(const Message<MessageType::notifySetting>&);
     void error(const messaging::error_source, const boost::system::error_code&);

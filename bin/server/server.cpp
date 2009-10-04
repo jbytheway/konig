@@ -80,6 +80,12 @@ void Server::warning(std::string const& w)
   out_ << "warning: " << w << std::endl;
 }
 
+boost::tuple<std::string, std::set<std::string>, st::node const*>
+Server::get_request(st::user& user, std::string const& address)
+{
+  return settings_->get_request(address, user);
+}
+
 std::string Server::set_request(
     st::user& user,
     std::string const& address,
