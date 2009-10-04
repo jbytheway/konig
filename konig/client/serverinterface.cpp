@@ -38,9 +38,10 @@ void ServerInterface::error(
   if (connection_) connection_->close();
 }
 
-void ServerInterface::message(Message<MessageType::rejection> const&)
+void ServerInterface::message(Message<MessageType::rejection> const& m)
 {
-  KONIG_FATAL("not implemented");
+  auto const& reason = m.get<fields::reason>();
+  client_.message("Server rejected request: "+reason);
 }
 
 void ServerInterface::message(Message<MessageType::notifySetting> const& m)
