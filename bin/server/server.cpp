@@ -28,7 +28,7 @@ class Server::Callbacks : st::branch_callback {
     virtual void children_altered(st::branch& altered) {
       server_.send_to_clients(
           Message<MessageType::notifySetting>(
-            altered.name(), altered.child_names()
+            altered.full_name(), altered.child_names()
           )
         );
     }
