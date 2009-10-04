@@ -1,6 +1,7 @@
 #ifndef KONIG__UTILITY__IDBASE_HPP
 #define KONIG__UTILITY__IDBASE_HPP
 
+#include <boost/mpl/if.hpp>
 #include <boost/lexical_cast.hpp>
 
 namespace konig { namespace utility {
@@ -42,7 +43,13 @@ class IdBase {
      *
      * \see IdBase::from_string */
     std::string to_string() const {
-      return boost::lexical_cast<std::string>(val_);
+      // Protect against unhelpful lexical_casts of chars
+      typedef typename boost::mpl::if_c<
+        sizeof(TInteger) == 1,
+        int,
+        TInteger
+      >::type SafeType;
+      return boost::lexical_cast<std::string>(SafeType(val_));
     }
 
     /** \brief Construct an invalid id. */
