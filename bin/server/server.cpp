@@ -89,8 +89,24 @@ std::string Server::set_request(
   return settings_->change_request(address, val, user);
 }
 
+void Server::add_client(std::unique_ptr<Client> client)
+{
+  // Careful! Be sure to get id before moving from client
+  ClientId id = client->id();
+  auto& clientsBranch =
+    dynamic_cast<st::branch&>(settings_->get_node("clients"));
+  clientsBranch.add_child(
+      st::make(id.to_string(), callbacks_->branch()).node_ptr(clientsBranch)
+    );
+  clients_[id] = std::move(client);
+  out_ << "Added client\n";
+}
+
 void Server::remove_client(Client const* client)
 {
+  auto& clientsBranch =
+    dynamic_cast<st::branch&>(settings_->get_node("clients"));
+  clientsBranch.remove_child(client->id().to_string());
   clients_.erase(client->id());
 }
 

@@ -27,9 +27,7 @@ class Server {
     template<typename Connection>
     void new_connection(Connection& c) {
       std::unique_ptr<Client> client(new Client(c, *this, free_client_id()));
-      ClientId i = client->id();
-      clients_[i] = std::move(client);
-      out_ << "Added client\n";
+      add_client(std::move(client));
     }
 
     void error(
@@ -44,6 +42,7 @@ class Server {
         std::string const& address,
         std::string const& val
       );
+    void add_client(std::unique_ptr<Client>);
     void remove_client(Client const*);
     void close();
   private:
