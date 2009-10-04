@@ -15,7 +15,8 @@ struct MessageData;
 template<>
 struct MessageData<MessageType::setSetting> {
   typedef fusion::map<
-    fusion::pair<fields::name, std::string>
+    fusion::pair<fields::name, std::string>,
+    fusion::pair<fields::value, std::string>
   > type;
 };
 
