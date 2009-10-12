@@ -61,5 +61,38 @@ void Client::close()
   connection_->close_gracefully();
 }
 
+settingstree::leaf_callback<std::uint8_t>& Client::callback_position()
+{
+  return callbacks_.position();
+}
+
+std::string Client::set_table_position(TablePosition const pos)
+{
+  table_position_ = pos;
+  return "";
+}
+
+settingstree::leaf_callback<std::uint8_t>& Client::Callbacks::position()
+{
+  return *this;
+}
+
+std::string Client::Callbacks::setting_altering(
+    settingstree::int_leaf<std::uint8_t>&,
+    std::uint8_t val
+  )
+{
+  // Altering player
+  if (val > 4) {
+    return "table position must be at most 4";
+  }
+  return client_.set_table_position(TablePosition(val));
+}
+
+void Client::Callbacks::setting_altered(settingstree::leaf& leaf)
+{
+  client_.server_.notify_setting(leaf);
+}
+
 }}
 

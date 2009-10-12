@@ -9,10 +9,12 @@
 #include <messaging/send.hpp>
 
 #include <settingstree/user.hpp>
+#include <settingstree/leaf_callback.hpp>
 
 #include <konig/message.hpp>
 #include <konig/protocol.hpp>
 #include <konig/clientid.hpp>
+#include <konig/tableposition.hpp>
 
 namespace konig { namespace server {
 
@@ -24,8 +26,10 @@ class Client : private settingstree::user {
     Client(Connection& c, Server& s, ClientId id) :
       settingstree::user("client"+id.to_string()),
       id_(id),
+      table_position_(0),
       server_(s),
-      connection_(c.shared_from_this())
+      connection_(c.shared_from_this()),
+      callbacks_(*this)
     {
       c.reset_callbacks(messaging::callback_helper<Client>(*this));
     }
@@ -50,10 +54,28 @@ class Client : private settingstree::user {
     }
 
     void close();
+
+    settingstree::leaf_callback<std::uint8_t>& callback_position();
+    std::string set_table_position(TablePosition);
   private:
     ClientId id_;
+    TablePosition table_position_;
     Server& server_;
     messaging::connection::ptr connection_;
+
+    class Callbacks : settingstree::leaf_callback<std::uint8_t> {
+      public:
+        Callbacks(Client& c) : client_(c) {}
+        settingstree::leaf_callback<std::uint8_t>& position();
+      private:
+        virtual std::string setting_altering(
+            settingstree::int_leaf<std::uint8_t>&,
+            std::uint8_t
+          );
+        virtual void setting_altered(settingstree::leaf&);
+        Client& client_;
+    };
+    Callbacks callbacks_;
 };
 
 }}

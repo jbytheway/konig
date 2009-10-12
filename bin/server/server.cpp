@@ -101,8 +101,11 @@ void Server::add_client(std::unique_ptr<Client> client)
   ClientId id = client->id();
   auto& clientsBranch =
     dynamic_cast<st::branch&>(settings_->get_node("clients"));
+  std::string const group = "client"+id.to_string();
   clientsBranch.add_child(
-      st::make(id.to_string(), callbacks_->branch()).node_ptr(clientsBranch)
+      st::make(id.to_string(), callbacks_->branch(),
+        st::make("position", client->callback_position(), uint8_t(0), group)
+      ).node_ptr(clientsBranch)
     );
   clients_[id] = std::move(client);
   out_ << "Added client\n";
@@ -123,6 +126,15 @@ void Server::close()
     client_pair.second->close();
   }
   message_server_.close_listeners();
+}
+
+void Server::notify_setting(st::leaf& altered)
+{
+  send_to_clients(
+      Message<MessageType::notifySetting>(
+        altered.full_name(), altered.value_set()
+      )
+    );
 }
 
 void Server::check_for_interrupt(boost::system::error_code const& e)

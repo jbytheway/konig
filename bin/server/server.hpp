@@ -48,6 +48,8 @@ class Server {
     void add_client(std::unique_ptr<Client>);
     void remove_client(Client const*);
     void close();
+
+    void notify_setting(settingstree::leaf&);
   private:
     void check_for_interrupt(boost::system::error_code const&);
 
