@@ -37,6 +37,7 @@ class Client : private settingstree::user {
     ~Client();
 
     ClientId id() const { return id_; }
+    TablePosition table_position() const { return table_position_; }
 
     template<typename Message, typename Connection>
     void message(const Message& m, Connection&) {

@@ -5,13 +5,16 @@ namespace konig {
 
 class TablePosition {
   public:
-    TablePosition(std::uint8_t const v) : val_(v)
+    typedef std::uint8_t internal_type;
+    static const internal_type max = 5;
+
+    TablePosition(internal_type const v) : val_(v)
     {
-      assert(val_ <= 4);
+      assert(val_ <= max);
     }
-    operator std::uint8_t() { return val_; }
+    operator internal_type() { return val_; }
   private:
-    std::uint8_t val_;
+    internal_type val_;
 };
 
 }

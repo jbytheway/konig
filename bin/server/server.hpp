@@ -50,7 +50,9 @@ class Server {
     void close();
 
     void notify_setting(settingstree::leaf&);
+    std::string test_go();
   private:
+    void go();
     void check_for_interrupt(boost::system::error_code const&);
 
     ClientId free_client_id() const;
@@ -59,6 +61,7 @@ class Server {
     template<typename Message>
     void send_to_clients(Message const& m);
 
+    boost::asio::io_service& io_;
     std::ostream& out_;
     messaging::server<Protocol, callback_helper> message_server_;
     typedef boost::unordered_map<ClientId, std::unique_ptr<Client>> Clients;

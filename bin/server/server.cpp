@@ -1,5 +1,7 @@
 #include "server.hpp"
 
+#include <array>
+
 #include <settingstree/make.hpp>
 
 #include <konig/fatal.hpp>
@@ -19,12 +21,22 @@ namespace {
 }
 
 // Definition of private Callbacks class (pimpl'd into Server)
-class Server::Callbacks : st::branch_callback {
+class Server::Callbacks : st::branch_callback, st::leaf_callback<bool> {
   public:
     Callbacks(Server& s) : server_(s) {}
     st::branch_callback& branch() { return *this; }
+    st::leaf_callback<bool>& go() { return *this; }
   private:
     Server& server_;
+
+    virtual std::string setting_altering(st::bool_leaf&, bool value)
+    {
+      if (!value) {
+        return "cannot unset go";
+      }
+      return server_.test_go();
+    }
+
     virtual void children_altered(st::branch& altered) {
       server_.send_to_clients(
           Message<MessageType::notifySetting>(
@@ -32,9 +44,14 @@ class Server::Callbacks : st::branch_callback {
           )
         );
     }
+
+    virtual void setting_altered(st::leaf& altered) {
+      server_.notify_setting(altered);
+    }
 };
 
 Server::Server(boost::asio::io_service& io, std::ostream& o) :
+  io_(io),
   out_(o),
   message_server_(
       io,
@@ -54,7 +71,10 @@ Server::Server(boost::asio::io_service& io, std::ostream& o) :
 
   settings_ =
     st::make("", callbacks_->branch(),
-      st::make("clients", callbacks_->branch())
+      st::make("clients", callbacks_->branch()),
+      st::make("server", callbacks_->branch(),
+        st::make("go", callbacks_->go(), false, "world")
+      )
     ).tree_ptr();
 }
 
@@ -135,6 +155,29 @@ void Server::notify_setting(st::leaf& altered)
         altered.full_name(), altered.value_set()
       )
     );
+}
+
+std::string Server::test_go()
+{
+  std::array<std::set<ClientId>, TablePosition::max> clients_in_positions;
+  BOOST_FOREACH(Clients::value_type const& p, clients_) {
+    Client const& client = *p.second;
+    clients_in_positions[client.table_position()].insert(client.id());
+  }
+  // Note we don't care about clients in position 0
+  for (int i=1; i<TablePosition::max; ++i) {
+    if (clients_in_positions[i].size() != 1) {
+      return "Not exactly one client in position "+
+        boost::lexical_cast<std::string>(i);
+    }
+  }
+  io_.post(boost::bind(&Server::go, this));
+  return "";
+}
+
+void Server::go()
+{
+  KONIG_FATAL("not implemented");
 }
 
 void Server::check_for_interrupt(boost::system::error_code const& e)
