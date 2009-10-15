@@ -5,6 +5,8 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/spirit/home/phoenix/operator/comparison.hpp>
 
+#include <konig/ai/aierror.hpp>
+
 namespace konig { namespace ai {
 
 struct PlayHigh : SpecificPlayAi::PlayRule {
@@ -43,7 +45,7 @@ SpecificPlayAi::SpecificPlayAi(const std::string& play_sequence)
       boost::algorithm::token_compress_on
     );
   if (chunks.size() != 13) {
-    throw std::logic_error("invalid play sequence");
+    throw AiError("invalid play sequence");
   }
   contract_name_ = chunks.front();
   chunks.erase(chunks.begin());

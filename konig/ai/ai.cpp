@@ -1,5 +1,6 @@
 #include <konig/ai/ai.hpp>
 
+#include <konig/ai/nosuchai.hpp>
 #include <konig/ai/noddyai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/strongsddefenceai.hpp>
@@ -23,7 +24,7 @@ Ai::Ptr Ai::create(const std::string& description)
   } else if (ai_name == "play") {
     p.reset(new SpecificPlayAi(ai_args));
   } else {
-    throw std::logic_error(ai_name+": no such ai");
+    throw NoSuchAi(ai_name);
   }
   return p;
 }
