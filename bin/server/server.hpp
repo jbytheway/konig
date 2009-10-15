@@ -1,6 +1,7 @@
 #ifndef KONIG_SERVER__SERVER_HPP
 #define KONIG_SERVER__SERVER_HPP
 
+#include <array>
 #include <set>
 
 #include <boost/asio/ip/tcp.hpp>
@@ -14,6 +15,7 @@
 
 #include <konig/protocol.hpp>
 #include "client.hpp"
+#include "process.hpp"
 
 namespace konig { namespace server {
 
@@ -21,7 +23,11 @@ class Server {
   private:
     typedef messaging::callback_helper<Server> callback_helper;
   public:
-    Server(boost::asio::io_service& io, std::ostream&);
+    Server(
+        boost::asio::io_service& io,
+        std::ostream&,
+        boost::filesystem::path ai_exe
+      );
     ~Server();
 
     template<typename Connection>
@@ -50,6 +56,7 @@ class Server {
     void close();
 
     void notify_setting(settingstree::leaf&);
+    void reset_ai(TablePosition, std::string args);
     std::string test_go();
   private:
     void go();
@@ -63,11 +70,13 @@ class Server {
 
     boost::asio::io_service& io_;
     std::ostream& out_;
+    boost::filesystem::path ai_exe_;
     messaging::server<Protocol, callback_helper> message_server_;
     typedef boost::unordered_map<ClientId, std::unique_ptr<Client>> Clients;
     Clients clients_;
     boost::asio::deadline_timer interrupt_monitor_;
     settingstree::tree::ptr settings_;
+    std::array<Process, TablePosition::max> ai_;
 
     struct Callbacks;
     std::unique_ptr<Callbacks> callbacks_;

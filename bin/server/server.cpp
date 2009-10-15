@@ -21,14 +21,32 @@ namespace {
 }
 
 // Definition of private Callbacks class (pimpl'd into Server)
-class Server::Callbacks : st::branch_callback, st::leaf_callback<bool> {
+class Server::Callbacks :
+  st::branch_callback,
+  st::leaf_callback<bool>,
+  st::leaf_callback<std::string> {
   public:
     Callbacks(Server& s) : server_(s) {}
     st::branch_callback& branch() { return *this; }
+    st::leaf_callback<std::string>& ai() { return *this; }
     st::leaf_callback<bool>& go() { return *this; }
   private:
     Server& server_;
 
+    // For ai
+    virtual std::string setting_altering(st::string_leaf& l, std::string value)
+    {
+      if (server_.ai_exe_.empty()) {
+        return "no executable for running AI";
+      }
+      TablePosition table_pos(boost::lexical_cast<int>(l.name()));
+      server_.io_.post(
+          std::bind(&Server::reset_ai, &server_, table_pos, std::move(value))
+        );
+      return "";
+    }
+
+    // For go
     virtual std::string setting_altering(st::bool_leaf&, bool value)
     {
       if (!value) {
@@ -37,6 +55,7 @@ class Server::Callbacks : st::branch_callback, st::leaf_callback<bool> {
       return server_.test_go();
     }
 
+    // For branch
     virtual void children_altered(st::branch& altered) {
       server_.send_to_clients(
           Message<MessageType::notifySetting>(
@@ -45,14 +64,20 @@ class Server::Callbacks : st::branch_callback, st::leaf_callback<bool> {
         );
     }
 
+    // For all leaves
     virtual void setting_altered(st::leaf& altered) {
       server_.notify_setting(altered);
     }
 };
 
-Server::Server(boost::asio::io_service& io, std::ostream& o) :
+Server::Server(
+    boost::asio::io_service& io,
+    std::ostream& o,
+    boost::filesystem::path ai_exe
+  ) :
   io_(io),
   out_(o),
+  ai_exe_(std::move(ai_exe)),
   message_server_(
       io,
       callback_helper(*this),
@@ -73,7 +98,13 @@ Server::Server(boost::asio::io_service& io, std::ostream& o) :
     st::make("", callbacks_->branch(),
       st::make("clients", callbacks_->branch()),
       st::make("server", callbacks_->branch(),
-        st::make("go", callbacks_->go(), false, "world")
+        st::make("go", callbacks_->go(), false, "admin")
+      ),
+      st::make("ai", callbacks_->branch(),
+        st::make("1", callbacks_->ai(), "", "admin"),
+        st::make("2", callbacks_->ai(), "", "admin"),
+        st::make("3", callbacks_->ai(), "", "admin"),
+        st::make("4", callbacks_->ai(), "", "admin")
       )
     ).tree_ptr();
 }
@@ -154,6 +185,15 @@ void Server::notify_setting(st::leaf& altered)
       Message<MessageType::notifySetting>(
         altered.full_name(), altered.value_set()
       )
+    );
+}
+
+void Server::reset_ai(TablePosition pos, std::string args)
+{
+  std::string spos = boost::lexical_cast<std::string>(int(pos));
+  ai_[pos].reset(
+      ai_exe_,
+      boost::assign::list_of(std::string("-p"))(spos)("-a")(std::move(args))
     );
 }
 

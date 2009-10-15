@@ -24,7 +24,7 @@ class Client : private settingstree::user {
   public:
     template<typename Connection>
     Client(Connection& c, Server& s, ClientId id) :
-      settingstree::user("client"+id.to_string()),
+      settingstree::user("client"+id.to_string(), "admin"),
       id_(id),
       table_position_(0),
       server_(s),
