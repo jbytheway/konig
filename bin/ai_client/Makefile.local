@@ -1,0 +1,4 @@
+BIN = konig-ai_client
+LIBS := -loptimal
+LIB_DEP_NAMES := konig-ai
+

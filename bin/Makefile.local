@@ -1,2 +1,2 @@
-SUBDIRS := simulator server dterm
+SUBDIRS := simulator server dterm ai_client
 
