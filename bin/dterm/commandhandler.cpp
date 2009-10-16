@@ -4,6 +4,13 @@
 
 #include <boost/assign/list_of.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/spirit/home/phoenix/core/reference.hpp>
+#include <boost/spirit/home/phoenix/object/construct.hpp>
+#include <boost/spirit/home/phoenix/operator/arithmetic.hpp>
+#include <boost/spirit/home/phoenix/stl/container.hpp>
+#include <boost/spirit/include/qi.hpp>
+
+#include <konig/fatal.hpp>
 
 namespace konig { namespace dterm {
 
@@ -182,8 +189,32 @@ void CommandHandler::command(std::string const& c)
 {
   if (c.empty()) return;
   assert(output_);
+#if 0
+  std::vector<std::string> tokens;
+  // Requires Spirit 2.1, which isn't in Gentoo yet (it's also not finished)
+  using namespace boost::spirit;
+  using namespace boost::spirit::qi;
+  typedef std::string::const_iterator it;
+  qi::rule<it, std::string(), qi::ascii::space_type> unquoted =
+    (~char_("\"'"))[_val += qi::_1] >> *(~char_(" \t\n\r\v\f"))[_val += qi::_1];
+  it first = c.begin();
+  bool r = phrase_parse(
+      first, c.end(),
+      *(
+        unquoted
+      ),
+      qi::ascii::space,
+      tokens
+    );
+  if (!r) {
+    output_->message("error parsing command");
+    return;
+  }
   std::list<std::string> tokenList;
-  // TODO: proper parser
+  std::move(tokens.begin(), tokens.end(), std::back_inserter(tokenList));
+#else
+  // Stop-gap parser until above usable
+  std::list<std::string> tokenList;
   boost::algorithm::split(
       tokenList, c, boost::implicit_cast<int (*)(int)>(&std::isspace),
       boost::algorithm::token_compress_on
@@ -194,6 +225,17 @@ void CommandHandler::command(std::string const& c)
   while (!tokenList.empty() && tokenList.back().empty()) {
     tokenList.pop_back();
   }
+  BOOST_FOREACH(std::string& token, tokenList) {
+    if (token.empty()) {
+      KONIG_FATAL("unexpected empty token");
+    }
+    if (token.size() == 1) continue;
+    if (token[0] == '"' && *boost::prior(token.end()) == '"') {
+      token.erase(token.begin());
+      token.erase(boost::prior(token.end()));
+    }
+  }
+#endif
   parser_->command(std::move(tokenList));
 }
 
