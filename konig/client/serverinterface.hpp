@@ -39,6 +39,7 @@ class ServerInterface {
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::getSetting)
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
+    void message(Message<MessageType::joined> const&);
     void message(Message<MessageType::rejection> const&);
     void message(Message<MessageType::notifySetting> const&);
 
@@ -51,6 +52,7 @@ class ServerInterface {
   private:
     messaging::connection::ptr connection_;
     ClientInterface& client_;
+    ClientId id_;
 };
 
 }}

@@ -20,6 +20,7 @@ void Client::message(const Message<type>&) {          \
   os << "warning: ignoring message of type " << type; \
   server_.warning(os.str());                          \
 }
+KONIG_SERVER_CLIENT_IGNORE(MessageType::joined)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::rejection)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifySetting)
 #undef KONIG_SERVER_CLIENT_IGNORE

@@ -6,11 +6,19 @@
 
 #include <konig/fields.hpp>
 #include <konig/messagetype.hpp>
+#include <konig/clientid.hpp>
 
 namespace konig {
 
 template<MessageType::internal_enum>
 struct MessageData;
+
+template<>
+struct MessageData<MessageType::joined> {
+  typedef fusion::map<
+    fusion::pair<fields::id, ClientId>
+  > type;
+};
 
 template<>
 struct MessageData<MessageType::rejection> {

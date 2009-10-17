@@ -10,6 +10,7 @@
 
 namespace konig { namespace fields {
 
+class id;
 class name;
 class reason;
 class value;

@@ -32,6 +32,7 @@ class Client : private settingstree::user {
       callbacks_(*this)
     {
       c.reset_callbacks(messaging::callback_helper<Client>(*this));
+      send(Message<MessageType::joined>(id));
     }
 
     ~Client();
@@ -43,6 +44,7 @@ class Client : private settingstree::user {
     void message(const Message& m, Connection&) {
       message(m);
     }
+    void message(const Message<MessageType::joined>&);
     void message(const Message<MessageType::rejection>&);
     void message(const Message<MessageType::getSetting>&);
     void message(const Message<MessageType::setSetting>&);

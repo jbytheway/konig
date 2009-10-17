@@ -11,7 +11,8 @@
 namespace konig { namespace client {
 
 ServerInterface::ServerInterface(asio::io_service& io, ClientInterface& cl) :
-  client_(cl)
+  client_(cl),
+  id_(ClientId::invalid())
 {
   connection_ = messaging::create_connection<Protocol>(
       io, asio::ip::tcp::endpoint(
@@ -36,6 +37,12 @@ void ServerInterface::error(
   client_.warning(os.str());
   client_.abort();
   if (connection_) connection_->close();
+}
+
+void ServerInterface::message(Message<MessageType::joined> const& m)
+{
+  id_ = m.get<fields::id>();
+  client_.message("Server assigned us id "+id_.to_string());
 }
 
 void ServerInterface::message(Message<MessageType::rejection> const& m)
