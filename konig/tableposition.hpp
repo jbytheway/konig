@@ -1,6 +1,9 @@
 #ifndef KONIG__TABLEPOSITION_HPP
 #define KONIG__TABLEPOSITION_HPP
 
+#include <cstdint>
+#include <cassert>
+
 namespace konig {
 
 class TablePosition {
