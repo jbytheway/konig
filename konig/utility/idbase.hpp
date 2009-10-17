@@ -85,8 +85,8 @@ class IdBase {
     friend bool operator!=(TDerived l, TDerived r) { return l.val_ != r.val_; }
 
     template<typename Archive>
-    friend void serialize(Archive& archive, TDerived& t) {
-      archive & t.val_;
+    friend void serialize(Archive& archive, TDerived& t, const unsigned int) {
+      archive & boost::serialization::make_nvp("val", t.val_);
     }
   protected:
     /** \brief Default constructor always produces the same, valid id */
