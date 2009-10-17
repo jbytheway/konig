@@ -37,6 +37,18 @@ void AiClient::set_server_interface(client::ServerInterface& si)
   server_interface_ = &si;
 }
 
+void AiClient::id_known(ClientId id)
+{
+  assert(server_interface_);
+  std::ostringstream os;
+  os << "clients:" << id.to_string() << ":position";
+  server_interface_->send(
+      Message<MessageType::setSetting>(
+        os.str(), boost::lexical_cast<std::string>(position_)
+      )
+    );
+}
+
 void AiClient::unset_server_interface()
 {
   assert(server_interface_);

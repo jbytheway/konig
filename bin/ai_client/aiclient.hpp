@@ -17,6 +17,7 @@ class AiClient : public client::ClientInterface, boost::noncopyable {
     virtual void warning(std::string const&);
     virtual void abort();
     virtual Player& player();
+    virtual void id_known(ClientId);
     void set_server_interface(client::ServerInterface&);
     void unset_server_interface();
   private:
