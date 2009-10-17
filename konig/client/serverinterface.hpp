@@ -22,6 +22,8 @@ class ServerInterface {
     ServerInterface(asio::io_service&, ClientInterface&);
     ~ServerInterface();
 
+    ClientId id() const { return id_; }
+
     void error(
         const messaging::error_source,
         const boost::system::error_code&

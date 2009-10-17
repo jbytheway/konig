@@ -2,6 +2,9 @@
 #define KONIG__UTILITY__IDBASE_HPP
 
 #include <boost/mpl/if.hpp>
+#include <boost/functional/hash.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 #include <boost/lexical_cast.hpp>
 
 namespace konig { namespace utility {

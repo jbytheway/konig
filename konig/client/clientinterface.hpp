@@ -2,6 +2,7 @@
 #define KONIG_CLIENT__CLIENTINTERFACE_HPP
 
 #include <konig/player.hpp>
+#include <konig/clientid.hpp>
 
 namespace konig { namespace client {
 
@@ -11,6 +12,7 @@ class ClientInterface {
     virtual void warning(std::string const&) = 0;
     virtual void abort() = 0;
     virtual Player& player() = 0;
+    virtual void id_known(ClientId) {}
 };
 
 }}

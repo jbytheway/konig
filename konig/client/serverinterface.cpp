@@ -42,6 +42,7 @@ void ServerInterface::error(
 void ServerInterface::message(Message<MessageType::joined> const& m)
 {
   id_ = m.get<fields::id>();
+  client_.id_known(id_);
   client_.message("Server assigned us id "+id_.to_string());
 }
 

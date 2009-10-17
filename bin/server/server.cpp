@@ -39,7 +39,7 @@ class Server::Callbacks :
       if (server_.ai_exe_.empty()) {
         return "no executable for running AI";
       }
-      TablePosition table_pos(boost::lexical_cast<int>(l.name()));
+      TablePosition table_pos(boost::lexical_cast<TablePosition>(l.name()));
       server_.io_.post(
           std::bind(&Server::reset_ai, &server_, table_pos, std::move(value))
         );
@@ -190,7 +190,7 @@ void Server::notify_setting(st::leaf& altered)
 
 void Server::reset_ai(TablePosition pos, std::string args)
 {
-  std::string spos = boost::lexical_cast<std::string>(int(pos));
+  std::string spos = boost::lexical_cast<std::string>(pos);
   ai_[pos].reset(
       ai_exe_,
       boost::assign::list_of(std::string("-p"))(spos)("-a")(std::move(args))
