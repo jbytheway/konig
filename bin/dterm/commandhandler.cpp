@@ -236,7 +236,16 @@ void CommandHandler::command(std::string const& c)
     }
   }
 #endif
-  parser_->command(std::move(tokenList));
+  while (!tokenList.empty()) {
+    auto semicolon = std::find(tokenList.begin(), tokenList.end(), ";");
+    std::list<std::string> subcommand;
+    subcommand.splice(
+        subcommand.begin(), tokenList, tokenList.begin(), semicolon
+      );
+    parser_->command(std::move(subcommand));
+    // Strip the semicolon
+    if (!tokenList.empty()) tokenList.pop_front();
+  }
 }
 
 void CommandHandler::end()
