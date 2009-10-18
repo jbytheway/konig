@@ -39,6 +39,17 @@ void ServerInterface::error(
   if (connection_) connection_->close();
 }
 
+#define KONIG_CLIENT_SERVERINTERFACE_IGNORE(type)     \
+void ServerInterface::message(const Message<type>&) { \
+  std::ostringstream os;                              \
+  os << "warning: ignoring message of type " << type; \
+  client_.warning(os.str());                          \
+}
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::getSetting)
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::bid)
+#undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
+
 void ServerInterface::message(Message<MessageType::joined> const& m)
 {
   id_ = m.get<fields::id>();

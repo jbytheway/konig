@@ -32,21 +32,12 @@ class ServerInterface {
     void message(const Message& m, Connection&) {
       message(m);
     }
-#define KONIG_CLIENT_SERVERINTERFACE_IGNORE(type) \
-    void message(const Message<type>&) {          \
-      std::ostringstream os;                      \
-      os << "warning: ignoring message of type " << type; \
-      client_.warning(os.str());                  \
-    }
-    KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::getSetting)
-    KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
-    KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::bid)
-#undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
-    void message(Message<MessageType::joined> const&);
-    void message(Message<MessageType::rejection> const&);
-    void message(Message<MessageType::notifySetting> const&);
-    void message(Message<MessageType::startGame> const&);
-    void message(Message<MessageType::requestBid> const&);
+#define KONIG_CLIENT_SERVERINTERFACE_MESSAGE(r, d, value) \
+    void message(const Message<MessageType::value>&);
+    BOOST_PP_SEQ_FOR_EACH(
+        KONIG_CLIENT_SERVERINTERFACE_MESSAGE, _, KONIG_MESSAGETYPE_VALUES()
+      )
+#undef KONIG_CLIENT_SERVERINTERFACE_MESSAGE
 
     template<typename Message>
     void send(Message const& m) {
