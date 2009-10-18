@@ -64,6 +64,13 @@ void ServerInterface::message(Message<MessageType::notifySetting> const& m)
   }
 }
 
+void ServerInterface::message(Message<MessageType::startGame> const& m)
+{
+  client_.player().start_game(
+      m.get<fields::rules>(), m.get<fields::position>(), m.get<fields::cards>()
+    );
+}
+
 void ServerInterface::close()
 {
   connection_->close_gracefully();

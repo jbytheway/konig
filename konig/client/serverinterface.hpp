@@ -44,6 +44,7 @@ class ServerInterface {
     void message(Message<MessageType::joined> const&);
     void message(Message<MessageType::rejection> const&);
     void message(Message<MessageType::notifySetting> const&);
+    void message(Message<MessageType::startGame> const&);
 
     template<typename Message>
     void send(Message const& m) {

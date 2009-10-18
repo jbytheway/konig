@@ -7,6 +7,9 @@
 #include <konig/fields.hpp>
 #include <konig/messagetype.hpp>
 #include <konig/clientid.hpp>
+#include <konig/ruleset.hpp>
+#include <konig/playposition.hpp>
+#include <konig/cards.hpp>
 
 namespace konig {
 
@@ -47,6 +50,15 @@ struct MessageData<MessageType::notifySetting> {
   typedef fusion::map<
     fusion::pair<fields::name, std::string>,
     fusion::pair<fields::value, std::set<std::string>>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::startGame> {
+  typedef fusion::map<
+    fusion::pair<fields::rules, Ruleset>,
+    fusion::pair<fields::position, PlayPosition>,
+    fusion::pair<fields::cards, Cards>
   > type;
 };
 

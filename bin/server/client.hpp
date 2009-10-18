@@ -44,11 +44,13 @@ class Client : private settingstree::user {
     void message(const Message& m, Connection&) {
       message(m);
     }
-    void message(const Message<MessageType::joined>&);
-    void message(const Message<MessageType::rejection>&);
-    void message(const Message<MessageType::getSetting>&);
-    void message(const Message<MessageType::setSetting>&);
-    void message(const Message<MessageType::notifySetting>&);
+
+#define KONIG_SERVER_CIENT_MESSAGE(r, d, value) \
+    void message(const Message<MessageType::value>&);
+    BOOST_PP_SEQ_FOR_EACH(
+        KONIG_SERVER_CIENT_MESSAGE, _, KONIG_MESSAGETYPE_VALUES()
+      )
+#undef KONIG_SERVER_CIENT_MESSAGE
     void error(const messaging::error_source, const boost::system::error_code&);
 
     template<typename Message>

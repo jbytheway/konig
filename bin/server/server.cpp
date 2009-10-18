@@ -5,6 +5,10 @@
 #include <settingstree/make.hpp>
 
 #include <konig/fatal.hpp>
+#include <konig/dealer.hpp>
+#include <konig/game.hpp>
+
+#include "remoteplayer.hpp"
 
 namespace konig { namespace server {
 
@@ -217,7 +221,40 @@ std::string Server::test_go()
 
 void Server::go()
 {
-  KONIG_FATAL("not implemented");
+  std::array<std::set<ClientId>, TablePosition::max> clients_in_positions;
+  BOOST_FOREACH(Clients::value_type const& p, clients_) {
+    Client const& client = *p.second;
+    clients_in_positions[client.table_position()].insert(client.id());
+  }
+  std::array<Player::Ptr, 4> players;
+  BOOST_STATIC_ASSERT(4 < TablePosition::max);
+  for (int i=0; i<4; ++i) {
+    if (clients_in_positions[i+1].size() != 1) {
+      throw std::runtime_error(
+          "data race failed; not exactly one client in position "+
+          boost::lexical_cast<std::string>(i+1)
+        );
+    }
+    players[i].reset(
+        new RemotePlayer(*clients_[*clients_in_positions[i+1].begin()])
+      );
+  }
+  Ruleset rules = konig::Ruleset::solodreier_only();
+  auto dealer = Dealer::create();
+  { // TODO: How often?  Rotation of forehand.
+    auto deal = dealer->deal();
+    out_ << deal << std::endl;
+    Game game(rules, players, deal);
+    konig::Outcome outcome;
+    std::vector<konig::Trick> tricks;
+    boost::tie(outcome, tricks) = game.play();
+    std::cout << outcome << '\n';
+    std::cout << '\n';
+    std::copy(
+        tricks.begin(), tricks.end(),
+        std::ostream_iterator<konig::Trick>(std::cout, "\n")
+      );
+  }
 }
 
 void Server::check_for_interrupt(boost::system::error_code const& e)

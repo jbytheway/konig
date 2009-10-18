@@ -14,6 +14,9 @@ class id;
 class name;
 class reason;
 class value;
+class rules;
+class position;
+class cards;
 
 template<typename Archive>
 class Serializer {

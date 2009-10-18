@@ -23,6 +23,7 @@ void Client::message(const Message<type>&) {          \
 KONIG_SERVER_CLIENT_IGNORE(MessageType::joined)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::rejection)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifySetting)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::startGame)
 #undef KONIG_SERVER_CLIENT_IGNORE
 
 void Client::message(const Message<MessageType::getSetting>& m)
