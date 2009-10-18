@@ -57,6 +57,12 @@ class CommandHandler::CommandParser {
             "Request that server changes a setting",
             "set SETTING VALUE  Request that setting SETTING be set to VALUE"
           ));
+      add_command(Command(
+            list_of("cs")("clientset"), &CommandParser::client_set_setting,
+            "Request that server changes a setting within your client branch",
+            "set SETTING VALUE  Request that setting clients:X:SETTING be set "
+            "to VALUE, where X is your client id"
+          ));
     }
 
     void command(std::list<std::string> tokens) {
@@ -141,6 +147,20 @@ class CommandHandler::CommandParser {
     void set_setting(std::list<std::string> args) {
       if (args.size() == 2) {
         std::string& name = args.front();
+        std::string& value = args.back();
+        handler_.server_interface_->send(Message<MessageType::setSetting>(
+              std::move(name), std::move(value)
+            ));
+      } else {
+        handler_.output_->message("Usage: set SETTING VALUE");
+      }
+    }
+
+    void client_set_setting(std::list<std::string> args) {
+      if (args.size() == 2) {
+        std::string name =
+          "clients:" + handler_.server_interface_->id().to_string() + ":" +
+          args.front();
         std::string& value = args.back();
         handler_.server_interface_->send(Message<MessageType::setSetting>(
               std::move(name), std::move(value)
