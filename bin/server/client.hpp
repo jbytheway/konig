@@ -77,12 +77,7 @@ class Client : private settingstree::user {
       MessageType::internal_enum request,
       MessageType::internal_enum response
     >
-    typename std::remove_reference<
-      typename boost::fusion::result_of::front<
-        typename MessageData<response>::type
-      >::type
-    >::type::second_type
-    remote_call();
+    typename Message<response>::only_value remote_call();
 
     void close();
 
@@ -118,18 +113,9 @@ template<
   MessageType::internal_enum request,
   MessageType::internal_enum response
 >
-typename std::remove_reference<
-  typename boost::fusion::result_of::front<
-    typename MessageData<response>::type
-  >::type
->::type::second_type
-Client::remote_call()
+typename Message<response>::only_value Client::remote_call()
 {
-  typedef typename std::remove_reference<
-    typename boost::fusion::result_of::front<
-      typename MessageData<response>::type
-    >::type
-  >::type::second_type ReturnType;
+  typedef typename Message<response>::only_value ReturnType;
   if (expected_remote_return_type_ ||
       !remote_return_value_.empty() ||
       aborting_) {

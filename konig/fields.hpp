@@ -18,6 +18,12 @@ class rules;
 class position;
 class cards;
 class bid;
+class king;
+class talon;
+class choice;
+class discard;
+class announcements;
+class card;
 
 template<typename Archive>
 class Serializer {

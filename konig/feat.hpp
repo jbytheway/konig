@@ -14,6 +14,7 @@ namespace konig {
 class Contract;
 
 class Feat {
+  friend class boost::serialization::access;
   public:
     enum internal_enum {
       game,
@@ -25,6 +26,7 @@ class Feat {
       king_ultimo
     };
 
+    Feat() = default; // For serialization
     Feat(internal_enum v) : value_(v) {}
 
     operator internal_enum() const { return value_; }
@@ -83,6 +85,11 @@ class Feat {
         bool offence[4]
       ) const;
   private:
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int) {
+      ar & BOOST_SERIALIZATION_NVP(value_);
+    }
+
     internal_enum value_;
 };
 

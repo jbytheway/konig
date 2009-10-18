@@ -51,8 +51,13 @@ class Message {
       boost::mpl::back_inserter<boost::mpl::vector<>::type>
     >::type Values;
   public:
-    // Default constructor (needed for deserialization)
-    Message() = default;
+    typedef typename boost::mpl::if_c<
+      boost::mpl::size<Values>::type::value == 1,
+      typename boost::mpl::front<Values>::type,
+      void
+    >::type only_value;
+
+    Message() = default; // For serialization
     // Constructor for building out of relevant data
     template<
       typename... T,
@@ -99,7 +104,7 @@ class Message {
 
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int /*version*/) {
-      serialize_impl(ar, empty(data_));
+      serialize_impl(ar, boost::fusion::empty(data_));
     }
 };
 

@@ -25,6 +25,18 @@ KONIG_SERVER_CLIENT_IGNORE(MessageType::rejection)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifySetting)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::startGame)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::requestBid)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyBid)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::requestCallKing)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyCallKing)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyTalon)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::requestTalonChoice)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyTalonChoice)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::requestDiscard)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyDiscard)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::requestAnnouncements)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyAnnouncements)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::requestPlayCard)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyPlayCard)
 #undef KONIG_SERVER_CLIENT_IGNORE
 
 void Client::message(const Message<MessageType::getSetting>& m)
@@ -50,19 +62,40 @@ void Client::message(const Message<MessageType::setSetting>& m)
   }
 }
 
-void Client::message(const Message<MessageType::bid>& m)
+template<typename T>
+static void remote_return(
+    Client& client,
+    std::type_info const& expected_type,
+    boost::any& return_value,
+    T&& val
+  )
 {
-  int bid = m.get<fields::bid>();
-  if (*expected_remote_return_type_ != typeid(int)) {
-    send(Message<MessageType::rejection>(
-          std::string("unexpected bid message")
+  if (expected_type != typeid(T)) {
+    client.send(Message<MessageType::rejection>(
+          std::string("unexpected message")
         ));
-  } else if (!remote_return_value_.empty()) {
+  } else if (!return_value.empty()) {
     KONIG_FATAL("too many returned values");
   } else {
-    remote_return_value_ = bid;
+    return_value = std::forward<T>(val);
   }
 }
+
+#define KONIG_SERVER_CLIENT_REMOTE_RETURN(type, field)    \
+void Client::message(const Message<MessageType::type>& m) \
+{                                                         \
+  remote_return(                                          \
+      *this, *expected_remote_return_type_, remote_return_value_, \
+      m.get<fields::field>()                              \
+    );                                                    \
+}
+KONIG_SERVER_CLIENT_REMOTE_RETURN(bid, bid)
+KONIG_SERVER_CLIENT_REMOTE_RETURN(callKing, king)
+KONIG_SERVER_CLIENT_REMOTE_RETURN(talonChoice, choice)
+KONIG_SERVER_CLIENT_REMOTE_RETURN(discard, discard)
+KONIG_SERVER_CLIENT_REMOTE_RETURN(announcements, announcements)
+KONIG_SERVER_CLIENT_REMOTE_RETURN(playCard, card)
+#undef KONIG_SERVER_CLIENT_REMOTE_RETURN
 
 void Client::error(
     const messaging::error_source es,

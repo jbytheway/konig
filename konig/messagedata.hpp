@@ -75,6 +75,122 @@ struct MessageData<MessageType::bid> {
   > type;
 };
 
+template<>
+struct MessageData<MessageType::notifyBid> {
+  typedef fusion::map<
+    fusion::pair<fields::position, PlayPosition>,
+    fusion::pair<fields::bid, int>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::requestCallKing> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::callKing> {
+  typedef fusion::map<
+    fusion::pair<fields::king, KingCall>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::notifyCallKing> {
+  typedef fusion::map<
+    fusion::pair<fields::king, KingCall>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::notifyTalon> {
+  typedef fusion::map<
+    fusion::pair<fields::talon, boost::array<Cards, 2>>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::requestTalonChoice> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::talonChoice> {
+  typedef fusion::map<
+    fusion::pair<fields::choice, uint8_t>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::notifyTalonChoice> {
+  typedef fusion::map<
+    fusion::pair<fields::choice, uint8_t>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::requestDiscard> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::discard> {
+  typedef fusion::map<
+    fusion::pair<fields::discard, Cards>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::notifyDiscard> {
+  typedef fusion::map<
+    fusion::pair<fields::discard, Cards>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::requestAnnouncements> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::announcements> {
+  typedef fusion::map<
+    fusion::pair<fields::announcements, std::vector<Announcement>>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::notifyAnnouncements> {
+  typedef fusion::map<
+    fusion::pair<fields::announcements, std::vector<Announcement>>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::requestPlayCard> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::playCard> {
+  typedef fusion::map<
+    fusion::pair<fields::card, Card>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::notifyPlayCard> {
+  typedef fusion::map<
+    fusion::pair<fields::position, PlayPosition>,
+    fusion::pair<fields::card, Card>
+  > type;
+};
+
 }
 
 #endif // KONIG__MESSAGEDATA_HPP

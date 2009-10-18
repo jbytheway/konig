@@ -16,69 +16,70 @@ void RemotePlayer::start_game(Ruleset rules, PlayPosition pos, Cards cards)
       ));
 }
 
-int RemotePlayer::bid()
+#define KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(name, request, response)      \
+Message<MessageType::response>::only_value RemotePlayer::name()              \
+{                                                                            \
+  return client_.remote_call<MessageType::request, MessageType::response>(); \
+}
+KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(bid, requestBid, bid)
+KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(call_king, requestCallKing, callKing)
+KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(
+    choose_talon_half, requestTalonChoice, talonChoice
+  )
+KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(discard, requestDiscard, discard)
+KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(
+    announce, requestAnnouncements, announcements
+  )
+KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(play_card, requestPlayCard, playCard)
+#undef KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL
+
+void RemotePlayer::notify_bid(PlayPosition pos, int bid)
 {
-  return client_.remote_call<MessageType::requestBid, MessageType::bid>();
+  client_.send(Message<MessageType::notifyBid>(
+        std::move(pos), std::move(bid)
+      ));
 }
 
-void RemotePlayer::notify_bid(PlayPosition, int)
+void RemotePlayer::notify_call_king(KingCall call)
 {
-  KONIG_FATAL("not implemented");
+  client_.send(Message<MessageType::notifyCallKing>(
+        std::move(call)
+      ));
 }
 
-KingCall RemotePlayer::call_king()
+void RemotePlayer::notify_talon(boost::array<Cards, 2> const& talon)
 {
-  KONIG_FATAL("not implemented");
+  client_.send(Message<MessageType::notifyTalon>(
+        std::move(talon)
+      ));
 }
 
-void RemotePlayer::notify_call_king(KingCall)
+void RemotePlayer::notify_talon_choice(uint8_t choice)
 {
-  KONIG_FATAL("not implemented");
+  client_.send(Message<MessageType::notifyTalonChoice>(
+        std::move(choice)
+      ));
 }
 
-void RemotePlayer::notify_talon(boost::array<Cards, 2> const& /*talon*/)
+void RemotePlayer::notify_discard(Cards discard)
 {
-  KONIG_FATAL("not implemented");
+  client_.send(Message<MessageType::notifyDiscard>(
+        std::move(discard)
+      ));
 }
 
-uint8_t RemotePlayer::choose_talon_half()
+void RemotePlayer::notify_announcements(std::vector<Announcement> announcements)
 {
-  KONIG_FATAL("not implemented");
+  client_.send(Message<MessageType::notifyAnnouncements>(
+        std::move(announcements)
+      ));
 }
 
-void RemotePlayer::notify_talon_choice(uint8_t)
+void RemotePlayer::notify_play_card(PlayPosition pos, Card card)
 {
-  KONIG_FATAL("not implemented");
-}
-
-Cards RemotePlayer::discard()
-{
-  KONIG_FATAL("not implemented");
-}
-
-void RemotePlayer::notify_discard(Cards)
-{
-  KONIG_FATAL("not implemented");
-}
-
-std::vector<Announcement> RemotePlayer::announce()
-{
-  KONIG_FATAL("not implemented");
-}
-
-void RemotePlayer::notify_announcements(std::vector<Announcement>)
-{
-  KONIG_FATAL("not implemented");
-}
-
-Card RemotePlayer::play_card()
-{
-  KONIG_FATAL("not implemented");
-}
-
-void RemotePlayer::notify_play_card(PlayPosition, Card)
-{
-  KONIG_FATAL("not implemented");
+  client_.send(Message<MessageType::notifyPlayCard>(
+        std::move(pos), std::move(card)
+      ));
 }
 
 }}

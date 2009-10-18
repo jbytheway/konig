@@ -7,11 +7,20 @@
 namespace konig {
 
 struct Announcement {
-  Feat feat;
-  Announcedness announcedness;
-  bool defensive;
+  friend class boost::serialization::access;
+  public:
+    Feat feat;
+    Announcedness announcedness;
+    bool defensive;
 
-  bool offensive() const { return !defensive; }
+    bool offensive() const { return !defensive; }
+  private:
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int) {
+      ar & BOOST_SERIALIZATION_NVP(feat) &
+        BOOST_SERIALIZATION_NVP(announcedness) &
+        BOOST_SERIALIZATION_NVP(defensive);
+    }
 };
 
 }

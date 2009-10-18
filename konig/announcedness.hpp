@@ -4,12 +4,15 @@
 #include <string>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include <konig/achievement.hpp>
 
 namespace konig {
 
 class Announcedness {
+  friend class boost::serialization::access;
   public:
     enum internal_enum {
       unannounced,
@@ -37,6 +40,11 @@ class Announcedness {
 
     std::string string(const Achievement) const;
   private:
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int) {
+      ar & BOOST_SERIALIZATION_NVP(value_);
+    }
+
     internal_enum value_;
 };
 

@@ -48,6 +48,11 @@ void ServerInterface::message(const Message<type>&) { \
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::getSetting)
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::bid)
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::callKing)
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::talonChoice)
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::discard)
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::announcements)
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::playCard)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
 
 void ServerInterface::message(Message<MessageType::joined> const& m)
@@ -82,12 +87,50 @@ void ServerInterface::message(Message<MessageType::startGame> const& m)
     );
 }
 
-void ServerInterface::message(Message<MessageType::requestBid> const&)
+void ServerInterface::message(Message<MessageType::notifyBid> const& m)
 {
-  int bid = client_.player().bid();
-  client_.message("Sending bid "+boost::lexical_cast<std::string>(bid));
-  send(Message<MessageType::bid>(bid));
+  client_.player().notify_bid(m.get<fields::position>(), m.get<fields::bid>());
 }
+
+void ServerInterface::message(Message<MessageType::notifyPlayCard> const& m)
+{
+  client_.player().notify_play_card(
+      m.get<fields::position>(), m.get<fields::card>()
+    );
+}
+
+#define KONIG_CLIENT_SERVERINTERFACE_REQUEST(request, response, member) \
+void ServerInterface::message(Message<MessageType::request> const&)     \
+{                                                                       \
+  send(Message<MessageType::response>(client_.player().member()));      \
+}
+KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestBid, bid, bid)
+KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestCallKing, callKing, call_king)
+KONIG_CLIENT_SERVERINTERFACE_REQUEST(
+    requestTalonChoice, talonChoice, choose_talon_half
+  )
+KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestDiscard, discard, discard)
+KONIG_CLIENT_SERVERINTERFACE_REQUEST(
+    requestAnnouncements, announcements, announce
+  )
+KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestPlayCard, playCard, play_card)
+#undef KONIG_CLIENT_SERVERINTERFACE_REQUEST
+
+#define KONIG_CLIENT_SERVERINTERFACE_NOTIFY(type, member, field)   \
+void ServerInterface::message(Message<MessageType::type> const& m) \
+{                                                                  \
+  client_.player().member(m.get<fields::field>());                 \
+}
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY(notifyCallKing, notify_call_king, king)
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY(notifyTalon, notify_talon, talon)
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
+    notifyTalonChoice, notify_talon_choice, choice
+  )
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY(notifyDiscard, notify_discard, discard)
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
+    notifyAnnouncements, notify_announcements, announcements
+  )
+#undef KONIG_CLIENT_SERVERINTERFACE_NOTIFY
 
 void ServerInterface::close()
 {
