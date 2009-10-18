@@ -2,6 +2,7 @@
 
 #include <boost/bind.hpp>
 
+#include <konig/player.hpp>
 #include <konig/positivecontract.hpp>
 #include <konig/contractandannouncements.hpp>
 

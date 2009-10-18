@@ -8,13 +8,14 @@
 
 #include <konig/outcome.hpp>
 #include <konig/cards.hpp>
-#include <konig/player.hpp>
 #include <konig/trick.hpp>
+#include <konig/announcement.hpp>
 #include <konig/announcednesses.hpp>
 
 namespace konig {
 
 class ContractAndAnnouncements;
+class Player;
 
 class Contract : public boost::enable_shared_from_this<Contract> {
   public:
@@ -25,8 +26,10 @@ class Contract : public boost::enable_shared_from_this<Contract> {
     const std::string& name() const { return name_; }
 
     virtual boost::tuple<Outcome, std::vector<Trick> > play(
-        boost::array<Cards, 4> hands, boost::array<Cards, 2> talon,
-        const std::vector<Player::Ptr>& players, PlayPosition declarer_position
+        boost::array<Cards, 4> hands,
+        boost::array<Cards, 2> talon,
+        const std::vector<boost::shared_ptr<Player>>& players,
+        PlayPosition declarer_position
       ) = 0;
 
     virtual bool grants_lead() const = 0;
@@ -45,7 +48,7 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         boost::array<Cards, 4> hands,
         Cards& declarers_cards,
         Cards& defenses_cards,
-        const std::vector<Player::Ptr>& players,
+        const std::vector<boost::shared_ptr<Player>>& players,
         const ContractAndAnnouncements& whole_contract,
         PlayPosition declarer_position,
         bool offence[4]

@@ -3,6 +3,9 @@
 
 #include <cassert>
 
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
+
 #include <konig/suit.hpp>
 #include <konig/trumprank.hpp>
 #include <konig/suitrank.hpp>
@@ -10,6 +13,7 @@
 namespace konig {
 
 class Card {
+  friend class boost::serialization::access;
   public:
     template<typename OutputIterator>
     static void make_deck(OutputIterator);
@@ -76,6 +80,12 @@ class Card {
       return suit_ < r.suit_ || (suit_ == r.suit_ && rank_ < r.rank_);
     }
   private:
+    template<typename Archive>
+    void serialize(Archive& ar, unsigned int) {
+      ar & BOOST_SERIALIZATION_NVP(suit_);
+      ar & BOOST_SERIALIZATION_NVP(rank_);
+    }
+
     uint8_t suit_;
     uint8_t rank_;
 };

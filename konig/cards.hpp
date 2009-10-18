@@ -6,14 +6,15 @@
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
-//#include <boost/spirit/home/phoenix/operator/member.hpp>
-//#include <boost/spirit/home/phoenix/operator/comparison.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include <konig/card.hpp>
 
 namespace konig {
 
 class Cards : public std::set<Card> {
+  friend class boost::serialization::access;
   public:
     using std::set<Card>::equal_range;
 
@@ -118,6 +119,13 @@ class Cards : public std::set<Card> {
         tally += card.card_points();
       }
       return tally;
+    }
+  private:
+    template<typename Archive>
+    void serialize(Archive& archive, unsigned int) {
+      archive & boost::serialization::make_nvp(
+          "set", boost::implicit_cast<std::set<Card>&>(*this)
+        );
     }
 };
 

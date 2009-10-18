@@ -4,14 +4,19 @@
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
-#include <konig/core.hpp>
+#include <konig/contract.hpp>
 
 namespace konig {
 
 class Contract;
 
 class Contracts {
+  friend class boost::serialization::access;
   public:
     Contracts() : reserved_contracts_(0) {}
 
@@ -31,6 +36,12 @@ class Contracts {
 
     int index_of_contract(const std::string& name) const;
   private:
+    template<typename Archive>
+    void serialize(Archive& ar, unsigned int) {
+      ar & BOOST_SERIALIZATION_NVP(contracts_);
+      ar & BOOST_SERIALIZATION_NVP(reserved_contracts_);
+    }
+
     std::vector<boost::shared_ptr<Contract>> contracts_;
     size_t reserved_contracts_;
 };

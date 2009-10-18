@@ -20,8 +20,10 @@ class PositiveContract : public Contract {
       );
 
     virtual boost::tuple<Outcome, std::vector<Trick> > play(
-        boost::array<Cards, 4> hands, boost::array<Cards, 2> talon,
-        const std::vector<Player::Ptr>& players, PlayPosition declarer_position
+        boost::array<Cards, 4> hands,
+        boost::array<Cards, 2> talon,
+        const std::vector<boost::shared_ptr<Player>>& players,
+        PlayPosition declarer_position
       );
 
     virtual bool grants_lead() const { return false; }
