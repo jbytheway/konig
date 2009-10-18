@@ -40,11 +40,13 @@ class ServerInterface {
     }
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::getSetting)
     KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
+    KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::bid)
 #undef KONIG_CLIENT_SERVERINTERFACE_IGNORE
     void message(Message<MessageType::joined> const&);
     void message(Message<MessageType::rejection> const&);
     void message(Message<MessageType::notifySetting> const&);
     void message(Message<MessageType::startGame> const&);
+    void message(Message<MessageType::requestBid> const&);
 
     template<typename Message>
     void send(Message const& m) {

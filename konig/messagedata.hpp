@@ -62,6 +62,19 @@ struct MessageData<MessageType::startGame> {
   > type;
 };
 
+template<>
+struct MessageData<MessageType::requestBid> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::bid> {
+  typedef fusion::map<
+    fusion::pair<fields::bid, int>
+  > type;
+};
+
 }
 
 #endif // KONIG__MESSAGEDATA_HPP

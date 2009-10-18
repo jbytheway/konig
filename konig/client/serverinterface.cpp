@@ -71,6 +71,13 @@ void ServerInterface::message(Message<MessageType::startGame> const& m)
     );
 }
 
+void ServerInterface::message(Message<MessageType::requestBid> const&)
+{
+  int bid = client_.player().bid();
+  client_.message("Sending bid "+boost::lexical_cast<std::string>(bid));
+  send(Message<MessageType::bid>(bid));
+}
+
 void ServerInterface::close()
 {
   connection_->close_gracefully();

@@ -17,6 +17,7 @@ class value;
 class rules;
 class position;
 class cards;
+class bid;
 
 template<typename Archive>
 class Serializer {

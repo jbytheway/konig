@@ -18,7 +18,7 @@ void RemotePlayer::start_game(Ruleset rules, PlayPosition pos, Cards cards)
 
 int RemotePlayer::bid()
 {
-  KONIG_FATAL("not implemented");
+  return client_.remote_call<MessageType::requestBid, MessageType::bid>();
 }
 
 void RemotePlayer::notify_bid(PlayPosition, int)

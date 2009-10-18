@@ -24,6 +24,7 @@ KONIG_SERVER_CLIENT_IGNORE(MessageType::joined)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::rejection)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifySetting)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::startGame)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::requestBid)
 #undef KONIG_SERVER_CLIENT_IGNORE
 
 void Client::message(const Message<MessageType::getSetting>& m)
@@ -49,12 +50,27 @@ void Client::message(const Message<MessageType::setSetting>& m)
   }
 }
 
+void Client::message(const Message<MessageType::bid>& m)
+{
+  int bid = m.get<fields::bid>();
+  if (*expected_remote_return_type_ != typeid(int)) {
+    send(Message<MessageType::rejection>(
+          std::string("unexpected bid message")
+        ));
+  } else if (!remote_return_value_.empty()) {
+    KONIG_FATAL("too many returned values");
+  } else {
+    remote_return_value_ = bid;
+  }
+}
+
 void Client::error(
     const messaging::error_source es,
     const boost::system::error_code& ec
   )
 {
   std::cerr << "error: client: " << es << ": " << ec.message() << std::endl;
+  if (aborting_) *aborting_ = true;
   server_.remove_client(this);
 }
 

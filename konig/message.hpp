@@ -87,8 +87,19 @@ class Message {
     Data data_;
 
     template<typename Archive>
-    void serialize(Archive& ar, const unsigned int /*version*/) {
+    void serialize_impl(Archive& ar, boost::mpl::false_) {
       ar & BOOST_SERIALIZATION_NVP(data_);
+    }
+
+    template<typename Archive>
+    void serialize_impl(Archive&, boost::mpl::true_) {
+      // Data is empty; cannot be serialized because ADL won't find the
+      // function in konig::fields.  Luckily it doesn't need to be serialized
+    }
+
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int /*version*/) {
+      serialize_impl(ar, empty(data_));
     }
 };
 

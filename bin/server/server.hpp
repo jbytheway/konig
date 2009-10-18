@@ -32,7 +32,9 @@ class Server {
 
     template<typename Connection>
     void new_connection(Connection& c) {
-      std::unique_ptr<Client> client(new Client(c, *this, free_client_id()));
+      std::unique_ptr<Client> client(
+          new Client(io_, c, *this, free_client_id())
+        );
       add_client(std::move(client));
     }
 

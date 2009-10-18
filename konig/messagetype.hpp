@@ -8,7 +8,7 @@ namespace konig {
 
 #define KONIG_MESSAGETYPE_VALUES() \
   (joined)(rejection)(getSetting)(setSetting)(notifySetting)\
-  (startGame)
+  (startGame)(requestBid)(bid)
 
 KONIG_UTILITY_ENUM_HEADER(MessageType, KONIG_MESSAGETYPE_VALUES())
 

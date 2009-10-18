@@ -1,7 +1,11 @@
 #ifndef KONIG_SERVER__CLIENT_HPP
 #define KONIG_SERVER__CLIENT_HPP
 
+#include <typeinfo>
+
 #include <boost/shared_ptr.hpp>
+#include <boost/fusion/include/front.hpp>
+#include <boost/any.hpp>
 
 #include <messaging/connection.hpp>
 #include <messaging/error_source.hpp>
@@ -11,10 +15,13 @@
 #include <settingstree/user.hpp>
 #include <settingstree/leaf_callback.hpp>
 
+#include <konig/fatal.hpp>
 #include <konig/message.hpp>
 #include <konig/protocol.hpp>
 #include <konig/clientid.hpp>
 #include <konig/tableposition.hpp>
+
+#include "remote_call_error.hpp"
 
 namespace konig { namespace server {
 
@@ -23,13 +30,21 @@ class Server;
 class Client : private settingstree::user {
   public:
     template<typename Connection>
-    Client(Connection& c, Server& s, ClientId id) :
+    Client(
+        boost::asio::io_service& io,
+        Connection& c,
+        Server& s,
+        ClientId id
+      ) :
       settingstree::user("client"+id.to_string(), "admin"),
+      io_(io),
       id_(id),
       table_position_(0),
       server_(s),
       connection_(c.shared_from_this()),
-      callbacks_(*this)
+      aborting_(NULL),
+      callbacks_(*this),
+      expected_remote_return_type_(NULL)
     {
       c.reset_callbacks(messaging::callback_helper<Client>(*this));
       send(Message<MessageType::joined>(id));
@@ -58,15 +73,28 @@ class Client : private settingstree::user {
       messaging::send<konig::Protocol>(m, connection_);
     }
 
+    template<
+      MessageType::internal_enum request,
+      MessageType::internal_enum response
+    >
+    typename std::remove_reference<
+      typename boost::fusion::result_of::front<
+        typename MessageData<response>::type
+      >::type
+    >::type::second_type
+    remote_call();
+
     void close();
 
     settingstree::leaf_callback<std::uint8_t>& callback_position();
     std::string set_table_position(TablePosition);
   private:
+    boost::asio::io_service& io_;
     ClientId id_;
     TablePosition table_position_;
     Server& server_;
     messaging::connection::ptr connection_;
+    bool* aborting_;
 
     class Callbacks : settingstree::leaf_callback<std::uint8_t> {
       public:
@@ -81,7 +109,48 @@ class Client : private settingstree::user {
         Client& client_;
     };
     Callbacks callbacks_;
+
+    std::type_info const* expected_remote_return_type_;
+    boost::any remote_return_value_;
 };
+
+template<
+  MessageType::internal_enum request,
+  MessageType::internal_enum response
+>
+typename std::remove_reference<
+  typename boost::fusion::result_of::front<
+    typename MessageData<response>::type
+  >::type
+>::type::second_type
+Client::remote_call()
+{
+  typedef typename std::remove_reference<
+    typename boost::fusion::result_of::front<
+      typename MessageData<response>::type
+    >::type
+  >::type::second_type ReturnType;
+  if (expected_remote_return_type_ ||
+      !remote_return_value_.empty() ||
+      aborting_) {
+    KONIG_FATAL("re-entrant use of remote_call");
+  }
+  expected_remote_return_type_ = &typeid(ReturnType);
+  bool aborting = false;
+  aborting_ = &aborting;
+  send(Message<request>());
+  do {
+    io_.run_one();
+    if (aborting) {
+      throw remote_call_error();
+    }
+  } while (remote_return_value_.empty());
+  ReturnType returnValue = boost::any_cast<ReturnType>(remote_return_value_);
+  aborting_ = NULL;
+  expected_remote_return_type_ = NULL;
+  remote_return_value_ = boost::any();
+  return returnValue;
+}
 
 }}
 
