@@ -13,6 +13,8 @@ class Dealer {
   public:
     typedef boost::shared_ptr<Dealer> Ptr;
 
+    static Ptr create();
+
     template<typename ForwardRange>
     static Ptr create(const ForwardRange& descriptions);
 
