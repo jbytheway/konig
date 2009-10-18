@@ -30,9 +30,9 @@ class Player {
     virtual Card play_card() = 0;
     virtual void notify_play_card(PlayPosition, Card) = 0;
   protected:
-    Player() {}
-    Player(Player const&) {}
-    Player& operator=(Player const&) { return *this; }
+    Player() = default;
+    Player(Player const&) = default;
+    Player& operator=(Player const&) = default;
     virtual ~Player() = 0;
 };
 
