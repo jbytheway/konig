@@ -1,9 +1,13 @@
 #include <konig/positivecontract.hpp>
 
 #include <boost/bind.hpp>
+#include <boost/serialization/export.hpp>
 
 #include <konig/kingcall.hpp>
 #include <konig/announcementsequence.hpp>
+#include <konig/protocol.hpp> // For achive classes so serialization works
+
+BOOST_CLASS_EXPORT(konig::PositiveContract)
 
 namespace konig {
 

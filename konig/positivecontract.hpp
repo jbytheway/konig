@@ -9,6 +9,7 @@
 namespace konig {
 
 class PositiveContract : public Contract {
+  friend class boost::serialization::access;
   public:
     PositiveContract(
         std::string name,
@@ -38,6 +39,19 @@ class PositiveContract : public Contract {
 
     virtual Achievement result_for(const Cards& declarers_cards);
   private:
+    PositiveContract() = default; // For serialization
+
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int) {
+      ar & boost::serialization::make_nvp(
+          "base", boost::serialization::base_object<Contract>(*this)
+        ) &
+        BOOST_SERIALIZATION_NVP(partnership_) &
+        BOOST_SERIALIZATION_NVP(talon_halves_) &
+        BOOST_SERIALIZATION_NVP(must_announce_bird_) &
+        BOOST_SERIALIZATION_NVP(no_initial_announcements_);
+    }
+
     bool partnership_;
     uint8_t talon_halves_; // How many halves of the talon declarer gets
     bool must_announce_bird_;

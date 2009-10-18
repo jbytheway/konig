@@ -5,6 +5,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/array.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/serialization/string.hpp>
 
 #include <konig/outcome.hpp>
 #include <konig/cards.hpp>
@@ -18,6 +19,7 @@ class ContractAndAnnouncements;
 class Player;
 
 class Contract : public boost::enable_shared_from_this<Contract> {
+  friend class boost::serialization::access;
   public:
     typedef boost::shared_ptr<Contract> Ptr;
 
@@ -56,12 +58,19 @@ class Contract : public boost::enable_shared_from_this<Contract> {
 
     static Ptr solodreier();
   protected:
+    Contract() = default; // For serialization
     Contract(std::string short_name, std::string name) :
       short_name_(std::move(short_name)),
       name_(std::move(name)) {}
 
-    const std::string short_name_;
-    const std::string name_;
+    std::string short_name_;
+    std::string name_;
+  private:
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int) {
+      ar & BOOST_SERIALIZATION_NVP(short_name_) &
+        BOOST_SERIALIZATION_NVP(name_);
+    }
 };
 
 }
