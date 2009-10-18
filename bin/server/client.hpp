@@ -60,12 +60,12 @@ class Client : private settingstree::user {
       message(m);
     }
 
-#define KONIG_SERVER_CIENT_MESSAGE(r, d, value) \
+#define KONIG_SERVER_CLIENT_MESSAGE(r, d, value) \
     void message(const Message<MessageType::value>&);
     BOOST_PP_SEQ_FOR_EACH(
-        KONIG_SERVER_CIENT_MESSAGE, _, KONIG_MESSAGETYPE_VALUES()
+        KONIG_SERVER_CLIENT_MESSAGE, _, KONIG_MESSAGETYPE_VALUES()
       )
-#undef KONIG_SERVER_CIENT_MESSAGE
+#undef KONIG_SERVER_CLIENT_MESSAGE
     void error(const messaging::error_source, const boost::system::error_code&);
 
     template<typename Message>
