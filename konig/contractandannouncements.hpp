@@ -14,11 +14,11 @@ namespace konig {
 class ContractAndAnnouncements {
   public:
     ContractAndAnnouncements(
-        Contract::Ptr = Contract::Ptr(),
+        Contract::ConstPtr = Contract::ConstPtr(),
         Card called_king = Card(TrumpRank::pagat)
       );
 
-    const Contract::Ptr& contract() const { return contract_; }
+    const Contract::ConstPtr& contract() const { return contract_; }
 
     const std::vector<Announcement>& last_announcements() const {
       return last_announcements_;
@@ -58,7 +58,7 @@ class ContractAndAnnouncements {
         bool offence[4]
       );
   private:
-    Contract::Ptr contract_;
+    Contract::ConstPtr contract_;
     Card called_king_;
     std::vector<Announcement> last_announcements_;
     Announcednesses announcednesses_;

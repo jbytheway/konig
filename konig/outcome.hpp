@@ -19,14 +19,16 @@ class Outcome {
       > Results;
 
     Outcome() {}
-    Outcome(boost::shared_ptr<Contract>);
+    Outcome(boost::shared_ptr<Contract const>);
 
-    const boost::shared_ptr<Contract>& contract() const { return contract_; }
+    const boost::shared_ptr<Contract const>& contract() const {
+      return contract_;
+    }
     const Results& results() const { return results_; }
 
     void add(bool offence, Feat, Announcedness, Achievement);
   private:
-    boost::shared_ptr<Contract> contract_;
+    boost::shared_ptr<Contract const> contract_;
     Results results_;
 };
 

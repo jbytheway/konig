@@ -27,7 +27,7 @@ namespace {
   }
 }
 
-boost::tuple<boost::shared_ptr<Contract>, PlayPosition>
+boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
 BiddingSequence::get_bids(const std::vector<Player::Ptr>& players)
 {
   assert(players.size() == 4);

@@ -4,7 +4,7 @@
 
 namespace konig {
 
-Outcome::Outcome(Contract::Ptr contract) :
+Outcome::Outcome(Contract::ConstPtr contract) :
   contract_(std::move(contract))
 {}
 

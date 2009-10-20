@@ -27,10 +27,10 @@ class Contracts {
     }
 
     size_t size() const { return contracts_.size(); }
-    const boost::shared_ptr<Contract>& operator[](size_t i) const {
+    const boost::shared_ptr<Contract const> operator[](size_t i) const {
       return contracts_[i];
     }
-    const boost::shared_ptr<Contract>& at(size_t i) const {
+    const boost::shared_ptr<Contract const> at(size_t i) const {
       return contracts_.at(i);
     }
 
@@ -42,6 +42,7 @@ class Contracts {
       ar & BOOST_SERIALIZATION_NVP(reserved_contracts_);
     }
 
+    // HACK: Would like to use const Contracts here but it breaks serialization
     std::vector<boost::shared_ptr<Contract>> contracts_;
     size_t reserved_contracts_;
 };

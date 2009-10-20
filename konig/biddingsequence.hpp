@@ -14,7 +14,7 @@ class BiddingSequence {
       contracts_(contracts)
     {}
 
-    boost::tuple<boost::shared_ptr<Contract>, PlayPosition>
+    boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
     get_bids(const std::vector<Player::Ptr>&);
   private:
     const Contracts& contracts_;

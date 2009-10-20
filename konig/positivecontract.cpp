@@ -30,7 +30,7 @@ PositiveContract::PositiveContract(
 boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
     boost::array<Cards, 4> hands, boost::array<Cards, 2> talon,
     const std::vector<Player::Ptr>& players, PlayPosition declarer_position
-  )
+  ) const
 {
   Player::Ptr declarer = players[declarer_position];
   Cards& declarers_hand = hands[declarer_position];
@@ -199,7 +199,7 @@ bool PositiveContract::valid_first_announcements(
     const std::vector<Announcement>& announcements
   ) const
 {
-  if (no_initial_announcements_ && ! announcements.empty()) {
+  if (no_initial_announcements_ && !announcements.empty()) {
     return false;
   }
   if (must_announce_bird_) {
@@ -213,7 +213,7 @@ bool PositiveContract::valid_first_announcements(
   return true;
 }
 
-Achievement PositiveContract::result_for(const Cards& declarers_cards)
+Achievement PositiveContract::result_for(const Cards& declarers_cards) const
 {
   return declarers_cards.total_card_points() >= 36*3-1 ?
     Achievement::made : Achievement::off;

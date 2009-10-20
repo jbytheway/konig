@@ -16,7 +16,7 @@ std::vector<Trick> Contract::play_tricks(
     const ContractAndAnnouncements& whole_contract,
     PlayPosition declarer_position,
     bool offence[4]
-  )
+  ) const
 {
   for (size_t i=0; i<4; ++i) {
     assert(hands[i].size() == 12);

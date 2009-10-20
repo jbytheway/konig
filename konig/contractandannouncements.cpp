@@ -5,7 +5,7 @@
 namespace konig {
 
 ContractAndAnnouncements::ContractAndAnnouncements(
-    Contract::Ptr contract,
+    Contract::ConstPtr contract,
     Card called_king
   ) :
   contract_(std::move(contract)),

@@ -76,7 +76,7 @@ class Feat {
     }
 
     Achievement result_for(
-        const boost::shared_ptr<Contract>&,
+        const boost::shared_ptr<Contract const>&,
         Card called_king,
         const std::vector<Trick>& tricks,
         const Cards& declarers_cards,

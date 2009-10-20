@@ -5,7 +5,7 @@
 namespace konig {
 
 Achievement Feat::result_for(
-    const boost::shared_ptr<Contract>& contract,
+    const boost::shared_ptr<Contract const>& contract,
     Card called_king,
     const std::vector<Trick>& tricks,
     const Cards& declarers_cards,

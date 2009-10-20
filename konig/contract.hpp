@@ -22,6 +22,7 @@ class Contract : public boost::enable_shared_from_this<Contract> {
   friend class boost::serialization::access;
   public:
     typedef boost::shared_ptr<Contract> Ptr;
+    typedef boost::shared_ptr<Contract const> ConstPtr;
 
     const std::string& short_name() const { return short_name_; }
 
@@ -32,7 +33,7 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         boost::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
         PlayPosition declarer_position
-      ) = 0;
+      ) const = 0;
 
     virtual bool grants_lead() const = 0;
 
@@ -44,7 +45,7 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         const std::vector<Announcement>&
       ) const = 0;
 
-    virtual Achievement result_for(const Cards& declarers_cards) = 0;
+    virtual Achievement result_for(const Cards& declarers_cards) const = 0;
 
     std::vector<Trick> play_tricks(
         boost::array<Cards, 4> hands,
@@ -54,7 +55,7 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         const ContractAndAnnouncements& whole_contract,
         PlayPosition declarer_position,
         bool offence[4]
-      );
+      ) const;
 
     static Ptr solodreier();
   protected:

@@ -13,7 +13,7 @@ namespace konig {
 class AnnouncementSequence {
   public:
     AnnouncementSequence(
-        boost::shared_ptr<Contract> contract,
+        boost::shared_ptr<Contract const> contract,
         Card called_king
       ) :
       contract_(std::move(contract)),
@@ -34,7 +34,7 @@ class AnnouncementSequence {
         PlayPosition declarer_position
       );
   private:
-    const boost::shared_ptr<Contract> contract_;
+    const boost::shared_ptr<Contract const> contract_;
     const Card called_king_;
     std::vector<std::vector<Announcement> > announcements_;
 };

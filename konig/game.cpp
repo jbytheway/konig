@@ -13,7 +13,7 @@ boost::tuple<Outcome, std::vector<Trick> > Game::play() const
     players_[i]->start_game(rules_, i, hands_[i]);
   }
   BiddingSequence bids(rules_.contracts());
-  Contract::Ptr contract;
+  Contract::ConstPtr contract;
   PlayPosition declarer;
   boost::tie(contract, declarer) = bids.get_bids(players_);
   assert(declarer < 4);

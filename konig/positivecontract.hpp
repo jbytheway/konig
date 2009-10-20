@@ -25,7 +25,7 @@ class PositiveContract : public Contract {
         boost::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
         PlayPosition declarer_position
-      );
+      ) const;
 
     virtual bool grants_lead() const { return false; }
 
@@ -37,7 +37,7 @@ class PositiveContract : public Contract {
         const std::vector<Announcement>&
       ) const;
 
-    virtual Achievement result_for(const Cards& declarers_cards);
+    virtual Achievement result_for(const Cards& declarers_cards) const;
   private:
     PositiveContract() = default; // For serialization
 
