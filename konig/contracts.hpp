@@ -34,7 +34,9 @@ class Contracts {
       return contracts_.at(i);
     }
 
-    int index_of_contract(const std::string& name) const;
+    // Return -1 when not found
+    int index_by_name(const std::string& name) const;
+    int index_by_short_name(const std::string& short_name) const;
   private:
     template<typename Archive>
     void serialize(Archive& ar, unsigned int) {

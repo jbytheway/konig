@@ -70,7 +70,7 @@ SpecificPlayAi::SpecificPlayAi(const std::string& play_sequence)
 
 int SpecificPlayAi::bid() {
   if (last_non_pass_ == -1) {
-    return rules_.contracts().index_of_contract("solodreier");
+    return rules_.contracts().index_by_name("solodreier");
   }
   return -1;
 }
