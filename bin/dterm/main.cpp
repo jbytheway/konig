@@ -11,7 +11,7 @@ int main()
   boost::filesystem::path home(getenv("HOME"));
 
   boost::asio::io_service io;
-  konig::dterm::CommandHandler ch;
+  konig::dterm::CommandHandler ch(io);
   konig::dterm::ReadlineWrapper rw(io, ch, home/".konig"/"dterm"/"history");
   ch.set_output(rw);
   konig::client::ServerInterface si(io, ch);

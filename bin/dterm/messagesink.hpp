@@ -7,6 +7,7 @@ namespace konig { namespace dterm {
 class MessageSink {
   public:
     virtual void message(std::string const&) = 0;
+    virtual void set_prompt(std::string const&) = 0;
     virtual void interrupt() = 0;
   protected:
     MessageSink() = default;

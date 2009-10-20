@@ -14,6 +14,48 @@
 
 namespace konig { namespace dterm {
 
+namespace {
+
+// Classes inheriting from Checker provide a first-line check on commands to
+// see if they are suitable for the currently required game mechanic (e.g. a
+// bid)
+class Checker {
+  public:
+    Checker(GameTracker const& t, boost::any& r) :
+      tracker_(t),
+      return_(r)
+    {}
+    virtual bool command(std::list<std::string> const& tokens) = 0;
+  protected:
+    GameTracker const& tracker_;
+    boost::any& return_;
+};
+
+class BidChecker : public Checker {
+  public:
+    BidChecker(GameTracker const& t, boost::any& r) :
+      Checker(t, r)
+    {}
+
+    virtual bool command(std::list<std::string> const& tokens) {
+      if (tokens.size() != 1) return false;
+      std::string const& bid = tokens.front();
+      if (bid == "pass" || bid == "p") {
+        return_ = -1;
+        return true;
+      }
+      Contracts const& contracts = tracker_.rules().contracts();
+      int index = contracts.index_by_short_name(bid);
+      if (index != -1) {
+        return_ = index;
+        return true;
+      }
+      return false;
+    }
+};
+
+}
+
 class CommandHandler::CommandParser {
   public:
     typedef void (CommandParser::*Implementation)(std::list<std::string>);
@@ -65,8 +107,11 @@ class CommandHandler::CommandParser {
           ));
     }
 
+    boost::scoped_ptr<Checker>& pre_checker() { return pre_checker_; }
+
     void command(std::list<std::string> tokens) {
       if (tokens.empty()) return;
+      if (pre_checker_ && pre_checker_->command(tokens)) return;
 
       std::string name = std::move(tokens.front());
       tokens.pop_front();
@@ -175,12 +220,18 @@ class CommandHandler::CommandParser {
     Commands commands_;
     typedef std::unordered_map<std::string, Commands::iterator> CommandLookup;
     CommandLookup command_lookup_;
+    boost::scoped_ptr<Checker> pre_checker_;
 };
 
-CommandHandler::CommandHandler() :
+CommandHandler::CommandHandler(boost::asio::io_service& io) :
+  io_(io),
   server_interface_(NULL),
   output_(NULL),
-  parser_(new CommandParser(*this))
+  tracker_(*this),
+  aborting_(false),
+  mode_(UiMode::none),
+  parser_(new CommandParser(*this)),
+  expected_return_type_(NULL)
 {}
 
 CommandHandler::~CommandHandler() = default;
@@ -272,6 +323,7 @@ void CommandHandler::end()
 {
   assert(server_interface_);
   assert(output_);
+  aborting_ = true;
   server_interface_->close();
   output_->message("Exit");
   output_->interrupt();
@@ -294,6 +346,7 @@ void CommandHandler::abort()
   // Cannot assume server_interface_ is set in this function, because it may be
   // called from its constructor
   assert(output_);
+  aborting_ = true;
   output_->message("Network instigated abort");
   output_->interrupt();
 }
@@ -301,6 +354,23 @@ void CommandHandler::abort()
 Player& CommandHandler::player()
 {
   return tracker_;
+}
+
+void CommandHandler::set_mode(UiMode const mode)
+{
+  BOOST_STATIC_ASSERT(int(UiMode::max) == 2);
+  switch (mode) {
+    case UiMode::none:
+      parser_->pre_checker().reset();
+      output_->set_prompt("> ");
+      break;
+    case UiMode::bid:
+      parser_->pre_checker().reset(new BidChecker(tracker_, return_value_));
+      output_->set_prompt("bid> ");
+      break;
+    default:
+      KONIG_FATAL("unexpected UiMode");
+  }
 }
 
 }}

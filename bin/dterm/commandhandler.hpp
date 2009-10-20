@@ -1,16 +1,21 @@
 #ifndef KONIG_DTERM__COMMANDHANDLER_HPP
 #define KONIG_DTERM__COMMANDHANDLER_HPP
 
+#include <boost/any.hpp>
+
+#include <konig/fatal.hpp>
 #include <konig/client/serverinterface.hpp>
 
 #include "messagesink.hpp"
 #include "gametracker.hpp"
+#include "uimode.hpp"
+#include "asynccallerror.hpp"
 
 namespace konig { namespace dterm {
 
 class CommandHandler : public client::ClientInterface {
   public:
-    CommandHandler();
+    CommandHandler(boost::asio::io_service&);
     ~CommandHandler();
     void set_output(MessageSink&);
     void unset_output();
@@ -26,14 +31,49 @@ class CommandHandler : public client::ClientInterface {
     virtual void warning(std::string const&);
     virtual void abort();
     virtual Player& player();
+
+    // Functions used by GameTracker
+    template<typename ReturnType>
+    ReturnType get_from_user(UiMode const);
   private:
+    void set_mode(UiMode const);
+
+    boost::asio::io_service& io_;
     konig::client::ServerInterface* server_interface_;
     MessageSink* output_;
     GameTracker tracker_;
+    bool aborting_;
+    UiMode mode_;
 
     class CommandParser;
     boost::scoped_ptr<CommandParser> parser_;
+
+    std::type_info const* expected_return_type_;
+    boost::any return_value_;
 };
+
+template<typename ReturnType>
+ReturnType CommandHandler::get_from_user(UiMode const mode)
+{
+  if (expected_return_type_ ||
+      !return_value_.empty() ||
+      mode_ != UiMode::none) {
+    KONIG_FATAL("re-entrant use of get_from_user");
+  }
+  expected_return_type_ = &typeid(ReturnType);
+  set_mode(mode);
+  do {
+    io_.run_one();
+    if (aborting_) {
+      throw AsyncCallError();
+    }
+  } while (return_value_.empty());
+  ReturnType returnValue = boost::any_cast<ReturnType>(return_value_);
+  set_mode(UiMode::none);
+  expected_return_type_ = NULL;
+  return_value_ = boost::any();
+  return returnValue;
+}
 
 }}
 

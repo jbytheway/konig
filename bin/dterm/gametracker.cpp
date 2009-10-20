@@ -2,11 +2,17 @@
 
 #include <konig/fatal.hpp>
 
+#include "commandhandler.hpp"
+
 namespace konig { namespace dterm {
+
+GameTracker::GameTracker(CommandHandler& handler) :
+  handler_(handler)
+{}
 
 int GameTracker::bid()
 {
-  KONIG_FATAL("not implemented");
+  return handler_.get_from_user<int>(UiMode::bid);
 }
 
 KingCall GameTracker::call_king()

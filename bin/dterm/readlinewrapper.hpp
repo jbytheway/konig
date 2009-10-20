@@ -23,6 +23,7 @@ class ReadlineWrapper : public MessageSink {
     ~ReadlineWrapper();
     void line(char*);
     virtual void message(std::string const&);
+    virtual void set_prompt(std::string const&);
     virtual void interrupt();
   private:
     void timer_expired(boost::system::error_code const&);

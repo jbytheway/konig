@@ -101,6 +101,14 @@ void ReadlineWrapper::message(std::string const& message)
   rl_redisplay();
 }
 
+void ReadlineWrapper::set_prompt(std::string const& prompt)
+{
+  rl_set_prompt(prompt.c_str());
+  std::cout << std::endl;
+  rl_on_new_line();
+  rl_redisplay();
+}
+
 void ReadlineWrapper::interrupt()
 {
   interrupted_ = true;

@@ -5,14 +5,19 @@
 
 namespace konig { namespace dterm {
 
+class CommandHandler;
+
 class GameTracker : public ai::Ai {
   public:
+    GameTracker(CommandHandler&);
     virtual int bid();
     virtual KingCall call_king();
     virtual uint8_t choose_talon_half();
     virtual Cards discard();
     virtual std::vector<Announcement> announce();
     virtual Card play_card();
+  private:
+    CommandHandler& handler_;
 };
 
 }}
