@@ -1,7 +1,7 @@
-#ifndef KONIG_DTERM__ASYNCCALLERROR_HPP
-#define KONIG_DTERM__ASYNCCALLERROR_HPP
+#ifndef KONIG_CLIENT__ASYNCCALLERROR_HPP
+#define KONIG_CLIENT__ASYNCCALLERROR_HPP
 
-namespace konig { namespace dterm {
+namespace konig { namespace client {
 
 class AsyncCallError : std::runtime_error {
   public:
@@ -12,5 +12,5 @@ class AsyncCallError : std::runtime_error {
 
 }}
 
-#endif // KONIG_DTERM__ASYNCCALLERROR_HPP
+#endif // KONIG_CLIENT__ASYNCCALLERROR_HPP
 

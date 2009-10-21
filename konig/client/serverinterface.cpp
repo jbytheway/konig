@@ -7,6 +7,7 @@
 
 #include <konig/fatal.hpp>
 #include <konig/protocol.hpp>
+#include <konig/client/asynccallerror.hpp>
 
 namespace konig { namespace client {
 
@@ -102,7 +103,11 @@ void ServerInterface::message(Message<MessageType::notifyPlayCard> const& m)
 #define KONIG_CLIENT_SERVERINTERFACE_REQUEST(request, response, member) \
 void ServerInterface::message(Message<MessageType::request> const&)     \
 {                                                                       \
-  send(Message<MessageType::response>(client_.player().member()));      \
+  try {                                                                 \
+    send(Message<MessageType::response>(client_.player().member()));    \
+  } catch (AsyncCallError const&) {                                     \
+    close();                                                            \
+  }                                                                     \
 }
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestBid, bid, bid)
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestCallKing, callKing, call_king)

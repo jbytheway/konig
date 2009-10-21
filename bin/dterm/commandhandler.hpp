@@ -5,11 +5,11 @@
 
 #include <konig/fatal.hpp>
 #include <konig/client/serverinterface.hpp>
+#include <konig/client/asynccallerror.hpp>
 
 #include "messagesink.hpp"
 #include "gametracker.hpp"
 #include "uimode.hpp"
-#include "asynccallerror.hpp"
 
 namespace konig { namespace dterm {
 
@@ -65,7 +65,7 @@ ReturnType CommandHandler::get_from_user(UiMode const mode)
   do {
     io_.run_one();
     if (aborting_) {
-      throw AsyncCallError();
+      throw client::AsyncCallError();
     }
   } while (return_value_.empty());
   ReturnType returnValue = boost::any_cast<ReturnType>(return_value_);
