@@ -1,6 +1,13 @@
 #ifndef KONIG__KINGCALL_HPP
 #define KONIG__KINGCALL_HPP
 
+#include <string>
+
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
+
+#include <konig/core.hpp>
+
 namespace konig {
 
 class KingCall {
@@ -14,6 +21,8 @@ class KingCall {
       fourth_king,
       invalid
     };
+
+    static bool from_string(KingCall&, std::string const&);
 
     KingCall() = default; // For serialization
     KingCall(internal_enum v) : value_(v) {}

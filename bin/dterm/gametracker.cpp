@@ -17,27 +17,27 @@ int GameTracker::bid()
 
 KingCall GameTracker::call_king()
 {
-  KONIG_FATAL("not implemented");
+  return handler_.get_from_user<KingCall>(UiMode::callKing);
 }
 
 uint8_t GameTracker::choose_talon_half()
 {
-  KONIG_FATAL("not implemented");
+  return handler_.get_from_user<uint8_t>(UiMode::chooseTalonHalf);
 }
 
 Cards GameTracker::discard()
 {
-  KONIG_FATAL("not implemented");
+  return handler_.get_from_user<Cards>(UiMode::discard);
 }
 
 std::vector<Announcement> GameTracker::announce()
 {
-  KONIG_FATAL("not implemented");
+  return handler_.get_from_user<std::vector<Announcement>>(UiMode::announce);
 }
 
 Card GameTracker::play_card()
 {
-  KONIG_FATAL("not implemented");
+  return handler_.get_from_user<Card>(UiMode::playCard);
 }
 
 }}

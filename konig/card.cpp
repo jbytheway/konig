@@ -7,14 +7,14 @@
 
 namespace konig {
 
-Card::Card(const std::string& description)
+bool Card::from_string(Card& card, std::string const& description)
 {
   using namespace boost::spirit::classic;
   Suit temp;
-  bool x = parse(
+  return parse(
       description.c_str(),
-      uint_p[px::ref(*this) = px::construct<Card>(arg1)] |
-      str_p("Sk")[px::ref(*this) = Card(TrumpRank::skus)] |
+      uint_p[px::ref(card) = px::construct<Card>(arg1)] |
+      str_p("Sk")[px::ref(card) = Card(TrumpRank::skus)] |
       (
         (ch_p('C') | ch_p('D') | ch_p('H') | ch_p('S'))[
             px::ref(temp) =
@@ -25,7 +25,7 @@ Card::Card(const std::string& description)
           ch_p('t') | ch_p('9') | ch_p('8') | ch_p('7') |
           ch_p('1') | ch_p('2') | ch_p('3') | ch_p('4')
         )[
-            px::ref(*this) =
+            px::ref(card) =
               px::construct<Card>(
                 px::ref(temp),
                 px::construct<SuitRank>(
@@ -36,7 +36,11 @@ Card::Card(const std::string& description)
       ),
       space_p
     ).full;
-  if (!x) {
+}
+
+Card::Card(const std::string& description)
+{
+  if (!from_string(*this, description)) {
     throw std::logic_error("invalid card specification");
   }
 }

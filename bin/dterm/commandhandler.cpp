@@ -54,6 +54,107 @@ class BidChecker : public Checker {
     }
 };
 
+class KingChecker : public Checker {
+  public:
+    KingChecker(GameTracker const& t, boost::any& r) :
+      Checker(t, r)
+    {}
+
+    virtual bool command(std::list<std::string> const& tokens) {
+      if (tokens.size() != 1) return false;
+      std::string const& king = tokens.front();
+      KingCall k;
+      if (KingCall::from_string(k, king)) {
+        return_ = k;
+        return true;
+      }
+      return false;
+    }
+};
+
+class TalonChecker : public Checker {
+  public:
+    TalonChecker(GameTracker const& t, boost::any& r) :
+      Checker(t, r)
+    {}
+
+    virtual bool command(std::list<std::string> const& tokens) {
+      if (tokens.size() != 1) return false;
+      std::string const& choice = tokens.front();
+      if (choice == "0") {
+        return_ = uint8_t(0);
+        return true;
+      } else if (choice == "1") {
+        return_ = uint8_t(1);
+        return true;
+      }
+      return false;
+    }
+};
+
+class DiscardChecker : public Checker {
+  public:
+    DiscardChecker(GameTracker const& t, boost::any& r) :
+      Checker(t, r)
+    {}
+
+    virtual bool command(std::list<std::string> const& tokens) {
+      Cards cards;
+      BOOST_FOREACH(auto const& token, tokens) {
+        Card card;
+        if (Card::from_string(card, token)) {
+          cards.insert(card);
+        } else {
+          return false;
+        }
+      }
+      return_ = cards;
+      return true;
+    }
+};
+
+class AnnounceChecker : public Checker {
+  public:
+    AnnounceChecker(GameTracker const& t, boost::any& r) :
+      Checker(t, r)
+    {}
+
+    virtual bool command(std::list<std::string> const& tokens) {
+      if (tokens.empty()) return false;
+      if (tokens.back() != "p" && tokens.back() != "pass") return false;
+      std::vector<Announcement> announcements;
+      BOOST_FOREACH(auto const& token,
+          std::make_pair(tokens.begin(), boost::prior(tokens.end()))) {
+        Announcement announcement;
+        if (Announcement::from_string(announcement, token)) {
+          announcements.push_back(announcement);
+        } else {
+          return false;
+        }
+      }
+      return_ = announcements;
+      return true;
+    }
+};
+
+class CardChecker : public Checker {
+  public:
+    CardChecker(GameTracker const& t, boost::any& r) :
+      Checker(t, r)
+    {}
+
+    virtual bool command(std::list<std::string> const& tokens) {
+      if (tokens.size() != 1) return false;
+      std::string const& token = tokens.front();
+      Card card;
+      if (Card::from_string(card, token)) {
+        return_ = card;
+        return true;
+      }
+      return false;
+    }
+};
+
 }
 
 class CommandHandler::CommandParser {
@@ -358,7 +459,7 @@ Player& CommandHandler::player()
 
 void CommandHandler::set_mode(UiMode const mode)
 {
-  BOOST_STATIC_ASSERT(int(UiMode::max) == 2);
+  BOOST_STATIC_ASSERT(int(UiMode::max) == 7);
   switch (mode) {
     case UiMode::none:
       parser_->pre_checker().reset();
@@ -367,6 +468,28 @@ void CommandHandler::set_mode(UiMode const mode)
     case UiMode::bid:
       parser_->pre_checker().reset(new BidChecker(tracker_, return_value_));
       output_->set_prompt("bid> ");
+      break;
+    case UiMode::callKing:
+      parser_->pre_checker().reset(new KingChecker(tracker_, return_value_));
+      output_->set_prompt("call> ");
+      break;
+    case UiMode::chooseTalonHalf:
+      parser_->pre_checker().reset(new TalonChecker(tracker_, return_value_));
+      output_->set_prompt("choose> ");
+      break;
+    case UiMode::discard:
+      parser_->pre_checker().
+        reset(new DiscardChecker(tracker_, return_value_));
+      output_->set_prompt("discard> ");
+      break;
+    case UiMode::announce:
+      parser_->pre_checker().
+        reset(new AnnounceChecker(tracker_, return_value_));
+      output_->set_prompt("announce> ");
+      break;
+    case UiMode::playCard:
+      parser_->pre_checker().reset(new CardChecker(tracker_, return_value_));
+      output_->set_prompt("play> ");
       break;
     default:
       KONIG_FATAL("unexpected UiMode");

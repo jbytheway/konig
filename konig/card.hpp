@@ -18,6 +18,8 @@ class Card {
     template<typename OutputIterator>
     static void make_deck(OutputIterator);
 
+    static bool from_string(Card&, std::string const&);
+
     struct CompareRanks {
       bool operator()(const Card& l, const Card& r) {
         return l.rank_ < r.rank_;
