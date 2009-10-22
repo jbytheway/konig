@@ -12,6 +12,7 @@ GameTracker::GameTracker(CommandHandler& handler) :
 
 int GameTracker::bid()
 {
+  handler_.present_bidding();
   return handler_.get_from_user<int>(UiMode::bid);
 }
 

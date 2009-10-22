@@ -29,6 +29,7 @@ class Ai : public Player {
     virtual void game_start_hook() {}
 
     Ruleset const& rules() const { return rules_; }
+    std::vector<int> const& bidding() const { return bidding_; }
     std::vector<int> legal_bids() const;
     Cards legal_plays() const;
   protected:

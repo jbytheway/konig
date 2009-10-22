@@ -456,6 +456,20 @@ Player& CommandHandler::player()
   return tracker_;
 }
 
+void CommandHandler::present_bidding() const
+{
+  Contracts const& contracts = tracker_.rules().contracts();
+  std::string presentation = "The bidding so far is:\n";
+  BOOST_FOREACH(int bid, tracker_.bidding()) {
+    if (bid == -1) {
+      presentation += "pass ";
+    } else {
+      presentation += contracts.at(bid)->short_name() + " ";
+    }
+  }
+  output_->message(presentation);
+}
+
 void CommandHandler::set_mode(UiMode const mode)
 {
   BOOST_STATIC_ASSERT(int(UiMode::max) == 7);
