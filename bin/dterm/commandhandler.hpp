@@ -48,19 +48,15 @@ class CommandHandler : public client::ClientInterface {
     class CommandParser;
     boost::scoped_ptr<CommandParser> parser_;
 
-    std::type_info const* expected_return_type_;
     boost::any return_value_;
 };
 
 template<typename ReturnType>
 ReturnType CommandHandler::get_from_user(UiMode const mode)
 {
-  if (expected_return_type_ ||
-      !return_value_.empty() ||
-      mode_ != UiMode::none) {
+  if (!return_value_.empty() || mode_ != UiMode::none) {
     KONIG_FATAL("re-entrant use of get_from_user");
   }
-  expected_return_type_ = &typeid(ReturnType);
   set_mode(mode);
   do {
     io_.run_one();
@@ -70,7 +66,6 @@ ReturnType CommandHandler::get_from_user(UiMode const mode)
   } while (return_value_.empty());
   ReturnType returnValue = boost::any_cast<ReturnType>(return_value_);
   set_mode(UiMode::none);
-  expected_return_type_ = NULL;
   return_value_ = boost::any();
   return returnValue;
 }

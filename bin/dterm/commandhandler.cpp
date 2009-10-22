@@ -331,8 +331,7 @@ CommandHandler::CommandHandler(boost::asio::io_service& io) :
   tracker_(*this),
   aborting_(false),
   mode_(UiMode::none),
-  parser_(new CommandParser(*this)),
-  expected_return_type_(NULL)
+  parser_(new CommandParser(*this))
 {}
 
 CommandHandler::~CommandHandler() = default;
