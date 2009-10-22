@@ -12,7 +12,7 @@ class SpecificPlayAi : public Ai {
   public:
     SpecificPlayAi(const std::string& play_sequence);
 
-    virtual int bid();
+    virtual Bid bid();
     virtual KingCall call_king();
     virtual uint8_t choose_talon_half();
     virtual Cards discard();

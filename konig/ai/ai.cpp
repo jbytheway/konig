@@ -43,7 +43,7 @@ void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   position_ = pos;
   hand_ = std::move(hand);
   bidding_.clear();
-  last_non_pass_ = -1;
+  last_non_pass_ = Bid::pass;
   declarer_ = position_forehand;
   offence_ = false;
   contract_ = ContractAndAnnouncements();
@@ -57,12 +57,12 @@ void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   game_start_hook();
 }
 
-void Ai::notify_bid(PlayPosition p, int bid)
+void Ai::notify_bid(PlayPosition p, Bid bid)
 {
-  if (bid < -1 || bid >= int(rules_.contracts().size())) {
+  if (bid < Bid::pass || bid >= Bid(rules_.contracts().size())) {
     throw std::logic_error("invalid bid");
   }
-  if (bid != -1) {
+  if (!bid.is_pass()) {
     declarer_ = p;
     last_non_pass_ = bid;
     offence_ = (p == position_);

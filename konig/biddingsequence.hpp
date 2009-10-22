@@ -18,7 +18,7 @@ class BiddingSequence {
     get_bids(const std::vector<Player::Ptr>&);
   private:
     const Contracts& contracts_;
-    std::vector<int> bids_;
+    std::vector<Bid> bids_;
 };
 
 }

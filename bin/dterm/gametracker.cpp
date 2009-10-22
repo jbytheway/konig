@@ -10,10 +10,10 @@ GameTracker::GameTracker(CommandHandler& handler) :
   handler_(handler)
 {}
 
-int GameTracker::bid()
+Bid GameTracker::bid()
 {
   handler_.present_bidding();
-  return handler_.get_from_user<int>(UiMode::bid);
+  return handler_.get_from_user<Bid>(UiMode::bid);
 }
 
 KingCall GameTracker::call_king()

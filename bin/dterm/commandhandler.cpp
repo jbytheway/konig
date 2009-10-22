@@ -39,15 +39,15 @@ class BidChecker : public Checker {
 
     virtual bool command(std::list<std::string> const& tokens) {
       if (tokens.size() != 1) return false;
-      std::string const& bid = tokens.front();
-      if (bid == "pass" || bid == "p") {
-        return_ = -1;
+      std::string const& token = tokens.front();
+      if (token == "pass" || token == "p") {
+        return_ = Bid::pass;
         return true;
       }
       Contracts const& contracts = tracker_.rules().contracts();
-      int index = contracts.index_by_short_name(bid);
-      if (index != -1) {
-        return_ = index;
+      Bid bid = contracts.index_by_short_name(token);
+      if (!bid.is_pass()) {
+        return_ = bid;
         return true;
       }
       return false;
@@ -460,8 +460,8 @@ void CommandHandler::present_bidding() const
 {
   Contracts const& contracts = tracker_.rules().contracts();
   std::string presentation = "The bidding so far is:\n";
-  BOOST_FOREACH(int bid, tracker_.bidding()) {
-    if (bid == -1) {
+  BOOST_FOREACH(Bid bid, tracker_.bidding()) {
+    if (bid.is_pass()) {
       presentation += "pass ";
     } else {
       presentation += contracts.at(bid)->short_name() + " ";

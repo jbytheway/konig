@@ -9,7 +9,7 @@ namespace konig { namespace ai {
 
 class NoddyAi : public Ai {
   public:
-    virtual int bid();
+    virtual Bid bid();
     virtual KingCall call_king();
     virtual uint8_t choose_talon_half();
     virtual Cards discard();

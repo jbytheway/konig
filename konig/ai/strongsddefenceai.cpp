@@ -50,11 +50,11 @@ void StrongSdDefenceAi::game_start_hook()
   }
 }
 
-int StrongSdDefenceAi::bid() {
-  if (last_non_pass_ == -1) {
+Bid StrongSdDefenceAi::bid() {
+  if (last_non_pass_.is_pass()) {
     throw std::logic_error("defence ai forced to bid");
   }
-  return -1;
+  return Bid::pass;
 }
 
 KingCall StrongSdDefenceAi::call_king() {

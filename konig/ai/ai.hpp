@@ -18,7 +18,7 @@ class Ai : public Player {
     Ai();
 
     virtual void start_game(Ruleset, PlayPosition, Cards hand);
-    virtual void notify_bid(PlayPosition, int);
+    virtual void notify_bid(PlayPosition, Bid);
     virtual void notify_call_king(KingCall);
     virtual void notify_talon(const boost::array<Cards, 2>& talon);
     virtual void notify_talon_choice(uint8_t);
@@ -29,15 +29,14 @@ class Ai : public Player {
     virtual void game_start_hook() {}
 
     Ruleset const& rules() const { return rules_; }
-    std::vector<int> const& bidding() const { return bidding_; }
-    std::vector<int> legal_bids() const;
+    std::vector<Bid> const& bidding() const { return bidding_; }
     Cards legal_plays() const;
   protected:
     Ruleset rules_;
     PlayPosition position_;
     Cards hand_;
-    std::vector<int> bidding_;
-    int last_non_pass_;
+    std::vector<Bid> bidding_;
+    Bid last_non_pass_;
     PlayPosition declarer_;
     bool offence_;
     ContractAndAnnouncements contract_;

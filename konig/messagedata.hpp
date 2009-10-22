@@ -71,7 +71,7 @@ struct MessageData<MessageType::requestBid> {
 template<>
 struct MessageData<MessageType::bid> {
   typedef fusion::map<
-    fusion::pair<fields::bid, int>
+    fusion::pair<fields::bid, Bid>
   > type;
 };
 
@@ -79,7 +79,7 @@ template<>
 struct MessageData<MessageType::notifyBid> {
   typedef fusion::map<
     fusion::pair<fields::position, PlayPosition>,
-    fusion::pair<fields::bid, int>
+    fusion::pair<fields::bid, Bid>
   > type;
 };
 

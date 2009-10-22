@@ -12,6 +12,7 @@
 namespace konig { namespace client {
 
 ServerInterface::ServerInterface(asio::io_service& io, ClientInterface& cl) :
+  io_(io),
   client_(cl),
   id_(ClientId::invalid())
 {
@@ -100,14 +101,38 @@ void ServerInterface::message(Message<MessageType::notifyPlayCard> const& m)
     );
 }
 
+namespace {
+
+template<
+  MessageType::internal_enum response,
+  typename Message<response>::only_value (Player::*member)()
+>
+class Responder {
+  public:
+    Responder(ServerInterface& i, Player& p) :
+      server_interface_(i),
+      player_(p)
+    {}
+    void operator()() {
+      try {
+        server_interface_.send(Message<response>((player_.*member)()));
+      } catch (AsyncCallError const&) {
+        server_interface_.close();
+      }
+    }
+  private:
+    ServerInterface& server_interface_;
+    Player& player_;
+};
+
+}
+
 #define KONIG_CLIENT_SERVERINTERFACE_REQUEST(request, response, member) \
 void ServerInterface::message(Message<MessageType::request> const&)     \
 {                                                                       \
-  try {                                                                 \
-    send(Message<MessageType::response>(client_.player().member()));    \
-  } catch (AsyncCallError const&) {                                     \
-    close();                                                            \
-  }                                                                     \
+  io_.post(Responder<MessageType::response, &Player::member>(           \
+        *this, client_.player()                                         \
+      ));                                                               \
 }
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestBid, bid, bid)
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestCallKing, callKing, call_king)

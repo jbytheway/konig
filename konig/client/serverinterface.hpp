@@ -46,6 +46,7 @@ class ServerInterface {
 
     void close();
   private:
+    asio::io_service& io_;
     messaging::connection::ptr connection_;
     ClientInterface& client_;
     ClientId id_;

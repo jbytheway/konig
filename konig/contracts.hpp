@@ -9,6 +9,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
+#include <konig/bid.hpp>
 #include <konig/contract.hpp>
 
 namespace konig {
@@ -27,16 +28,22 @@ class Contracts {
     }
 
     size_t size() const { return contracts_.size(); }
-    const boost::shared_ptr<Contract const> operator[](size_t i) const {
+    const boost::shared_ptr<Contract const> operator[](size_t const i) const {
       return contracts_[i];
     }
-    const boost::shared_ptr<Contract const> at(size_t i) const {
+    const boost::shared_ptr<Contract const> operator[](Bid const i) const {
+      return contracts_[i.value()];
+    }
+    const boost::shared_ptr<Contract const> at(size_t const i) const {
       return contracts_.at(i);
     }
+    const boost::shared_ptr<Contract const> at(Bid const i) const {
+      return contracts_.at(i.value());
+    }
 
-    // Return -1 when not found
-    int index_by_name(const std::string& name) const;
-    int index_by_short_name(const std::string& short_name) const;
+    // Return Bid::pass when not found
+    Bid index_by_name(const std::string& name) const;
+    Bid index_by_short_name(const std::string& short_name) const;
   private:
     template<typename Archive>
     void serialize(Archive& ar, unsigned int) {

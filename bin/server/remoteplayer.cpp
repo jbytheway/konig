@@ -33,7 +33,7 @@ KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(
 KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(play_card, requestPlayCard, playCard)
 #undef KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL
 
-void RemotePlayer::notify_bid(PlayPosition pos, int bid)
+void RemotePlayer::notify_bid(PlayPosition pos, Bid bid)
 {
   client_.send(Message<MessageType::notifyBid>(
         std::move(pos), std::move(bid)

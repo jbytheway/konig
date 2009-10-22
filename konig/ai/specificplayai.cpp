@@ -68,11 +68,11 @@ SpecificPlayAi::SpecificPlayAi(const std::string& play_sequence)
   }
 }
 
-int SpecificPlayAi::bid() {
-  if (last_non_pass_ == -1) {
+Bid SpecificPlayAi::bid() {
+  if (last_non_pass_.is_pass()) {
     return rules_.contracts().index_by_name("solodreier");
   }
-  return -1;
+  return Bid::pass;
 }
 
 KingCall SpecificPlayAi::call_king() {

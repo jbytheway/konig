@@ -2,11 +2,11 @@
 
 namespace konig { namespace ai {
 
-int NoddyAi::bid() {
-  if (last_non_pass_ == -1) {
+Bid NoddyAi::bid() {
+  if (last_non_pass_.is_pass()) {
     return rules_.contracts().index_by_name("solodreier");
   }
-  return -1;
+  return Bid::pass;
 }
 
 KingCall NoddyAi::call_king() {

@@ -10,7 +10,7 @@ class CommandHandler;
 class GameTracker : public ai::Ai {
   public:
     GameTracker(CommandHandler&);
-    virtual int bid();
+    virtual Bid bid();
     virtual KingCall call_king();
     virtual uint8_t choose_talon_half();
     virtual Cards discard();

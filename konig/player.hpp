@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <konig/bid.hpp>
 #include <konig/ruleset.hpp>
 #include <konig/cards.hpp>
 #include <konig/playposition.hpp>
@@ -16,8 +17,8 @@ class Player {
     typedef boost::shared_ptr<Player> Ptr;
 
     virtual void start_game(Ruleset, PlayPosition, Cards) = 0;
-    virtual int bid() = 0;
-    virtual void notify_bid(PlayPosition, int) = 0;
+    virtual Bid bid() = 0;
+    virtual void notify_bid(PlayPosition, Bid) = 0;
     virtual KingCall call_king() = 0;
     virtual void notify_call_king(KingCall) = 0;
     virtual void notify_talon(boost::array<Cards, 2> const& talon) = 0;
