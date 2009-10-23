@@ -42,6 +42,11 @@ std::vector<Announcement> GameTracker::announce()
   return handler_.get_from_user<std::vector<Announcement>>(UiMode::announce);
 }
 
+void GameTracker::notify_announcements_done()
+{
+  handler_.present_contract();
+}
+
 Card GameTracker::play_card()
 {
   return handler_.get_from_user<Card>(UiMode::playCard);

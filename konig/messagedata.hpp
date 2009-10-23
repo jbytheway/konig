@@ -171,6 +171,12 @@ struct MessageData<MessageType::notifyAnnouncements> {
 };
 
 template<>
+struct MessageData<MessageType::notifyAnnouncementsDone> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
 struct MessageData<MessageType::requestPlayCard> {
   typedef fusion::map<
   > type;

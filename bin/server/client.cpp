@@ -35,6 +35,7 @@ KONIG_SERVER_CLIENT_IGNORE(MessageType::requestDiscard)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyDiscard)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::requestAnnouncements)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyAnnouncements)
+KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyAnnouncementsDone)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::requestPlayCard)
 KONIG_SERVER_CLIENT_IGNORE(MessageType::notifyPlayCard)
 #undef KONIG_SERVER_CLIENT_IGNORE

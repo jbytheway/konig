@@ -75,6 +75,11 @@ void RemotePlayer::notify_announcements(std::vector<Announcement> announcements)
       ));
 }
 
+void RemotePlayer::notify_announcements_done()
+{
+  client_.send(Message<MessageType::notifyAnnouncementsDone>());
+}
+
 void RemotePlayer::notify_play_card(PlayPosition pos, Card card)
 {
   client_.send(Message<MessageType::notifyPlayCard>(

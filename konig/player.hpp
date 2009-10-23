@@ -28,6 +28,7 @@ class Player {
     virtual void notify_discard(Cards) = 0;
     virtual std::vector<Announcement> announce() = 0;
     virtual void notify_announcements(std::vector<Announcement>) = 0;
+    virtual void notify_announcements_done() {}
     virtual Card play_card() = 0;
     virtual void notify_play_card(PlayPosition, Card) = 0;
   protected:

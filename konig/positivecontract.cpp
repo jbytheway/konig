@@ -158,6 +158,11 @@ boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
   ContractAndAnnouncements whole_contract =
     announcements.get_announcements(players, offence, declarer_position);
 
+  std::for_each(
+      players.begin(), players.end(),
+      boost::bind(&Player::notify_announcements_done, _1)
+    );
+
   std::vector<Trick> tricks = play_tricks(
       hands, declarers_cards, defences_cards,
       players, whole_contract, declarer_position, offence

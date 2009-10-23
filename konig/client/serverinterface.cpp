@@ -162,6 +162,13 @@ KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
   )
 #undef KONIG_CLIENT_SERVERINTERFACE_NOTIFY
 
+void ServerInterface::message(
+    Message<MessageType::notifyAnnouncementsDone> const&
+  )
+{
+  client_.player().notify_announcements_done();
+}
+
 void ServerInterface::close()
 {
   connection_->close_gracefully();

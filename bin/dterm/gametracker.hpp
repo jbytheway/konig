@@ -16,6 +16,7 @@ class GameTracker : public ai::Ai {
     virtual uint8_t choose_talon_half();
     virtual Cards discard();
     virtual std::vector<Announcement> announce();
+    virtual void notify_announcements_done();
     virtual Card play_card();
   private:
     CommandHandler& handler_;
