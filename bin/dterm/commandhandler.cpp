@@ -510,7 +510,7 @@ void CommandHandler::present_current_trick() const
     }
     if (p == tracker_.declarer()) os << "#";
     if (p == tracker_.position()) os << "@";
-    if (trick.played() && trick.leader() == p) os << "*";
+    if (trick.played() && trick.winner() == p) os << "*";
     os << " ";
   }
   output_->message(os.str());
