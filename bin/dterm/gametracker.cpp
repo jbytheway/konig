@@ -10,6 +10,11 @@ GameTracker::GameTracker(CommandHandler& handler) :
   handler_(handler)
 {}
 
+void GameTracker::game_start_hook()
+{
+  handler_.present_hand();
+}
+
 Bid GameTracker::bid()
 {
   handler_.present_bidding();

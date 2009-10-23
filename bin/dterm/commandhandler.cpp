@@ -456,6 +456,11 @@ Player& CommandHandler::player()
   return tracker_;
 }
 
+void CommandHandler::present_hand() const
+{
+  output_->message(boost::lexical_cast<std::string>(tracker_.hand()));
+}
+
 void CommandHandler::present_bidding() const
 {
   Contracts const& contracts = tracker_.rules().contracts();
