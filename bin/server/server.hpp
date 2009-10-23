@@ -72,6 +72,7 @@ class Server {
 
     boost::asio::io_service& io_;
     std::ostream& out_;
+    bool closing_;
     boost::filesystem::path ai_exe_;
     messaging::server<Protocol, callback_helper> message_server_;
     typedef boost::unordered_map<ClientId, std::unique_ptr<Client>> Clients;

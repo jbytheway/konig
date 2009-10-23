@@ -81,6 +81,7 @@ Server::Server(
   ) :
   io_(io),
   out_(o),
+  closing_(false),
   ai_exe_(std::move(ai_exe)),
   message_server_(
       io,
@@ -125,7 +126,7 @@ void Server::error(
   ) {
   std::ostringstream os;
   os << "server: " << es << ": " << ec.message();
-  if (!interrupted) {
+  if (!closing_) {
     throw std::runtime_error(os.str());
   }
 }
@@ -176,7 +177,7 @@ void Server::remove_client(Client const* client)
 
 void Server::close()
 {
-  out_ << "Server interrupted.  Shutting down" << std::endl;
+  closing_ = true;
   BOOST_FOREACH(Clients::value_type const& client_pair, clients_) {
     client_pair.second->close();
   }
@@ -259,13 +260,18 @@ void Server::go()
   } catch (remote_call_error&) {
     out_ << "remote call failed; game aborted\n";
   }
+  close();
 }
 
 void Server::check_for_interrupt(boost::system::error_code const& e)
 {
   if (e) {
     KONIG_FATAL("error in Server::check_for_interrupt");
+  } else if (closing_) {
+    // Don't need to do anything
+    return;
   } else if (interrupted) {
+    out_ << "Server interrupted.  Shutting down" << std::endl;
     close();
   } else {
     interrupt_monitor_.expires_from_now(boost::posix_time::milliseconds(10));
