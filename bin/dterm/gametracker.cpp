@@ -49,6 +49,7 @@ void GameTracker::notify_announcements_done()
 
 Card GameTracker::play_card()
 {
+  handler_.present_hand();
   handler_.present_current_trick();
   return handler_.get_from_user<Card>(UiMode::playCard);
 }
