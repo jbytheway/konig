@@ -27,6 +27,7 @@ class Ai : public Player {
     virtual void notify_play_card(PlayPosition, Card);
 
     virtual void game_start_hook() {}
+    virtual void trick_complete_hook() {}
 
     Ruleset const& rules() const { return rules_; }
     PlayPosition position() const { return position_; }

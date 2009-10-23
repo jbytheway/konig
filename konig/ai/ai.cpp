@@ -125,6 +125,7 @@ void Ai::notify_play_card(PlayPosition p, Card c)
   tricks_.back().add(c);
   if (tricks_.back().complete()) {
     assert(tricks_.size() < 13);
+    trick_complete_hook();
     if (tricks_.size() < 12) {
       tricks_.push_back(
           Trick(tricks_.back().winner(), contract_.contract()->rising_rule())

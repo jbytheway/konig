@@ -54,5 +54,10 @@ Card GameTracker::play_card()
   return handler_.get_from_user<Card>(UiMode::playCard);
 }
 
+void GameTracker::trick_complete_hook()
+{
+  handler_.present_current_trick();
+}
+
 }}
 
