@@ -497,6 +497,25 @@ void CommandHandler::present_contract() const
     );
 }
 
+void CommandHandler::present_current_trick() const
+{
+  std::ostringstream os;
+  Trick const& trick = tracker_.tricks().back();
+  for (PlayPosition p = position_forehand; p < position_max; ++p) {
+    int positionInTrick = (p+4-trick.leader())%4;
+    if (positionInTrick < trick.played()) {
+      os << trick.cards()[positionInTrick];
+    } else {
+      os << "--";
+    }
+    if (trick.played() && trick.leader() == p) os << "*";
+    if (p == tracker_.declarer()) os << "#";
+    if (p == tracker_.position()) os << "@";
+    os << " ";
+  }
+  output_->message(os.str());
+}
+
 void CommandHandler::set_mode(UiMode const mode)
 {
   BOOST_STATIC_ASSERT(int(UiMode::max) == 7);

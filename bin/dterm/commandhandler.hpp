@@ -38,6 +38,7 @@ class CommandHandler : public client::ClientInterface {
     void present_hand() const;
     void present_bidding() const;
     void present_contract() const;
+    void present_current_trick() const;
   private:
     void set_mode(UiMode const);
 
