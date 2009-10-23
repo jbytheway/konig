@@ -20,6 +20,8 @@ class ContractAndAnnouncements {
 
     const Contract::ConstPtr& contract() const { return contract_; }
 
+    const Announcednesses& announcednesses() const { return announcednesses_; }
+
     const std::vector<Announcement>& last_announcements() const {
       return last_announcements_;
     }
@@ -65,6 +67,8 @@ class ContractAndAnnouncements {
     typedef std::map<std::pair<bool, Card>, unsigned int> PlayConstraints;
     PlayConstraints play_constraints_;
 };
+
+std::ostream& operator<<(std::ostream&, const ContractAndAnnouncements&);
 
 }
 

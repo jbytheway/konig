@@ -38,6 +38,7 @@ Cards GameTracker::discard()
 
 std::vector<Announcement> GameTracker::announce()
 {
+  handler_.present_contract();
   return handler_.get_from_user<std::vector<Announcement>>(UiMode::announce);
 }
 

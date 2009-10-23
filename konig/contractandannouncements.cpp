@@ -97,5 +97,28 @@ Outcome ContractAndAnnouncements::score(
   return o;
 }
 
+std::ostream& operator<<(std::ostream& o, const ContractAndAnnouncements& c)
+{
+  o << c.contract()->short_name();
+  BOOST_FOREACH(auto const& i, c.announcednesses()) {
+    bool defensive = !i.first.first;
+    Feat f = i.first.second;
+    Announcedness announcedness = i.second;
+    if (announcedness != Announcedness::unannounced) {
+      o << f;
+      if (defensive) {
+        o << '!';
+      }
+
+      // Fake the announcedness of the game to get the right output format
+      if (f == Feat::game) {
+        announcedness = Announcedness::unannounced;
+      }
+      o << announcedness.string(Achievement::neutral);
+    }
+  }
+  return o;
+}
+
 }
 

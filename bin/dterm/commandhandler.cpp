@@ -480,6 +480,23 @@ void CommandHandler::present_bidding() const
   output_->message(presentation);
 }
 
+void CommandHandler::present_contract() const
+{
+  std::string side;
+  if (!tracker_.offence()) {
+    side = "defending";
+  } else if (tracker_.declarer() == tracker_.position()) {
+    side = "declarer";
+  } else {
+    side = "partner";
+  }
+  output_->message(
+      "The contract is "+
+      boost::lexical_cast<std::string>(tracker_.contract())+
+      " and you are "+side
+    );
+}
+
 void CommandHandler::set_mode(UiMode const mode)
 {
   BOOST_STATIC_ASSERT(int(UiMode::max) == 7);

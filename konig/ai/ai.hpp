@@ -29,10 +29,13 @@ class Ai : public Player {
     virtual void game_start_hook() {}
 
     Ruleset const& rules() const { return rules_; }
+    PlayPosition position() const { return position_; }
     Cards const& hand() const { return hand_; }
     std::vector<Bid> const& bidding() const { return bidding_; }
     Bid last_non_pass() const { return last_non_pass_; }
     PlayPosition declarer() const { return declarer_; }
+    bool offence() const { return offence_; }
+    ContractAndAnnouncements const& contract() const { return contract_; }
     std::vector<Trick> const& tricks() const { return tricks_; }
     Cards legal_plays() const;
   private:

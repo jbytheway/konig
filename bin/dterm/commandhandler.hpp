@@ -37,6 +37,7 @@ class CommandHandler : public client::ClientInterface {
     ReturnType get_from_user(UiMode const);
     void present_hand() const;
     void present_bidding() const;
+    void present_contract() const;
   private:
     void set_mode(UiMode const);
 
