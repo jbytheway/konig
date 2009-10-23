@@ -121,8 +121,11 @@ class AnnounceChecker : public Checker {
 
     virtual bool command(std::list<std::string> const& tokens) {
       if (tokens.empty()) return false;
-      if (tokens.back() != "p" && tokens.back() != "pass") return false;
       std::vector<Announcement> announcements;
+      if (tokens.back() == "p" || tokens.back() == "pass") {
+        return_ = announcements;
+        return true;
+      }
       BOOST_FOREACH(auto const& token,
           std::make_pair(tokens.begin(), boost::prior(tokens.end()))) {
         Announcement announcement;
