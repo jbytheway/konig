@@ -3,8 +3,8 @@
 namespace konig { namespace ai {
 
 Bid NoddyAi::bid() {
-  if (last_non_pass_.is_pass()) {
-    return rules_.contracts().index_by_name("solodreier");
+  if (last_non_pass().is_pass()) {
+    return rules().contracts().index_by_name("solodreier");
   }
   return Bid::pass;
 }
@@ -26,8 +26,8 @@ std::vector<Announcement> NoddyAi::announce() {
 }
 
 Card NoddyAi::play_card() {
-  assert(!hand_.empty());
   Cards legal = legal_plays();
+  assert(!legal.empty());
   std::uniform_int<size_t> card_chooser(0, legal.size()-1);
   size_t which = card_chooser(random_engine_);
   Cards::iterator i = legal.begin();

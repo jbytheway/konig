@@ -31,8 +31,11 @@ class Ai : public Player {
     Ruleset const& rules() const { return rules_; }
     Cards const& hand() const { return hand_; }
     std::vector<Bid> const& bidding() const { return bidding_; }
+    Bid last_non_pass() const { return last_non_pass_; }
+    PlayPosition declarer() const { return declarer_; }
+    std::vector<Trick> const& tricks() const { return tricks_; }
     Cards legal_plays() const;
-  protected:
+  private:
     Ruleset rules_;
     PlayPosition position_;
     Cards hand_;

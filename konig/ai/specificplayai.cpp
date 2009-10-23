@@ -69,8 +69,8 @@ SpecificPlayAi::SpecificPlayAi(const std::string& play_sequence)
 }
 
 Bid SpecificPlayAi::bid() {
-  if (last_non_pass_.is_pass()) {
-    return rules_.contracts().index_by_name("solodreier");
+  if (last_non_pass().is_pass()) {
+    return rules().contracts().index_by_name("solodreier");
   }
   return Bid::pass;
 }
@@ -92,12 +92,12 @@ std::vector<Announcement> SpecificPlayAi::announce() {
 }
 
 Card SpecificPlayAi::play_card() {
-  size_t current_trick = tricks_.size() - 1;
+  size_t current_trick = tricks().size() - 1;
   assert(current_trick < 12);
   Cards legal_plays = this->legal_plays();
   BOOST_FOREACH(const PlayRule::Ptr& p, play_rules_[current_trick]) {
     Card c;
-    if (p->apply(tricks_[current_trick], legal_plays, c)) {
+    if (p->apply(tricks()[current_trick], legal_plays, c)) {
       return c;
     }
   }

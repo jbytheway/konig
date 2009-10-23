@@ -458,7 +458,9 @@ Player& CommandHandler::player()
 
 void CommandHandler::present_hand() const
 {
-  output_->message(boost::lexical_cast<std::string>(tracker_.hand()));
+  output_->message(
+      "Your hand is:\n"+boost::lexical_cast<std::string>(tracker_.hand())
+    );
 }
 
 void CommandHandler::present_bidding() const

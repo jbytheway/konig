@@ -13,7 +13,7 @@ void StrongSdDefenceAi::game_start_hook()
   cards_to_preserve_.clear();
   // collect size and value of each suit
   std::map<Suit, std::pair<size_t, size_t>> suits;
-  BOOST_FOREACH(const Card& card, hand_) {
+  BOOST_FOREACH(const Card& card, hand()) {
     std::map<Suit, std::pair<size_t, size_t>>::iterator i =
       suits.insert(std::make_pair(card.suit(), std::make_pair(0, 0))).first;
     i->second.first += 1;
@@ -35,8 +35,7 @@ void StrongSdDefenceAi::game_start_hook()
     if (suit == Suit::trumps) {
       continue;
     }
-    const std::pair<Cards::iterator, Cards::iterator> suit_range =
-      hand_.equal_range(suit);
+    const auto suit_range = hand().equal_range(suit);
     SuitRank top_rank = boost::prior(suit_range.second)->suit_rank();
     int num_needed = SuitRank::king - top_rank + 1;
     if (std::distance(suit_range.first, suit_range.second) < num_needed) {
@@ -51,7 +50,7 @@ void StrongSdDefenceAi::game_start_hook()
 }
 
 Bid StrongSdDefenceAi::bid() {
-  if (last_non_pass_.is_pass()) {
+  if (last_non_pass().is_pass()) {
     throw std::logic_error("defence ai forced to bid");
   }
   return Bid::pass;
@@ -75,7 +74,7 @@ std::vector<Announcement> StrongSdDefenceAi::announce() {
 
 Card StrongSdDefenceAi::play_card() {
   Cards legal = legal_plays();
-  const Trick& trick = tricks_.back();
+  const Trick& trick = tricks().back();
   Cards unpreserved;
   Cards preserved;
   // Slower than using proper algorithms...
@@ -91,7 +90,7 @@ Card StrongSdDefenceAi::play_card() {
     // We're leading
     return play_low_short(unpreserved, preserved);
   }
-  const int declarers_position_in_trick = (declarer_ - trick.leader() + 4)%4;
+  const int declarers_position_in_trick = (declarer() - trick.leader() + 4)%4;
   const bool declarer_has_played = trick.played() > declarers_position_in_trick;
   const Card declarer_played = trick.cards()[declarers_position_in_trick];
   const bool declarer_played_strongly =
@@ -113,7 +112,7 @@ Card StrongSdDefenceAi::play_card() {
     }
   } else {
     // We're discarding
-    if (declarer_played_strongly && trick.winner() == declarer_) {
+    if (declarer_played_strongly && trick.winner() == declarer()) {
       // Discard bottom card from shortest suit
       return play_low_short(unpreserved, preserved);
     } else {
