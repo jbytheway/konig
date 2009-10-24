@@ -32,6 +32,8 @@ std::string Announcedness::string(const Achievement achievement) const
       case  Achievement::off:
         result += "-";
         break;
+      case Achievement::neutral:
+        break;
       case Achievement::made:
         result += "+";
         break;
