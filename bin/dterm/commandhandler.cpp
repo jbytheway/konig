@@ -380,7 +380,8 @@ void CommandHandler::command(std::string const& c)
   assert(output_);
 #if 0
   std::vector<std::string> tokens;
-  // Requires Spirit 2.1, which isn't in Gentoo yet (it's also not finished)
+  // Requires Spirit 2.1 (i.e. Boost 1.41), which isn't in Gentoo yet
+  // (This code is also not finished)
   using namespace boost::spirit;
   using namespace boost::spirit::qi;
   typedef std::string::const_iterator it;
