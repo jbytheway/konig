@@ -1,0 +1,7 @@
+BIN = konig-test
+LIBS = -lboost_unit_test_framework-mt
+LIB_DEP_NAMES = konig
+
+test: $(BIN)
+	./$<
+
