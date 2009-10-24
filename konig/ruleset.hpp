@@ -18,6 +18,7 @@ class Ruleset {
 
     const Contracts& contracts() const { return contracts_; }
 
+    static Ruleset cheltenham();
     static Ruleset solodreier_only();
   private:
     template<typename Archive>

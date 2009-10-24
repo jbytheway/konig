@@ -27,6 +27,12 @@ class Contracts {
       contracts_.push_back(c);
     }
 
+    Contracts(std::vector<boost::shared_ptr<Contract>> c, uint32_t r) :
+      contracts_(std::move(c)),
+      reserved_contracts_(r)
+    {
+    }
+
     size_t size() const { return contracts_.size(); }
     const boost::shared_ptr<Contract const> operator[](size_t const i) const {
       return contracts_[i];
@@ -53,7 +59,7 @@ class Contracts {
 
     // HACK: Would like to use const Contracts here but it breaks serialization
     std::vector<boost::shared_ptr<Contract>> contracts_;
-    size_t reserved_contracts_;
+    uint32_t reserved_contracts_;
 };
 
 }

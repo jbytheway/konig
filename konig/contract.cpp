@@ -2,6 +2,7 @@
 
 #include <boost/bind.hpp>
 
+#include <konig/fatal.hpp>
 #include <konig/player.hpp>
 #include <konig/positivecontract.hpp>
 #include <konig/contractandannouncements.hpp>
@@ -62,6 +63,63 @@ std::vector<Trick> Contract::play_tricks(
   }
 
   return tricks;
+}
+
+Contract::Ptr Contract::rufer()
+{
+  return Ptr(new PositiveContract("r", "rufer", true, 1, false, false));
+}
+
+Contract::Ptr Contract::trischaken()
+{
+  KONIG_FATAL("not implemented");
+}
+
+Contract::Ptr Contract::sechserdreier()
+{
+  return
+    Ptr(new PositiveContract("6d", "sechserdreier", false, 2, false, true));
+}
+
+Contract::Ptr Contract::solo()
+{
+  return Ptr(new PositiveContract("s", "solo", true, 0, false, false));
+}
+
+Contract::Ptr Contract::piccolo()
+{
+  KONIG_FATAL("not implemented");
+}
+
+Contract::Ptr Contract::besserrufer()
+{
+  return Ptr(new PositiveContract("br", "besserrufer", true, 1, true, false));
+}
+
+Contract::Ptr Contract::bettel()
+{
+  KONIG_FATAL("not implemented");
+}
+
+Contract::Ptr Contract::dreier()
+{
+  return Ptr(new PositiveContract("d", "dreier", false, 1, false, false));
+}
+
+Contract::Ptr Contract::piccolo_ouvert()
+{
+  KONIG_FATAL("not implemented");
+}
+
+Contract::Ptr Contract::besserdreier()
+{
+  return
+    Ptr(new PositiveContract("bd", "besserdreier", false, 1, true, false));
+}
+
+Contract::Ptr Contract::bettel_ouvert()
+{
+  KONIG_FATAL("not implemented");
 }
 
 Contract::Ptr Contract::solodreier()

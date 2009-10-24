@@ -57,6 +57,18 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         bool offence[4]
       ) const;
 
+    // Contracts
+    static Ptr rufer();
+    static Ptr trischaken();
+    static Ptr sechserdreier();
+    static Ptr solo();
+    static Ptr piccolo();
+    static Ptr besserrufer();
+    static Ptr bettel();
+    static Ptr dreier();
+    static Ptr piccolo_ouvert();
+    static Ptr besserdreier();
+    static Ptr bettel_ouvert();
     static Ptr solodreier();
   protected:
     Contract() = default; // For serialization
