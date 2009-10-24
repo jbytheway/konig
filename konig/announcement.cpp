@@ -2,6 +2,12 @@
 
 namespace konig {
 
+Announcement::Announcement(Feat f, Announcedness a, bool d) :
+  feat(f),
+  announcedness(a),
+  defensive(d)
+{}
+
 bool Announcement::from_string(Announcement& a, std::string const& d)
 {
   if (d.size() == 0) return false;

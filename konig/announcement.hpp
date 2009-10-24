@@ -9,6 +9,8 @@ namespace konig {
 struct Announcement {
   friend class boost::serialization::access;
   public:
+    Announcement() = default; // For serialization
+    Announcement(Feat, Announcedness, bool defensive);
     static bool from_string(Announcement&, std::string const&);
 
     Feat feat;
