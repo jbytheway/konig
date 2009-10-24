@@ -1,4 +1,3 @@
 BIN = konig-simulator
 LIBS = -loptimal -lboost_system-mt
 LIB_DEP_NAMES = konig-ai
-THIS_LDFLAGS = -no-install
