@@ -11,6 +11,8 @@ enum PlayPosition {
 };
 
 inline PlayPosition& operator++(PlayPosition& p) {
+  // Don't want to reduce mod 4, becasue then couldn't easily loop over all
+  // PlayPositions
   return p = PlayPosition(p+1);
 }
 
