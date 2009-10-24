@@ -176,25 +176,25 @@ Announcednesses PositiveContract::initial_announcednesses() const
 {
   Announcednesses result;
   // Game
-  result.insert(true, Feat::game, Announcedness::announced);
+  result.insert(Feat::game, true, Announcedness::announced);
 
   // Birds (offensive and defensive)
-  result.insert(true, Feat::pagat);
-  result.insert(true, Feat::uhu);
-  result.insert(true, Feat::kakadu);
-  result.insert(false, Feat::pagat);
-  result.insert(false, Feat::uhu);
-  result.insert(false, Feat::kakadu);
+  result.insert(Feat::pagat, true);
+  result.insert(Feat::uhu, true);
+  result.insert(Feat::kakadu, true);
+  result.insert(Feat::pagat, false);
+  result.insert(Feat::uhu, false);
+  result.insert(Feat::kakadu, false);
 
   // 45 and valat (offensive and defensive)
-  result.insert(true, Feat::forty_five);
-  result.insert(true, Feat::valat);
-  result.insert(false, Feat::forty_five);
-  result.insert(false, Feat::valat);
+  result.insert(Feat::forty_five, true);
+  result.insert(Feat::valat, true);
+  result.insert(Feat::forty_five, false);
+  result.insert(Feat::valat, false);
 
   // King ultimo
   if (partnership_) {
-    result.insert(true, Feat::king_ultimo);
+    result.insert(Feat::king_ultimo, true);
   }
 
   return result;

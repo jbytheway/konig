@@ -29,7 +29,7 @@ bool ContractAndAnnouncements::is_legal(
   }
   // Check it exists in this contract
   Announcednesses::const_iterator a =
-    announcednesses_.find(std::make_pair(originally_offence, f));
+    announcednesses_.find(std::make_pair(f, originally_offence));
   if (a == announcednesses_.end()) {
     return false;
   }
@@ -45,7 +45,7 @@ void ContractAndAnnouncements::add(std::vector<Announcement> announcements)
     Announcedness new_announcedness = a.announcedness;
     bool offensive = a.offensive();
     Feat f = a.feat;
-    announcednesses_[std::make_pair(offensive, f)] = new_announcedness;
+    announcednesses_[std::make_pair(f, offensive)] = new_announcedness;
     if (new_announcedness == Announcedness::announced &&
         f.constrains_play()) {
       play_constraints_[
@@ -85,8 +85,8 @@ Outcome ContractAndAnnouncements::score(
   assert(declarers_cards.size() + defenses_cards.size() == 54);
   Outcome o(contract_);
   BOOST_FOREACH(const auto& i, announcednesses_) {
-    bool offensive = i.first.first;
-    Feat feat = i.first.second;
+    bool offensive = i.first.second;
+    Feat feat = i.first.first;
     Announcedness announcedness = i.second;
     Achievement achievement = feat.result_for(
         contract_, called_king_, tricks, declarers_cards, defenses_cards,
@@ -101,8 +101,8 @@ std::ostream& operator<<(std::ostream& o, const ContractAndAnnouncements& c)
 {
   o << c.contract()->short_name();
   BOOST_FOREACH(auto const& i, c.announcednesses()) {
-    bool defensive = !i.first.first;
-    Feat f = i.first.second;
+    bool defensive = !i.first.second;
+    Feat f = i.first.first;
     Announcedness announcedness = i.second;
     if (announcedness != Announcedness::unannounced) {
       o << f;
