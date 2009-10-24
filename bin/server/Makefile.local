@@ -1,4 +1,4 @@
 BIN := konig-server
-LIBS = -lsettingstree -lboost_filesystem
+LIBS = -lsettingstree -lboost_filesystem-mt
 LIB_DEP_NAMES := konig
 
