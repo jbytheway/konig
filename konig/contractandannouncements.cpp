@@ -84,15 +84,15 @@ Outcome ContractAndAnnouncements::score(
 {
   assert(declarers_cards.size() + defenses_cards.size() == 54);
   Outcome o(contract_);
-  BOOST_FOREACH(
-      const Announcednesses::value_type& stuff,
-      announcednesses_
-    ) {
-    Achievement a = stuff.first.second.result_for(
+  BOOST_FOREACH(const auto& i, announcednesses_) {
+    bool offensive = i.first.first;
+    Feat feat = i.first.second;
+    Announcedness announcedness = i.second;
+    Achievement achievement = feat.result_for(
         contract_, called_king_, tricks, declarers_cards, defenses_cards,
-        stuff.first.first, offence
+        offensive, offence
       );
-    o.add(stuff.first.first, stuff.first.second, stuff.second, a);
+    o.add(offensive, feat, announcedness, achievement);
   }
   return o;
 }
