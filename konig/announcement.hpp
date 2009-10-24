@@ -27,6 +27,12 @@ struct Announcement {
     }
 };
 
+inline bool operator==(Announcement const& l, Announcement const& r) {
+  return l.feat == r.feat &&
+    l.announcedness == r.announcedness &&
+    l.defensive == r.defensive;
+}
+
 }
 
 #endif // KONIG__ANNOUNCEMENT_HPP
