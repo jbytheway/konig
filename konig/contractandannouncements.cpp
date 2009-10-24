@@ -111,7 +111,7 @@ std::ostream& operator<<(std::ostream& o, const ContractAndAnnouncements& c)
       }
 
       // Fake the announcedness of the game to get the right output format
-      if (f == Feat::game) {
+      if (f == Feat::game && announcedness == Announcedness::announced) {
         announcedness = Announcedness::unannounced;
       }
       o << announcedness.string(Achievement::neutral);
