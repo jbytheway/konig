@@ -209,6 +209,12 @@ class CommandHandler::CommandParser {
             "set SETTING VALUE  Request that setting clients:X:SETTING be set "
             "to VALUE, where X is your client id"
           ));
+      add_command(Command(
+            list_of("pid"), &CommandParser::show_pid,
+            "Print the process id of the client",
+            "pid  Print the process id of the client, to facilitate attaching "
+            "a debugger"
+          ));
     }
 
     boost::scoped_ptr<Checker>& pre_checker() { return pre_checker_; }
@@ -316,6 +322,15 @@ class CommandHandler::CommandParser {
             ));
       } else {
         handler_.output_->message("Usage: set SETTING VALUE");
+      }
+    }
+
+    void show_pid(std::list<std::string> args) {
+      if (args.empty()) {
+        std::string pid = boost::lexical_cast<std::string>(getpid());
+        handler_.output_->message(pid);
+      } else {
+        handler_.output_->message("Usage: pid");
       }
     }
 
