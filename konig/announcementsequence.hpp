@@ -14,7 +14,7 @@ class AnnouncementSequence {
   public:
     AnnouncementSequence(
         boost::shared_ptr<Contract const> contract,
-        Card called_king
+        Card called_king = Card(TrumpRank::pagat)
       ) :
       contract_(std::move(contract)),
       called_king_(called_king)

@@ -5,6 +5,7 @@
 #include <konig/fatal.hpp>
 #include <konig/player.hpp>
 #include <konig/positivecontract.hpp>
+#include <konig/negativecontract.hpp>
 #include <konig/contractandannouncements.hpp>
 
 namespace konig {
@@ -88,7 +89,7 @@ Contract::Ptr Contract::solo()
 
 Contract::Ptr Contract::piccolo()
 {
-  KONIG_FATAL("not implemented");
+  return Ptr(new NegativeContract("p", "piccolo", 1, false, false));
 }
 
 Contract::Ptr Contract::besserrufer()
@@ -98,7 +99,7 @@ Contract::Ptr Contract::besserrufer()
 
 Contract::Ptr Contract::bettel()
 {
-  KONIG_FATAL("not implemented");
+  return Ptr(new NegativeContract("b", "bettel", 0, false, true));
 }
 
 Contract::Ptr Contract::dreier()
@@ -108,7 +109,7 @@ Contract::Ptr Contract::dreier()
 
 Contract::Ptr Contract::piccolo_ouvert()
 {
-  KONIG_FATAL("not implemented");
+  return Ptr(new NegativeContract("po", "piccolo ouvert", 1, true, false));
 }
 
 Contract::Ptr Contract::besserdreier()
@@ -119,7 +120,7 @@ Contract::Ptr Contract::besserdreier()
 
 Contract::Ptr Contract::bettel_ouvert()
 {
-  KONIG_FATAL("not implemented");
+  return Ptr(new NegativeContract("bo", "bettel ouvert", 0, true, true));
 }
 
 Contract::Ptr Contract::solodreier()
