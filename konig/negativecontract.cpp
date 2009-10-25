@@ -1,7 +1,12 @@
 #include <konig/negativecontract.hpp>
 
+#include <boost/serialization/export.hpp>
+
 #include <konig/player.hpp>
 #include <konig/announcementsequence.hpp>
+#include <konig/protocol.hpp> // For achive classes so serialization works
+
+BOOST_CLASS_EXPORT(konig::NegativeContract)
 
 namespace konig {
 
