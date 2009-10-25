@@ -34,7 +34,8 @@ Ai::Ai() :
   last_non_pass_(-1),
   declarer_(position_forehand),
   offence_(false),
-  king_call_(KingCall::invalid)
+  king_call_(KingCall::invalid),
+  called_king_in_talon_(false)
 {}
 
 void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
@@ -50,6 +51,7 @@ void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   king_call_ = KingCall::invalid;
   talon_[0].clear();
   talon_[1].clear();
+  called_king_in_talon_ = false;
   accepted_.clear();
   rejected_.clear();
   discard_.clear();
@@ -98,6 +100,17 @@ void Ai::notify_talon(const boost::array<Cards, 2>& talon)
   talon_ = talon;
   accepted_ = talon_[0];
   accepted_.insert(talon_[1]);
+  // Check for called king
+  if (king_call_ == KingCall::fourth_king) {
+    Cards::iterator king = accepted_.find(SuitRank::king);
+    if (king != accepted_.end()) {
+      called_king_in_talon_ = true;
+      contract_.set_called_king(*king);
+    }
+  } else if (king_call_ != KingCall::invalid) {
+    Card called_king(king_call_);
+    called_king_in_talon_ = accepted_.count(called_king);
+  }
 }
 
 void Ai::notify_talon_choice(uint8_t choice)
@@ -136,6 +149,15 @@ void Ai::notify_play_card(PlayPosition p, Card c)
     assert(hand_.count(c));
     hand_.erase(c);
   }
+}
+
+uint8_t Ai::guess_num_offence() const
+{
+  // For non-partnership contracts it's always 1
+  if (king_call_ == KingCall::invalid) return 1;
+  // For partnership contracts we guess 2 unless we saw the called king in the
+  // talon
+  return called_king_in_talon_ ? 1 : 2;
 }
 
 Cards Ai::legal_plays() const

@@ -38,6 +38,8 @@ class Ai : public Player {
     bool offence() const { return offence_; }
     ContractAndAnnouncements const& contract() const { return contract_; }
     std::vector<Trick> const& tricks() const { return tricks_; }
+
+    uint8_t guess_num_offence() const;
     Cards legal_plays() const;
   private:
     Ruleset rules_;
@@ -50,6 +52,7 @@ class Ai : public Player {
     ContractAndAnnouncements contract_;
     KingCall king_call_;
     boost::array<Cards, 2> talon_;
+    bool called_king_in_talon_;
     Cards accepted_;
     Cards rejected_;
     Cards discard_;
