@@ -6,6 +6,7 @@
 #include <konig/player.hpp>
 #include <konig/positivecontract.hpp>
 #include <konig/negativecontract.hpp>
+#include <konig/trischaken.hpp>
 #include <konig/contractandannouncements.hpp>
 
 namespace konig {
@@ -73,7 +74,7 @@ Contract::Ptr Contract::rufer()
 
 Contract::Ptr Contract::trischaken()
 {
-  KONIG_FATAL("not implemented");
+  return Ptr(new Trischaken());
 }
 
 Contract::Ptr Contract::sechserdreier()
