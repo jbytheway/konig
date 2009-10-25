@@ -84,7 +84,7 @@ void ReadlineWrapper::line(char* l)
     std::cout << std::endl;
     eof_ = true;
   } else {
-    if (*l && l != last_line_) {
+    if (*l && strlen(l) > 2 && l != last_line_) {
       add_history(l);
       last_line_ = l;
     }
