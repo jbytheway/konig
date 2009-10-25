@@ -14,6 +14,10 @@ class PlayAi {
     virtual ~PlayAi() = 0;
 
     virtual Card play_card(Ai const&) = 0;
+  protected:
+    PlayAi() = default;
+    PlayAi(PlayAi const&) = default;
+    PlayAi& operator=(PlayAi const&) = default;
 };
 
 }}

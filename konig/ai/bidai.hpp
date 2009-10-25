@@ -14,6 +14,10 @@ class BidAi {
     virtual ~BidAi() = 0;
 
     virtual Bid bid(Ai const&) = 0;
+  protected:
+    BidAi() = default;
+    BidAi(BidAi const&) = default;
+    BidAi& operator=(BidAi const&) = default;
 };
 
 }}
