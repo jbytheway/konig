@@ -10,6 +10,9 @@ BOOST_AUTO_TEST_CASE(contract_names_correct)
   {
     Contract::ConstPtr contract = Contract::solodreier();
     BOOST_CHECK_EQUAL(contract->bid_name(), "sd");
+    BOOST_CHECK_EQUAL(
+        contract->contract_name(1, Announcedness::announced), "sd"
+      );
     BOOST_CHECK_EQUAL(contract->outcome_name(
           1, Announcedness::announced, Achievement::made
         ), "sd");
@@ -26,6 +29,12 @@ BOOST_AUTO_TEST_CASE(contract_names_correct)
   {
     Contract::ConstPtr contract = Contract::rufer();
     BOOST_CHECK_EQUAL(contract->bid_name(), "r");
+    BOOST_CHECK_EQUAL(
+        contract->contract_name(2, Announcedness::announced), "r"
+      );
+    BOOST_CHECK_EQUAL(
+        contract->contract_name(1, Announcedness::announced), "r3"
+      );
     BOOST_CHECK_EQUAL(contract->outcome_name(
           2, Announcedness::announced, Achievement::made
         ), "r");
@@ -54,6 +63,9 @@ BOOST_AUTO_TEST_CASE(contract_names_correct)
   {
     Contract::ConstPtr contract = Contract::bettel();
     BOOST_CHECK_EQUAL(contract->bid_name(), "b");
+    BOOST_CHECK_EQUAL(
+        contract->contract_name(1, Announcedness::announced), "b"
+      );
     BOOST_CHECK_EQUAL(contract->outcome_name(
           1, Announcedness::announced, Achievement::made
         ), "b");
@@ -70,6 +82,9 @@ BOOST_AUTO_TEST_CASE(contract_names_correct)
   {
     Contract::ConstPtr contract = Contract::trischaken();
     BOOST_CHECK_EQUAL(contract->bid_name(), "t");
+    BOOST_CHECK_EQUAL(
+        contract->contract_name(1, Announcedness::announced), "t"
+      );
     BOOST_CHECK_EQUAL(contract->outcome_name(
           1, Announcedness::announced, Achievement::made
         ), "t");
