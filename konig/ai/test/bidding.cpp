@@ -34,16 +34,36 @@ namespace {
 
 BOOST_AUTO_TEST_CASE(bidding_failures)
 {
+  BOOST_CHECK_THROW(do_bid_test(list_of("")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("r")), ai::InvalidPlayError);
   BOOST_CHECK_THROW(do_bid_test(list_of("t")), ai::InvalidPlayError);
   BOOST_CHECK_THROW(do_bid_test(list_of("6d")), ai::InvalidPlayError);
   BOOST_CHECK_THROW(do_bid_test(list_of("r")("")("")("")
                                        ("s")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("r")("s")("")("")
+                                       ("t")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("r")("t")("")("")
+                                       ("t")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("p")("s")("")("")
+                                       ("")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("r")("p")("")("")
+                                       ("s")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("r")("r")("")("")
+                                       ("")), ai::InvalidPlayError);
 }
 
 BOOST_AUTO_TEST_CASE(bidding_results)
 {
   BOOST_CHECK_EQUAL("r",  do_bid_test(list_of("r")("")("")("")
                                              ("r")));
+  BOOST_CHECK_EQUAL("t",  do_bid_test(list_of("r")("")("")("")
+                                             ("t")));
+  BOOST_CHECK_EQUAL("6d", do_bid_test(list_of("r")("")("")("")
+                                             ("6d")));
+  BOOST_CHECK_EQUAL("s",  do_bid_test(list_of("r")("s")("")("")
+                                             ("")));
+  BOOST_CHECK_EQUAL("s",  do_bid_test(list_of("r")("s")("")("")
+                                             ("s")));
   BOOST_CHECK_EQUAL("sd", do_bid_test(list_of("sd")("")("")("")));
 }
 
