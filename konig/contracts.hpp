@@ -19,21 +19,22 @@ class Contract;
 class Contracts {
   friend class boost::serialization::access;
   public:
-    Contracts() : reserved_contracts_(0) {}
+    Contracts() : reserved_bids_(0) {}
 
     Contracts(boost::shared_ptr<Contract> c) :
-      reserved_contracts_(0)
+      reserved_bids_(0)
     {
       contracts_.push_back(c);
     }
 
     Contracts(std::vector<boost::shared_ptr<Contract>> c, uint32_t r) :
       contracts_(std::move(c)),
-      reserved_contracts_(r)
+      reserved_bids_(r)
     {
     }
 
     size_t size() const { return contracts_.size(); }
+    Bid reserved_bids() const { return reserved_bids_; }
     const boost::shared_ptr<Contract const> operator[](size_t const i) const {
       return contracts_[i];
     }
@@ -54,12 +55,12 @@ class Contracts {
     template<typename Archive>
     void serialize(Archive& ar, unsigned int) {
       ar & BOOST_SERIALIZATION_NVP(contracts_);
-      ar & BOOST_SERIALIZATION_NVP(reserved_contracts_);
+      ar & BOOST_SERIALIZATION_NVP(reserved_bids_);
     }
 
     // HACK: Would like to use const Contracts here but it breaks serialization
     std::vector<boost::shared_ptr<Contract>> contracts_;
-    uint32_t reserved_contracts_;
+    Bid reserved_bids_;
 };
 
 }
