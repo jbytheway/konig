@@ -11,6 +11,7 @@ namespace konig { namespace ai {
 class SpecificPlayAi : public Ai {
   public:
     SpecificPlayAi(const std::string& play_sequence);
+    SpecificPlayAi(std::vector<Bid>, const std::string& play_sequence);
 
     virtual Bid bid();
     virtual KingCall call_king();
@@ -25,8 +26,11 @@ class SpecificPlayAi : public Ai {
       virtual bool apply(const Trick&, const Cards& legal, Card& play) = 0;
     };
   private:
+    void init_play_rules(const std::string& play_sequence);
+
     std::mt19937 random_engine_;
-    std::string contract_name_;
+    std::vector<Bid> bids_;
+    std::vector<Bid>::iterator next_bid_;
     std::vector<std::list<PlayRule::Ptr> > play_rules_;
 };
 

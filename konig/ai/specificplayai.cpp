@@ -37,42 +37,27 @@ struct PlayCard : SpecificPlayAi::PlayRule {
   }
 };
 
-SpecificPlayAi::SpecificPlayAi(const std::string& play_sequence)
+SpecificPlayAi::SpecificPlayAi(const std::string& play_sequence) :
+  next_bid_(bids_.begin())
 {
-  std::vector<std::string> chunks;
-  boost::algorithm::split(
-      chunks, play_sequence, arg1 == ' ',
-      boost::algorithm::token_compress_on
-    );
-  if (chunks.size() != 13) {
-    throw AiError("invalid play sequence");
-  }
-  contract_name_ = chunks.front();
-  chunks.erase(chunks.begin());
-  BOOST_FOREACH(const std::string& chunk, chunks) {
-    std::vector<std::string> play_instructions;
-    boost::algorithm::split(
-        play_instructions, chunk, arg1 == ':',
-        boost::algorithm::token_compress_on
-      );
-    play_rules_.push_back(std::list<boost::shared_ptr<PlayRule> >());
-    BOOST_FOREACH(const std::string& play_instruction, play_instructions) {
-      boost::shared_ptr<PlayRule> p;
-      if (play_instruction == "h") {
-        p.reset(new PlayHigh());
-      } else {
-        p.reset(new PlayCard(Card(play_instruction)));
-      }
-      play_rules_.back().push_back(std::move(p));
-    }
-  }
+  init_play_rules(play_sequence);
+}
+
+SpecificPlayAi::SpecificPlayAi(
+    std::vector<Bid> bids,
+    const std::string& play_sequence
+  ) :
+  bids_(std::move(bids)),
+  next_bid_(bids_.begin())
+{
+  init_play_rules(play_sequence);
 }
 
 Bid SpecificPlayAi::bid() {
-  if (last_non_pass().is_pass()) {
-    return rules().contracts().index_by_name("solodreier");
-  }
-  return Bid::pass;
+  if (next_bid_ == bids_.end()) return Bid::pass;
+  Bid b = *next_bid_;
+  ++next_bid_;
+  return b;
 }
 
 KingCall SpecificPlayAi::call_king() {
@@ -107,6 +92,35 @@ Card SpecificPlayAi::play_card() {
   Cards::iterator i = legal_plays.begin();
   std::advance(i, which);
   return *i;
+}
+
+void SpecificPlayAi::init_play_rules(std::string const& play_sequence)
+{
+  std::vector<std::string> chunks;
+  boost::algorithm::split(
+      chunks, play_sequence, arg1 == ' ',
+      boost::algorithm::token_compress_on
+    );
+  if (chunks.size() != 12) {
+    throw AiError("invalid play sequence");
+  }
+  BOOST_FOREACH(const std::string& chunk, chunks) {
+    std::vector<std::string> play_instructions;
+    boost::algorithm::split(
+        play_instructions, chunk, arg1 == ':',
+        boost::algorithm::token_compress_on
+      );
+    play_rules_.push_back(std::list<boost::shared_ptr<PlayRule> >());
+    BOOST_FOREACH(const std::string& play_instruction, play_instructions) {
+      boost::shared_ptr<PlayRule> p;
+      if (play_instruction == "h") {
+        p.reset(new PlayHigh());
+      } else {
+        p.reset(new PlayCard(Card(play_instruction)));
+      }
+      play_rules_.back().push_back(std::move(p));
+    }
+  }
 }
 
 }}
