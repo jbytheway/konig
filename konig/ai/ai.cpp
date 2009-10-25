@@ -5,16 +5,17 @@
 #include <konig/ai/noddyai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/strongsddefenceai.hpp>
+#include <konig/ai/forwardingai.hpp>
 #include <konig/ai/invalidplayerror.hpp>
 
 namespace konig { namespace ai {
 
 Ai::Ptr Ai::create(const std::string& description)
 {
-  std::string::const_iterator colon =
-    std::find(description.begin(), description.end(), ':');
-  std::string ai_name(description.begin(), colon);
-  std::string ai_args(colon, description.end());
+  std::string::const_iterator equals =
+    std::find(description.begin(), description.end(), '=');
+  std::string ai_name(description.begin(), equals);
+  std::string ai_args(equals, description.end());
   if (!ai_args.empty()) {
     ai_args.erase(ai_args.begin());
   }
@@ -25,6 +26,8 @@ Ai::Ptr Ai::create(const std::string& description)
     p.reset(new StrongSdDefenceAi());
   } else if (ai_name == "play") {
     p.reset(new SpecificPlayAi(ai_args));
+  } else if (ai_name == "forward") {
+    p.reset(new ForwardingAi(ai_args));
   } else {
     throw NoSuchAi(ai_name);
   }
