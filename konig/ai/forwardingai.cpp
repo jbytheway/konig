@@ -17,11 +17,11 @@ ForwardingAi::ForwardingAi(std::string const& args)
   parser.addOption("bid", '\0', &bid_spec);
   parser.addOption("play", '\0', &play_spec);
   std::istringstream is(args);
-  if (parser.parseStream(is, "forward:")) {
+  if (parser.parseStream(is, "forward")) {
     throw AiError(boost::algorithm::join(parser.getErrors(), "\n"));
   }
   bidder_ = BidAi::create(bid_spec);
-  player_ = PlayAi::create(bid_spec);
+  player_ = PlayAi::create(play_spec);
 }
 
 Bid ForwardingAi::bid()
