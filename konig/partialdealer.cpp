@@ -23,7 +23,7 @@ Deal PartialDealer::deal()
   std::random_shuffle(remaining_cards_.begin(), remaining_cards_.end(), rng);
 
   std::vector<Card>::iterator position = remaining_cards_.begin();
-  typedef boost::array<Cards, 6> Chunks;
+  typedef std::array<Cards, 6> Chunks;
   Chunks chunks;
   Chunks::iterator next_chunk = chunks.begin();
 

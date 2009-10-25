@@ -15,7 +15,7 @@ Deal CompleteDealer::deal()
   std::random_shuffle(deck_.begin(), deck_.end(), rng);
 
   std::vector<Card>::iterator position = deck_.begin();
-  typedef boost::array<Cards, 6> Chunks;
+  typedef std::array<Cards, 6> Chunks;
   Chunks chunks;
   Chunks::iterator next_chunk = chunks.begin();
 

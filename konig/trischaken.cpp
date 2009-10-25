@@ -59,8 +59,8 @@ std::string Trischaken::outcome_name(
 }
 
 boost::tuple<Outcome, std::vector<Trick> > Trischaken::play(
-    boost::array<Cards, 4> hands,
-    boost::array<Cards, 2> /*talon*/,
+    std::array<Cards, 4> hands,
+    std::array<Cards, 2> /*talon*/,
     const std::vector<boost::shared_ptr<Player>>& players,
     PlayPosition declarer_position
   ) const

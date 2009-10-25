@@ -12,7 +12,7 @@ class PartialDealer : public Dealer {
 
     virtual Deal deal();
   private:
-    boost::array<PartialCards, 6> partial_chunks_;
+    std::array<PartialCards, 6> partial_chunks_;
     std::vector<Card> remaining_cards_;
 };
 

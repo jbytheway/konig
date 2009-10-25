@@ -12,7 +12,7 @@
 namespace konig {
 
 std::vector<Trick> Contract::play_tricks(
-    boost::array<Cards, 4> hands,
+    std::array<Cards, 4> hands,
     Cards& declarers_cards,
     Cards& defences_cards,
     const std::vector<Player::Ptr>& players,

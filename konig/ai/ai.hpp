@@ -20,7 +20,7 @@ class Ai : public Player {
     virtual void start_game(Ruleset, PlayPosition, Cards hand);
     virtual void notify_bid(PlayPosition, Bid);
     virtual void notify_call_king(KingCall);
-    virtual void notify_talon(const boost::array<Cards, 2>& talon);
+    virtual void notify_talon(const std::array<Cards, 2>& talon);
     virtual void notify_talon_choice(uint8_t);
     virtual void notify_discard(Cards);
     virtual void notify_announcements(std::vector<Announcement>);
@@ -52,7 +52,7 @@ class Ai : public Player {
     bool offence_;
     ContractAndAnnouncements contract_;
     KingCall king_call_;
-    boost::array<Cards, 2> talon_;
+    std::array<Cards, 2> talon_;
     bool called_king_in_talon_;
     Cards accepted_;
     Cards rejected_;

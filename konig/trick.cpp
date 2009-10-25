@@ -44,7 +44,7 @@ Cards Trick::legal_plays(
       }
     }
   }
-  boost::array<Cards, 3> constraint_levels;
+  std::array<Cards, 3> constraint_levels;
   BOOST_FOREACH(Card legal_play, legal_plays) {
     constraint_levels[
         whole_contract.play_constraint(legal_play, offence, trick)

@@ -36,8 +36,8 @@ class Game {
   private:
     const Ruleset rules_;
     const std::vector<Player::Ptr> players_;
-    boost::array<Cards, 4> hands_;
-    boost::array<Cards, 2> talon_;
+    std::array<Cards, 4> hands_;
+    std::array<Cards, 2> talon_;
 };
 
 }

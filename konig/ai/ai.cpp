@@ -97,7 +97,7 @@ void Ai::notify_call_king(KingCall call)
   }
 }
 
-void Ai::notify_talon(const boost::array<Cards, 2>& talon)
+void Ai::notify_talon(const std::array<Cards, 2>& talon)
 {
   talon_ = talon;
   accepted_ = talon_[0];

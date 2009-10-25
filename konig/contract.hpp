@@ -38,8 +38,8 @@ class Contract : public boost::enable_shared_from_this<Contract> {
     const std::string& name() const { return name_; }
 
     virtual boost::tuple<Outcome, std::vector<Trick> > play(
-        boost::array<Cards, 4> hands,
-        boost::array<Cards, 2> talon,
+        std::array<Cards, 4> hands,
+        std::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
         PlayPosition declarer_position
       ) const = 0;
@@ -57,7 +57,7 @@ class Contract : public boost::enable_shared_from_this<Contract> {
     virtual Achievement result_for(const Cards& declarers_cards) const = 0;
 
     std::vector<Trick> play_tricks(
-        boost::array<Cards, 4> hands,
+        std::array<Cards, 4> hands,
         Cards& declarers_cards,
         Cards& defenses_cards,
         const std::vector<boost::shared_ptr<Player>>& players,

@@ -16,7 +16,7 @@ class RemotePlayer : public Player {
     virtual void notify_bid(PlayPosition, Bid);
     virtual KingCall call_king();
     virtual void notify_call_king(KingCall);
-    virtual void notify_talon(boost::array<Cards, 2> const& talon);
+    virtual void notify_talon(std::array<Cards, 2> const& talon);
     virtual uint8_t choose_talon_half();
     virtual void notify_talon_choice(uint8_t);
     virtual Cards discard();

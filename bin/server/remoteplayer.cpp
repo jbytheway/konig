@@ -47,7 +47,7 @@ void RemotePlayer::notify_call_king(KingCall call)
       ));
 }
 
-void RemotePlayer::notify_talon(boost::array<Cards, 2> const& talon)
+void RemotePlayer::notify_talon(std::array<Cards, 2> const& talon)
 {
   client_.send(Message<MessageType::notifyTalon>(
         std::move(talon)

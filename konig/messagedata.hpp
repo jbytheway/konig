@@ -106,7 +106,7 @@ struct MessageData<MessageType::notifyCallKing> {
 template<>
 struct MessageData<MessageType::notifyTalon> {
   typedef fusion::map<
-    fusion::pair<fields::talon, boost::array<Cards, 2>>
+    fusion::pair<fields::talon, std::array<Cards, 2>>
   > type;
 };
 

@@ -3,6 +3,7 @@
 
 #include <set>
 #include <algorithm>
+#include <array>
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
@@ -102,7 +103,7 @@ class Cards : public std::set<Card> {
     }
 
     template<size_t size>
-    void insert(const boost::array<Card, size>& to_insert) {
+    void insert(const std::array<Card, size>& to_insert) {
       copy(to_insert.begin(), to_insert.end(), inserter(*this, end()));
     }
 
@@ -138,6 +139,15 @@ class Cards : public std::set<Card> {
 };
 
 std::ostream& operator<<(std::ostream&, const Cards&);
+
+// HACK: This should go once boost::serialization supports std::array natively
+template<typename Archive, size_t N>
+void serialize(Archive& ar, std::array<Cards, N>& cards, const unsigned int)
+{
+  BOOST_FOREACH(Cards& card, cards) {
+    ar & boost::serialization::make_nvp("array_mem", card);
+  }
+}
 
 }
 

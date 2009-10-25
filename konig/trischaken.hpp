@@ -24,8 +24,8 @@ class Trischaken : public Contract {
       ) const;
 
     virtual boost::tuple<Outcome, std::vector<Trick> > play(
-        boost::array<Cards, 4> hands,
-        boost::array<Cards, 2> talon,
+        std::array<Cards, 4> hands,
+        std::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
         PlayPosition declarer_position
       ) const;

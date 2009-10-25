@@ -31,7 +31,7 @@ class Trick {
 
     PlayPosition leader() const { return leader_; }
 
-    const boost::array<Card, 4> cards() const {
+    const std::array<Card, 4> cards() const {
       return cards_;
     }
 
@@ -53,7 +53,7 @@ class Trick {
     }
 
     PlayPosition player_of(const Card& card) const {
-      boost::array<Card, 4>::const_iterator p =
+      std::array<Card, 4>::const_iterator p =
         std::find(cards_.begin(), cards_.begin()+played_, card);
       if (p == cards_.begin()+played_) {
         return position_max;
@@ -65,7 +65,7 @@ class Trick {
 
     PlayPosition leader_;
     bool rising_rule_;
-    boost::array<Card, 4> cards_;
+    std::array<Card, 4> cards_;
     uint8_t played_;
     uint8_t winning_card_;
 };

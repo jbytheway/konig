@@ -21,7 +21,7 @@ class Player {
     virtual void notify_bid(PlayPosition, Bid) = 0;
     virtual KingCall call_king() = 0;
     virtual void notify_call_king(KingCall) = 0;
-    virtual void notify_talon(boost::array<Cards, 2> const& talon) = 0;
+    virtual void notify_talon(std::array<Cards, 2> const& talon) = 0;
     virtual uint8_t choose_talon_half() = 0;
     virtual void notify_talon_choice(uint8_t) = 0;
     virtual Cards discard() = 0;

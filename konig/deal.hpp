@@ -39,8 +39,8 @@ class Deal {
   private:
     void sanity_check();
 
-    boost::array<Cards, 4> hands_;
-    boost::array<Cards, 2> talon_;
+    std::array<Cards, 4> hands_;
+    std::array<Cards, 2> talon_;
 };
 
 template<typename Range>
