@@ -10,9 +10,8 @@ using namespace konig;
 
 BOOST_AUTO_TEST_CASE(contracts_correctly_output)
 {
-  Contract::ConstPtr contract = Contract::solodreier();
-
   {
+    Contract::ConstPtr contract = Contract::solodreier();
     ContractAndAnnouncements ca(contract);
     BOOST_CHECK_EQUAL(ca.string(1), "sd");
     ca.add(boost::assign::list_of(
@@ -23,6 +22,11 @@ BOOST_AUTO_TEST_CASE(contracts_correctly_output)
           Announcement(Feat::forty_five, Announcedness::announced, true)
         ));
     BOOST_CHECK_EQUAL(ca.string(1), "sdxf!");
+  }
+  {
+    Contract::ConstPtr contract = Contract::trischaken();
+    ContractAndAnnouncements ca(contract);
+    BOOST_CHECK_EQUAL(ca.string(1), "t");
   }
 }
 

@@ -104,16 +104,21 @@ Outcome ContractAndAnnouncements::score(
 std::string ContractAndAnnouncements::string(uint8_t num_offence) const
 {
   std::ostringstream os;
-  BOOST_FOREACH(auto const& i, announcednesses()) {
-    bool defensive = !i.first.second;
-    Feat f = i.first.first;
-    Announcedness announcedness = i.second;
-    if (f == Feat::game) {
-      os << contract()->contract_name(num_offence, announcedness);
-    } else if (announcedness != Announcedness::unannounced) {
-      os << f;
-      if (defensive) os << "!";
-      os << announcedness.string(Achievement::neutral);
+  if (!announcednesses_.count(std::make_pair(Feat::game, true))) {
+    // special case for Trishacken
+    os << contract()->contract_name(num_offence, Announcedness::announced);
+  } else {
+    BOOST_FOREACH(auto const& i, announcednesses()) {
+      bool defensive = !i.first.second;
+      Feat f = i.first.first;
+      Announcedness announcedness = i.second;
+      if (f == Feat::game) {
+        os << contract()->contract_name(num_offence, announcedness);
+      } else if (announcedness != Announcedness::unannounced) {
+        os << f;
+        if (defensive) os << "!";
+        os << announcedness.string(Achievement::neutral);
+      }
     }
   }
   return os.str();
