@@ -16,6 +16,14 @@ namespace konig {
 class Cards : public std::set<Card> {
   friend class boost::serialization::access;
   public:
+    Cards() = default;
+    Cards(Cards const&) = default;
+
+    template<typename Range>
+    explicit Cards(Range const& r) {
+      std::copy(boost::begin(r), boost::end(r), std::inserter(*this, end()));
+    }
+
     using std::set<Card>::equal_range;
 
     std::pair<iterator, iterator> equal_range(Suit suit) {

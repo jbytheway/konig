@@ -11,7 +11,7 @@ Achievement Feat::result_for(
     const Cards& declarers_cards,
     const Cards& defences_cards,
     bool feat_offensive,
-    bool offence[4]
+    std::array<bool, 4> const& achievers
   ) const
 {
   const Cards& our_cards = feat_offensive ? declarers_cards : defences_cards;
@@ -20,8 +20,7 @@ Achievement Feat::result_for(
   switch (value_) {
     case game:
       assert(feat_offensive);
-      return contract->result_for(declarers_cards) ?
-        Achievement::made : Achievement::off;
+      return contract->result_for(declarers_cards);
     case forty_five:
       // Remember to cater for 45 via valat
       return
@@ -38,7 +37,7 @@ Achievement Feat::result_for(
       {
         const Trick& last_trick = tricks.back();
         if (last_trick.count(called_king)) {
-          bool winning_side = offence[last_trick.winner()];
+          bool winning_side = achievers[last_trick.winner()];
           return (winning_side == feat_offensive) ?
             Achievement::made : Achievement::off;
         } else {
@@ -51,8 +50,9 @@ Achievement Feat::result_for(
       {
         const Trick& trick = tricks[12-constrained_to_trick()];
         PlayPosition played_by = trick.player_of(constrained_card(called_king));
-        if (played_by != position_max && offence[played_by] == feat_offensive) {
-          bool winning_side = offence[trick.winner()];
+        if (played_by != position_max &&
+            achievers[played_by] == feat_offensive) {
+          bool winning_side = achievers[trick.winner()];
           const Card winning_card = trick.winning_card();
           return
             ( winning_side == feat_offensive &&

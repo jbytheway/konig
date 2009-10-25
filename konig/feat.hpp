@@ -2,6 +2,7 @@
 #define KONIG__FEAT_HPP
 
 #include <vector>
+#include <array>
 
 #include <boost/shared_ptr.hpp>
 
@@ -82,7 +83,7 @@ class Feat {
         const Cards& declarers_cards,
         const Cards& defences_cards,
         bool feat_offensive,
-        bool offence[4]
+        std::array<bool, 4> const& achievers
       ) const;
   private:
     template<typename Archive>

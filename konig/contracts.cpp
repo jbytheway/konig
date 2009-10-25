@@ -14,10 +14,10 @@ Bid Contracts::index_by_name(const std::string& name) const
   return Bid::pass;
 }
 
-Bid Contracts::index_by_short_name(const std::string& short_name) const
+Bid Contracts::index_by_bid_name(const std::string& bid_name) const
 {
   for (size_t i=0; i<contracts_.size(); ++i) {
-    if (contracts_[i]->short_name() == short_name) {
+    if (contracts_[i]->bid_name() == bid_name) {
       return Bid(i);
     }
   }

@@ -27,6 +27,30 @@ PositiveContract::PositiveContract(
 {
 }
 
+std::string PositiveContract::contract_name(
+    uint8_t const num_offence,
+    Announcedness const announcedness
+  ) const
+{
+  std::string result = bid_name();
+  if (partnership_ && num_offence == 1) result += "3";
+  result += announcedness.string(Achievement::neutral);
+  return result;
+}
+
+std::string PositiveContract::outcome_name(
+    uint8_t const num_achievers,
+    Announcedness const announcedness,
+    Achievement const achievement
+  ) const
+{
+  std::string result = bid_name();
+  if (partnership_ && num_achievers == 1) result += "3";
+  result += announcedness.string(Achievement::neutral);
+  if (achievement == Achievement::off) result += "/";
+  return result;
+}
+
 boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
     boost::array<Cards, 4> hands, boost::array<Cards, 2> talon,
     const std::vector<Player::Ptr>& players, PlayPosition declarer_position
@@ -34,7 +58,7 @@ boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
 {
   Player::Ptr declarer = players[declarer_position];
   Cards& declarers_hand = hands[declarer_position];
-  bool offence[4] = {false};
+  std::array<bool, 4> offence = {{false, false, false, false}};
   offence[declarer_position] = true;
 
   KingCall king(KingCall::invalid);

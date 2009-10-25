@@ -14,15 +14,15 @@ BOOST_AUTO_TEST_CASE(contracts_correctly_output)
 
   {
     ContractAndAnnouncements ca(contract);
-    BOOST_CHECK_EQUAL(boost::lexical_cast<std::string>(ca), "sd");
+    BOOST_CHECK_EQUAL(ca.string(1), "sd");
     ca.add(boost::assign::list_of(
           Announcement(Feat::game, Announcedness::kontraed, false)
         ));
-    BOOST_CHECK_EQUAL(boost::lexical_cast<std::string>(ca), "sdx");
+    BOOST_CHECK_EQUAL(ca.string(1), "sdx");
     ca.add(boost::assign::list_of(
           Announcement(Feat::forty_five, Announcedness::announced, true)
         ));
-    BOOST_CHECK_EQUAL(boost::lexical_cast<std::string>(ca), "sdxf!");
+    BOOST_CHECK_EQUAL(ca.string(1), "sdxf!");
   }
 }
 

@@ -49,7 +49,7 @@ class Contracts {
 
     // Return Bid::pass when not found
     Bid index_by_name(const std::string& name) const;
-    Bid index_by_short_name(const std::string& short_name) const;
+    Bid index_by_bid_name(const std::string& short_name) const;
   private:
     template<typename Archive>
     void serialize(Archive& ar, unsigned int) {

@@ -2,6 +2,7 @@
 #define KONIG__CONTRACTANDANNOUNCEMENTS_HPP
 
 #include <map>
+#include <array>
 
 #include <boost/bind.hpp>
 
@@ -57,8 +58,10 @@ class ContractAndAnnouncements {
         const std::vector<Trick>& tricks,
         const Cards& declarers_cards,
         const Cards& defenses_cards,
-        bool offence[4]
+        std::array<bool, 4> const& game_achievers
       );
+
+    std::string string(uint8_t num_offence) const;
   private:
     Contract::ConstPtr contract_;
     Card called_king_;
@@ -67,8 +70,6 @@ class ContractAndAnnouncements {
     typedef std::map<std::pair<bool, Card>, unsigned int> PlayConstraints;
     PlayConstraints play_constraints_;
 };
-
-std::ostream& operator<<(std::ostream&, const ContractAndAnnouncements&);
 
 }
 

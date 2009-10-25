@@ -13,6 +13,16 @@ class Trischaken : public Contract {
   public:
     Trischaken();
 
+    virtual std::string contract_name(
+        uint8_t const num_offence,
+        Announcedness const
+      ) const;
+    virtual std::string outcome_name(
+        uint8_t const num_achievers,
+        Announcedness const,
+        Achievement const
+      ) const;
+
     virtual boost::tuple<Outcome, std::vector<Trick> > play(
         boost::array<Cards, 4> hands,
         boost::array<Cards, 2> talon,

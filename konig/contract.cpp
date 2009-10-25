@@ -18,7 +18,7 @@ std::vector<Trick> Contract::play_tricks(
     const std::vector<Player::Ptr>& players,
     const ContractAndAnnouncements& whole_contract,
     PlayPosition declarer_position,
-    bool offence[4]
+    std::array<bool, 4> const& offence
   ) const
 {
   for (size_t i=0; i<4; ++i) {

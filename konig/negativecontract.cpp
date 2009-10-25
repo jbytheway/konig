@@ -24,6 +24,28 @@ NegativeContract::NegativeContract(
 {
 }
 
+std::string NegativeContract::contract_name(
+    uint8_t const /*num_offence*/,
+    Announcedness const announcedness
+  ) const
+{
+  std::string result = bid_name();
+  result += announcedness.string(Achievement::neutral);
+  return result;
+}
+
+std::string NegativeContract::outcome_name(
+    uint8_t const /*num_achievers*/,
+    Announcedness const announcedness,
+    Achievement const achievement
+  ) const
+{
+  std::string result = bid_name();
+  result += announcedness.string(Achievement::neutral);
+  if (achievement == Achievement::off) result += "/";
+  return result;
+}
+
 boost::tuple<Outcome, std::vector<Trick> > NegativeContract::play(
     boost::array<Cards, 4> hands,
     boost::array<Cards, 2> /*talon*/,
@@ -31,7 +53,7 @@ boost::tuple<Outcome, std::vector<Trick> > NegativeContract::play(
     PlayPosition declarer_position
   ) const
 {
-  bool offence[4] = {false};
+  std::array<bool, 4> offence = {{false, false, false, false}};
   offence[declarer_position] = true;
 
   AnnouncementSequence announcements(shared_from_this());

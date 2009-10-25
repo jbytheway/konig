@@ -1,5 +1,7 @@
 #include <konig/contractandannouncements.hpp>
 
+#include <sstream>
+
 #include <boost/foreach.hpp>
 
 namespace konig {
@@ -79,45 +81,42 @@ Outcome ContractAndAnnouncements::score(
     const std::vector<Trick>& tricks,
     const Cards& declarers_cards,
     const Cards& defenses_cards,
-    bool offence[4]
+    std::array<bool, 4> const& game_achievers
   )
 {
   assert(declarers_cards.size() + defenses_cards.size() == 54);
-  Outcome o(contract_);
+  uint8_t num_game_achievers =
+    std::count(game_achievers.begin(), game_achievers.end(), true);
+  Outcome o(contract_, num_game_achievers);
   BOOST_FOREACH(const auto& i, announcednesses_) {
     bool offensive = i.first.second;
     Feat feat = i.first.first;
     Announcedness announcedness = i.second;
     Achievement achievement = feat.result_for(
         contract_, called_king_, tricks, declarers_cards, defenses_cards,
-        offensive, offence
+        offensive, game_achievers
       );
     o.add(offensive, feat, announcedness, achievement);
   }
   return o;
 }
 
-std::ostream& operator<<(std::ostream& o, const ContractAndAnnouncements& c)
+std::string ContractAndAnnouncements::string(uint8_t num_offence) const
 {
-  o << c.contract()->short_name();
-  BOOST_FOREACH(auto const& i, c.announcednesses()) {
+  std::ostringstream os;
+  BOOST_FOREACH(auto const& i, announcednesses()) {
     bool defensive = !i.first.second;
     Feat f = i.first.first;
     Announcedness announcedness = i.second;
-    if (announcedness != Announcedness::unannounced) {
-      o << f;
-      if (defensive) {
-        o << '!';
-      }
-
-      // Fake the announcedness of the game to get the right output format
-      if (f == Feat::game && announcedness == Announcedness::announced) {
-        announcedness = Announcedness::unannounced;
-      }
-      o << announcedness.string(Achievement::neutral);
+    if (f == Feat::game) {
+      os << contract()->contract_name(num_offence, announcedness);
+    } else if (announcedness != Announcedness::unannounced) {
+      os << f;
+      if (defensive) os << "!";
+      os << announcedness.string(Achievement::neutral);
     }
   }
-  return o;
+  return os.str();
 }
 
 }

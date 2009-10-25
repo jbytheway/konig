@@ -18,17 +18,19 @@ class Outcome {
         std::pair<Announcedness, Achievement>
       > Results;
 
-    Outcome() {}
-    Outcome(boost::shared_ptr<Contract const>);
+    Outcome() = default;
+    Outcome(boost::shared_ptr<Contract const>, uint8_t num_game_achievers);
 
     const boost::shared_ptr<Contract const>& contract() const {
       return contract_;
     }
+    uint8_t num_game_achievers() const { return num_game_achievers_; }
     const Results& results() const { return results_; }
 
     void add(bool offence, Feat, Announcedness, Achievement);
   private:
     boost::shared_ptr<Contract const> contract_;
+    uint8_t num_game_achievers_;
     Results results_;
 };
 

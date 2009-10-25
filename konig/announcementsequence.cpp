@@ -23,7 +23,7 @@ void AnnouncementSequence::get_announcement(
 ContractAndAnnouncements
 AnnouncementSequence::get_announcements(
     const std::vector<Player::Ptr>& players,
-    const bool offence[4],
+    std::array<bool, 4> const& offence,
     PlayPosition declarer_position
   )
 {

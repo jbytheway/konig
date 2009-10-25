@@ -4,8 +4,9 @@
 
 namespace konig {
 
-Outcome::Outcome(Contract::ConstPtr contract) :
-  contract_(std::move(contract))
+Outcome::Outcome(Contract::ConstPtr contract, uint8_t num_game_achievers) :
+  contract_(std::move(contract)),
+  num_game_achievers_(num_game_achievers)
 {}
 
 void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
@@ -20,24 +21,23 @@ void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
 
 std::ostream& operator<<(std::ostream& o, const Outcome& outcome)
 {
-  o << outcome.contract()->short_name();
   for (Outcome::Results::const_iterator i = outcome.results().begin();
       i != outcome.results().end(); ++i) {
     Feat f = i->first.first;
     bool defensive = !i->first.second;
     Announcedness announcedness = i->second.first;
     Achievement achievement = i->second.second;
-    if (announcedness != Announcedness::unannounced ||
-        achievement != Achievement::neutral) {
+    if (f == Feat::game) {
+      o << outcome.contract()->outcome_name(
+          outcome.num_game_achievers(), announcedness, achievement
+        );
+    } else {
+      assert(
+          announcedness != Announcedness::unannounced ||
+          achievement != Achievement::neutral
+        );
       o << f;
-      if (defensive) {
-        o << '!';
-      }
-
-      // Fake the announcedness of the game to get the right output format
-      if (f == Feat::game && announcedness == Announcedness::announced) {
-        announcedness = Announcedness::unannounced;
-      }
+      if (defensive) o << '!';
       o << announcedness.string(achievement);
     }
   }

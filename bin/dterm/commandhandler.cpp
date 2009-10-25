@@ -45,7 +45,7 @@ class BidChecker : public Checker {
         return true;
       }
       Contracts const& contracts = tracker_.rules().contracts();
-      Bid bid = contracts.index_by_short_name(token);
+      Bid bid = contracts.index_by_bid_name(token);
       if (!bid.is_pass()) {
         return_ = bid;
         return true;
@@ -490,7 +490,7 @@ void CommandHandler::present_bidding() const
     if (bid.is_pass()) {
       presentation += "pass ";
     } else {
-      presentation += contracts.at(bid)->short_name() + " ";
+      presentation += contracts.at(bid)->bid_name() + " ";
     }
   }
   output_->message(presentation);
@@ -507,9 +507,9 @@ void CommandHandler::present_contract() const
     side = "partner";
   }
   output_->message(
-      "The contract is "+
-      boost::lexical_cast<std::string>(tracker_.contract())+
-      " and you are "+side
+      "The contract is " +
+      tracker_.contract().string(tracker_.guess_num_offence()) +
+      " and you are " + side
     );
 }
 

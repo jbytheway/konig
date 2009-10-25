@@ -24,7 +24,16 @@ class Contract : public boost::enable_shared_from_this<Contract> {
     typedef boost::shared_ptr<Contract> Ptr;
     typedef boost::shared_ptr<Contract const> ConstPtr;
 
-    const std::string& short_name() const { return short_name_; }
+    const std::string& bid_name() const { return short_name_; }
+    virtual std::string contract_name(
+        uint8_t const num_offence,
+        Announcedness const
+      ) const = 0;
+    virtual std::string outcome_name(
+        uint8_t const num_achievers,
+        Announcedness const,
+        Achievement const
+      ) const = 0;
 
     const std::string& name() const { return name_; }
 
@@ -54,7 +63,7 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         const std::vector<boost::shared_ptr<Player>>& players,
         const ContractAndAnnouncements& whole_contract,
         PlayPosition declarer_position,
-        bool offence[4]
+        std::array<bool, 4> const& offence
       ) const;
 
     // Contracts
@@ -75,15 +84,15 @@ class Contract : public boost::enable_shared_from_this<Contract> {
     Contract(std::string short_name, std::string name) :
       short_name_(std::move(short_name)),
       name_(std::move(name)) {}
-
-    std::string short_name_;
-    std::string name_;
   private:
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int) {
       ar & BOOST_SERIALIZATION_NVP(short_name_) &
         BOOST_SERIALIZATION_NVP(name_);
     }
+
+    std::string short_name_;
+    std::string name_;
 };
 
 }
