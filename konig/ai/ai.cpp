@@ -1,5 +1,6 @@
 #include <konig/ai/ai.hpp>
 
+#include <konig/fatal.hpp>
 #include <konig/ai/nosuchai.hpp>
 #include <konig/ai/noddyai.hpp>
 #include <konig/ai/specificplayai.hpp>
@@ -63,7 +64,7 @@ void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
 void Ai::notify_bid(PlayPosition p, Bid bid)
 {
   if (bid < Bid::pass || bid >= Bid(rules_.contracts().size())) {
-    throw std::logic_error("invalid bid");
+    KONIG_FATAL("invalid bid");
   }
   if (!bid.is_pass()) {
     declarer_ = p;
