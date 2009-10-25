@@ -1,2 +1,3 @@
-BIN := libkonig-ai.la
+SUBDIRS = test
+BIN = libkonig-ai.la
 LIB_DEP_NAMES = konig

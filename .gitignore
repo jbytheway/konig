@@ -6,6 +6,7 @@
 /config.mk
 /*/Makefile
 /*/*/Makefile
+/*/*/*/Makefile
 /release
 /optimised
 /tags
