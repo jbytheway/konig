@@ -241,7 +241,7 @@ void Server::go()
           new RemotePlayer(*clients_[*clients_in_positions[i+1].begin()])
         );
     }
-    Ruleset rules = konig::Ruleset::solodreier_only();
+    Ruleset rules = konig::Ruleset::cheltenham();
     auto dealer = Dealer::create();
     { // TODO: How often?  Rotation of forehand.
       auto deal = dealer->deal();
