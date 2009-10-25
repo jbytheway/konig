@@ -31,6 +31,10 @@ class Bid {
       return l.value_ > r.value_;
     }
 
+    friend inline bool operator<=(Bid const& l, Bid const& r) {
+      return l.value_ <= r.value_;
+    }
+
     friend inline bool operator<(Bid const& l, Bid const& r) {
       return l.value_ < r.value_;
     }
