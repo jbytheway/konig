@@ -12,8 +12,8 @@ class PositiveContract : public Contract {
   friend class boost::serialization::access;
   public:
     PositiveContract(
-        std::string name,
         std::string short_name,
+        std::string name,
         const bool partnership,
         const uint8_t talon_halves,
         const bool must_announce_bird,
