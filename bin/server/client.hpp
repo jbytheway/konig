@@ -21,7 +21,7 @@
 #include <konig/clientid.hpp>
 #include <konig/tableposition.hpp>
 
-#include "remote_call_error.hpp"
+#include "remotecallerror.hpp"
 
 namespace konig { namespace server {
 
@@ -128,7 +128,7 @@ typename Message<response>::only_value Client::remote_call()
   do {
     io_.run_one();
     if (aborting) {
-      throw remote_call_error();
+      throw RemoteCallError();
     }
   } while (remote_return_value_.empty());
   ReturnType returnValue = boost::any_cast<ReturnType>(remote_return_value_);

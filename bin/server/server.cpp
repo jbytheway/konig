@@ -257,7 +257,7 @@ void Server::go()
           std::ostream_iterator<konig::Trick>(out_, "\n")
         );
     }
-  } catch (remote_call_error&) {
+  } catch (RemoteCallError const&) {
     out_ << "remote call failed; game aborted\n";
   }
   close();
