@@ -10,8 +10,8 @@ namespace konig { namespace ai {
 
 class SpecificPlayAi : public Ai {
   public:
-    SpecificPlayAi(const std::string& play_sequence);
-    SpecificPlayAi(std::vector<Bid>, const std::string& play_sequence);
+    SpecificPlayAi(const std::string& play_sequence = "");
+    SpecificPlayAi(std::vector<Bid>, const std::string& play_sequence = "");
 
     virtual Bid bid();
     virtual KingCall call_king();

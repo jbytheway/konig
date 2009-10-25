@@ -96,6 +96,13 @@ Card SpecificPlayAi::play_card() {
 
 void SpecificPlayAi::init_play_rules(std::string const& play_sequence)
 {
+  // Special case: when nothing is specified, play randomly
+  if (play_sequence.empty()) {
+    std::list<PlayRule::Ptr> p;
+    play_rules_ = std::vector<std::list<PlayRule::Ptr>>(12, p);
+    return;
+  }
+
   std::vector<std::string> chunks;
   boost::algorithm::split(
       chunks, play_sequence, arg1 == ' ',
