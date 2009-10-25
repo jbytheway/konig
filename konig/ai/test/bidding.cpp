@@ -11,7 +11,7 @@ using namespace konig;
 using boost::assign::list_of;
 
 namespace {
-  void do_bid_test(std::vector<std::string> const& bid_names)
+  std::string do_bid_test(std::vector<std::string> const& bid_names)
   {
     Ruleset rules = Ruleset::cheltenham();
     Contracts const& contracts = rules.contracts();
@@ -28,12 +28,22 @@ namespace {
     for (PlayPosition p = position_forehand; p != position_max; ++p) {
       players[p]->start_game(rules, p, Cards());
     }
-    bs.get_bids(players);
+    return bs.get_bids(players).get<0>()->bid_name();
   }
 }
 
 BOOST_AUTO_TEST_CASE(bidding_failures)
 {
   BOOST_CHECK_THROW(do_bid_test(list_of("t")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("6d")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("r")("")("")("")
+                                       ("s")), ai::InvalidPlayError);
+}
+
+BOOST_AUTO_TEST_CASE(bidding_results)
+{
+  BOOST_CHECK_EQUAL("r",  do_bid_test(list_of("r")("")("")("")
+                                             ("r")));
+  BOOST_CHECK_EQUAL("sd", do_bid_test(list_of("sd")("")("")("")));
 }
 

@@ -31,7 +31,7 @@ namespace {
             // Ensure we don't pass at first
             && (!bid.is_pass() || !current.is_pass())
             // Ensure only first bid uses reserved bids
-            && (bid >= reserved_bids || current.is_pass())
+            && (bid >= reserved_bids || bid.is_pass() || current.is_pass())
             // Ensure only valid reserved bid is 0
             && (bid >= reserved_bids || bid <= Bid(0))) {
           return bid;
@@ -86,6 +86,17 @@ BiddingSequence::get_bids(const std::vector<Player::Ptr>& players)
     std::for_each(
         players.begin(), players.end(),
         boost::bind(&Player::notify_bid, _1, PlayPosition(player), bid)
+      );
+  }
+
+  // Finally if we're in the reserved bids we must find out which one
+  if (current < reserved_bids) {
+    current =
+      get_bid(players[0], true, current, true, reserved_bids, bid_bound);
+    bids_.push_back(current);
+    std::for_each(
+        players.begin(), players.end(),
+        boost::bind(&Player::notify_bid, _1, position_forehand, current)
       );
   }
 
