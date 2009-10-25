@@ -24,6 +24,7 @@ namespace {
           return bid;
         }
       }
+      player->notify_invalid_play("invalid bid");
     }
   }
 }

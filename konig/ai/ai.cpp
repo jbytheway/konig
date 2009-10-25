@@ -4,6 +4,7 @@
 #include <konig/ai/noddyai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/strongsddefenceai.hpp>
+#include <konig/ai/invalidplayerror.hpp>
 
 namespace konig { namespace ai {
 
@@ -149,6 +150,11 @@ void Ai::notify_play_card(PlayPosition p, Card c)
     assert(hand_.count(c));
     hand_.erase(c);
   }
+}
+
+void Ai::notify_invalid_play(std::string m)
+{
+  throw InvalidPlayError(std::move(m));
 }
 
 uint8_t Ai::guess_num_offence() const

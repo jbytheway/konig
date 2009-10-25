@@ -87,5 +87,10 @@ void RemotePlayer::notify_play_card(PlayPosition pos, Card card)
       ));
 }
 
+void RemotePlayer::notify_invalid_play(std::string m)
+{
+  client_.send(Message<MessageType::notifyInvalidPlay>(std::move(m)));
+}
+
 }}
 

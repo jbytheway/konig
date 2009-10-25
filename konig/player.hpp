@@ -31,6 +31,7 @@ class Player {
     virtual void notify_announcements_done() {}
     virtual Card play_card() = 0;
     virtual void notify_play_card(PlayPosition, Card) = 0;
+    virtual void notify_invalid_play(std::string) = 0;
   protected:
     Player() = default;
     Player(Player const&) = default;

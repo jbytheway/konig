@@ -160,6 +160,9 @@ KONIG_CLIENT_SERVERINTERFACE_NOTIFY(notifyDiscard, notify_discard, discard)
 KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
     notifyAnnouncements, notify_announcements, announcements
   )
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
+    notifyInvalidPlay, notify_invalid_play, message
+  )
 #undef KONIG_CLIENT_SERVERINTERFACE_NOTIFY
 
 void ServerInterface::message(

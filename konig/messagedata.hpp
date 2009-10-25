@@ -197,6 +197,13 @@ struct MessageData<MessageType::notifyPlayCard> {
   > type;
 };
 
+template<>
+struct MessageData<MessageType::notifyInvalidPlay> {
+  typedef fusion::map<
+    fusion::pair<fields::message, std::string>
+  > type;
+};
+
 }
 
 #endif // KONIG__MESSAGEDATA_HPP
