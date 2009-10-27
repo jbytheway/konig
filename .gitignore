@@ -4,6 +4,7 @@
 .makefrags
 *.la
 /config.mk
+/user.mk
 /*/Makefile
 /*/*/Makefile
 /*/*/*/Makefile
