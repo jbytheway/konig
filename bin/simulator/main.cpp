@@ -24,6 +24,8 @@ struct Options {
   std::vector<std::string> ais;
   std::vector<std::string> chunks;
   unsigned long num_deals;
+  boost::optional<unsigned long> seed;
+
   bool show_deal;
   bool show_tricks;
 };
@@ -41,6 +43,7 @@ void usage(std::ostream& o)
 "                chunks of cards (4 hands, 2 talon-halves).\n"
 "  -n, --num-deals N\n"
 "                Make N random deals in total (default 1).\n"
+"  -s, --seed N  Seed dealer with N (default seeds from /dev/urandom).\n"
 "  -d-, --no-show-deal\n"
 "                Don't show the deal.\n"
 "  -t-, --no-show-tricks\n"
@@ -58,6 +61,7 @@ int main(int argc, char const* const* const argv) {
   parser.addOption("chunks",      'c', &options.chunks, ",");
   parser.addOption("num-deals",   'n', &options.num_deals);
   parser.addOption("show-deal",   'd', &options.show_deal);
+  parser.addOption("seed",        's', &options.seed);
   parser.addOption("show-tricks", 't', &options.show_tricks);
 
   boost::filesystem::path options_file(std::getenv("HOME"));
@@ -97,7 +101,9 @@ int main(int argc, char const* const* const argv) {
   }
 
   konig::Ruleset rules = konig::Ruleset::solodreier_only();
-  konig::Dealer::Ptr dealer(konig::Dealer::create(options.chunks));
+  konig::Dealer::Ptr dealer = options.seed ?
+    konig::Dealer::create(options.chunks, *options.seed) :
+    konig::Dealer::create(options.chunks);
   for (unsigned long i=0; i<options.num_deals; ++i) {
     konig::Deal deal = dealer->deal();
     if (options.show_deal) {

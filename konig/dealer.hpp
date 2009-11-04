@@ -14,15 +14,21 @@ class Dealer {
     typedef boost::shared_ptr<Dealer> Ptr;
 
     static Ptr create();
+    static Ptr create(unsigned long seed);
 
     template<typename ForwardRange>
     static Ptr create(const ForwardRange& descriptions);
 
+    template<typename ForwardRange>
+    static Ptr create(const ForwardRange& descriptions, unsigned long seed);
+
     // Argument must be an array reference to be used instead of the templated
     // overload
-    static Ptr create(const std::string (& descriptions)[6]);
+    static Ptr create(const std::string (& descs)[6]);
+    static Ptr create(const std::string (& descs)[6], unsigned long seed);
 
     Dealer();
+    Dealer(unsigned long seed);
 
     virtual Deal deal() = 0;
   protected:
@@ -41,6 +47,19 @@ Dealer::Ptr Dealer::create(const ForwardRange& descriptions)
   std::copy(boost::begin(descriptions), boost::end(descriptions), descs);
 
   return create(descs);
+}
+
+template<typename ForwardRange>
+Dealer::Ptr Dealer::create(const ForwardRange& descriptions, unsigned long seed)
+{
+  if (boost::size(descriptions) != 6) {
+    throw std::logic_error("wrong number of chunks in desription");
+  }
+
+  std::string descs[6];
+  std::copy(boost::begin(descriptions), boost::end(descriptions), descs);
+
+  return create(descs, seed);
 }
 
 }

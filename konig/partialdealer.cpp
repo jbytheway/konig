@@ -6,15 +6,16 @@ namespace konig {
 
 PartialDealer::PartialDealer(const std::string descriptions[6])
 {
-  std::set<Card> deck;
-  Card::make_deck(inserter(deck, deck.begin()));
-  for (size_t i=0; i<6; ++i) {
-    size_t size;
-    if (i<4) size = 12; else size = 3;
-    partial_chunks_[i] = PartialCards(descriptions[i], size);
-    partial_chunks_[i].erase_certainties(deck);
-  }
-  remaining_cards_.assign(deck.begin(), deck.end());
+  init(descriptions);
+}
+
+PartialDealer::PartialDealer(
+    const std::string descriptions[6],
+    unsigned long seed
+  ) :
+  Dealer(seed)
+{
+  init(descriptions);
 }
 
 Deal PartialDealer::deal()
@@ -34,6 +35,19 @@ Deal PartialDealer::deal()
   assert(position == remaining_cards_.end());
   assert(next_chunk == chunks.end());
   return Deal(chunks);
+}
+
+void PartialDealer::init(const std::string descriptions[6])
+{
+  std::set<Card> deck;
+  Card::make_deck(inserter(deck, deck.begin()));
+  for (size_t i=0; i<6; ++i) {
+    size_t size;
+    if (i<4) size = 12; else size = 3;
+    partial_chunks_[i] = PartialCards(descriptions[i], size);
+    partial_chunks_[i].erase_certainties(deck);
+  }
+  remaining_cards_.assign(deck.begin(), deck.end());
 }
 
 }

@@ -10,6 +10,7 @@ namespace konig {
 class CompleteDealer : public Dealer {
   public:
     CompleteDealer();
+    CompleteDealer(unsigned long seed);
 
     virtual Deal deal();
   private:

@@ -9,6 +9,12 @@ CompleteDealer::CompleteDealer()
   Card::make_deck(back_inserter(deck_));
 }
 
+CompleteDealer::CompleteDealer(unsigned long seed) :
+  Dealer(seed)
+{
+  Card::make_deck(back_inserter(deck_));
+}
+
 Deal CompleteDealer::deal()
 {
   boost::random_number_generator<random_engine_type> rng(random_engine_);
