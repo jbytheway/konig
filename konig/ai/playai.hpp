@@ -13,6 +13,8 @@ class PlayAi {
 
     virtual ~PlayAi() = 0;
 
+    virtual std::vector<Announcement> announce(Ai const&) = 0;
+    virtual void play_start(Ai const&) = 0;
     virtual Card play_card(Ai const&) = 0;
   protected:
     PlayAi() = default;

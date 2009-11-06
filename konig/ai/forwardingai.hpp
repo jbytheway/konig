@@ -17,7 +17,11 @@ class ForwardingAi : public Ai {
     virtual Cards discard();
     virtual std::vector<Announcement> announce();
     virtual Card play_card();
+
+    virtual void play_start_hook();
+    virtual void trick_complete_hook();
   private:
+    bool debug_;
     BidAi::Ptr bidder_;
     PlayAi::Ptr player_;
 };
