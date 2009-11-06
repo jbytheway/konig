@@ -14,7 +14,9 @@ ContractAndAnnouncements::ContractAndAnnouncements(
   called_king_(called_king),
   announcednesses_(
       contract_ ? contract_->initial_announcednesses() : Announcednesses()
-    )
+    ),
+  had_first_announcements_(false),
+  num_passes_(0)
 {}
 
 bool ContractAndAnnouncements::is_legal(
@@ -39,10 +41,23 @@ bool ContractAndAnnouncements::is_legal(
   return (new_announcedness == a->second.next_level());
 }
 
+bool ContractAndAnnouncements::is_done() const
+{
+  return num_passes_ == 3;
+}
+
 void ContractAndAnnouncements::add(std::vector<Announcement> announcements)
 {
   last_announcements_ = std::move(announcements);
-  //announcements_.push_back(last_announcements_);
+  if (!had_first_announcements_) {
+    had_first_announcements_ = true;
+  } else if (last_announcements_.empty()) {
+    assert(num_passes_ < 3);
+    ++num_passes_;
+  } else {
+    num_passes_ = 0;
+  }
+
   BOOST_FOREACH(const Announcement& a, last_announcements_) {
     Announcedness new_announcedness = a.announcedness;
     bool offensive = a.offensive();

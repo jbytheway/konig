@@ -42,6 +42,8 @@ class ContractAndAnnouncements {
           contract_->valid_first_announcements(announcements));
     }
 
+    bool is_done() const;
+
     void set_called_king(const Card king) {
       called_king_ = king;
     }
@@ -67,6 +69,8 @@ class ContractAndAnnouncements {
     Card called_king_;
     std::vector<Announcement> last_announcements_;
     Announcednesses announcednesses_;
+    bool had_first_announcements_;
+    uint8_t num_passes_;
     typedef std::map<std::pair<bool, Card>, unsigned int> PlayConstraints;
     PlayConstraints play_constraints_;
 };
