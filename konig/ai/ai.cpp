@@ -133,6 +133,9 @@ void Ai::notify_discard(Cards discard)
 void Ai::notify_announcements(std::vector<Announcement> announcements)
 {
   contract_.add(std::move(announcements));
+  if (contract_.is_done()) {
+    play_start_hook();
+  }
 }
 
 void Ai::notify_play_card(PlayPosition p, Card c)

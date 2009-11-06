@@ -28,6 +28,7 @@ class Ai : public Player {
     virtual void notify_invalid_play(std::string);
 
     virtual void game_start_hook() {}
+    virtual void play_start_hook() {}
     virtual void trick_complete_hook() {}
 
     Ruleset const& rules() const { return rules_; }
