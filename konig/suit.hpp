@@ -28,6 +28,7 @@ class Suit {
 
     Suit() : value_(min) {}
     Suit(const internal_enum v) : value_(v) {}
+    explicit Suit(const int v) : value_(v) {}
 
     explicit Suit(const std::string& s);
 
