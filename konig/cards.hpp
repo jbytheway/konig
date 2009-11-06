@@ -25,6 +25,30 @@ class Cards : public std::set<Card> {
       std::copy(boost::begin(r), boost::end(r), std::inserter(*this, end()));
     }
 
+    template<typename InputIterator>
+    Cards(InputIterator const start, InputIterator const finish) :
+      std::set<Card>(start, finish)
+    {
+    }
+
+    using std::set<Card>::lower_bound;
+
+    iterator lower_bound(Suit suit) {
+      if (suit == Suit::trumps) {
+        return lower_bound(Card(TrumpRank::pagat));
+      } else {
+        return lower_bound(Card(suit, SuitRank::low_pip));
+      }
+    }
+
+    const_iterator lower_bound(Suit suit) const {
+      if (suit == Suit::trumps) {
+        return lower_bound(Card(TrumpRank::pagat));
+      } else {
+        return lower_bound(Card(suit, SuitRank::low_pip));
+      }
+    }
+
     using std::set<Card>::equal_range;
 
     std::pair<iterator, iterator> equal_range(Suit suit) {
@@ -57,16 +81,16 @@ class Cards : public std::set<Card> {
 
     using std::set<Card>::count;
 
-    size_t count(Suit suit) {
+    size_t count(Suit suit) const {
       std::pair<iterator, iterator> range = equal_range(suit);
       return std::distance(range.first, range.second);
     }
 
-    size_t count(TrumpRank rank) {
+    size_t count(TrumpRank rank) const {
       return count(Card(rank));
     }
 
-    size_t count(SuitRank rank) {
+    size_t count(SuitRank rank) const {
       size_t tally = 0;
       for (Suit s = Suit::min; s<Suit::trumps; ++s) {
         tally += count(Card(s, rank));
