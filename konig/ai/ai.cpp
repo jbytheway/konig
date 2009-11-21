@@ -1,5 +1,7 @@
 #include <konig/ai/ai.hpp>
 
+#include <boost/assign/list_of.hpp>
+
 #include <konig/fatal.hpp>
 #include <konig/ai/nosuchai.hpp>
 #include <konig/ai/noddyai.hpp>
@@ -61,6 +63,7 @@ void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   rejected_.clear();
   discard_.clear();
   tricks_.clear();
+
   game_start_hook();
 }
 
@@ -105,6 +108,7 @@ void Ai::notify_talon(const std::array<Cards, 2>& talon)
   talon_ = talon;
   accepted_ = talon_[0];
   accepted_.insert(talon_[1]);
+
   // Check for called king
   if (king_call_ == KingCall::fourth_king) {
     Cards::iterator king = accepted_.find(SuitRank::king);
@@ -179,6 +183,15 @@ Cards Ai::legal_plays() const
   return tricks_.back().legal_plays(
       hand_, offence_, 13-tricks_.size(), contract_
     );
+}
+
+Card Ai::relevant_bird() const
+{
+  unsigned int trick_num = 13-tricks_.size();
+  assert(trick_num > 0);
+  assert(trick_num <= 3);
+  // HACK: relying on Cheltenham rules
+  return Card(TrumpRank(trick_num));
 }
 
 }}

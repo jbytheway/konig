@@ -7,7 +7,7 @@
 
 namespace konig { namespace ai {
 
-class ForwardingAi : public Ai {
+class ForwardingAi : public FateAi {
   public:
     ForwardingAi(std::string const& args);
 

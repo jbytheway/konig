@@ -64,14 +64,22 @@ Cards Trick::legal_plays(
 
 std::ostream& operator<<(std::ostream& o, const Trick& t)
 {
-  assert(t.complete());
-  for (PlayPosition p = position_forehand; p < position_max; ++p) {
-    Card c = t.cards()[(p-t.leader()+4)%4];
-    o << boost::format("%2s") % c;
-    if (p == t.winner()) {
-      o << '*';
-    } else {
-      o << ' ';
+  if (!t.played()) {
+    o << "-- -- -- --";
+  } else {
+    for (PlayPosition p = position_forehand; p < position_max; ++p) {
+      int index = (p-t.leader()+4)%4;
+      if (index < t.played()) {
+        Card c = t.cards()[index];
+        o << boost::format("%2s") % c;
+      } else {
+        o << "--";
+      }
+      if (p == t.winner()) {
+        o << '*';
+      } else {
+        o << ' ';
+      }
     }
   }
   return o;

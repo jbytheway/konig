@@ -1,7 +1,7 @@
 #ifndef KONIG_AI__PLAYAI_HPP
 #define KONIG_AI__PLAYAI_HPP
 
-#include <konig/ai/ai.hpp>
+#include <konig/ai/fateai.hpp>
 
 namespace konig { namespace ai {
 
@@ -13,9 +13,9 @@ class PlayAi {
 
     virtual ~PlayAi() = 0;
 
-    virtual std::vector<Announcement> announce(Ai const&) = 0;
-    virtual void play_start(Ai const&) = 0;
-    virtual Card play_card(Ai const&) = 0;
+    virtual std::vector<Announcement> announce(FateAi const&) = 0;
+    virtual void play_start(FateAi const&) = 0;
+    virtual Card play_card(FateAi const&) = 0;
   protected:
     PlayAi() = default;
     PlayAi(PlayAi const&) = default;

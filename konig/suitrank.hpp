@@ -28,7 +28,7 @@ class SuitRank {
 
     explicit SuitRank(const std::string& s);
 
-    bool valid() const { return value_ >= 7 && value_ <= king; }
+    bool valid() const { return value_ >= low_pip && value_ <= king; }
 
     operator internal_enum() const { return internal_enum(value_); }
     SuitRank& operator++() { ++value_; return *this; }

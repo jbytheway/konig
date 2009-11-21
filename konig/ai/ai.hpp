@@ -39,10 +39,13 @@ class Ai : public Player {
     PlayPosition declarer() const { return declarer_; }
     bool offence() const { return offence_; }
     ContractAndAnnouncements const& contract() const { return contract_; }
+    Cards const& accepted() const { return accepted_; }
+    Cards const& rejected() const { return rejected_; }
     std::vector<Trick> const& tricks() const { return tricks_; }
 
     uint8_t guess_num_offence() const;
     Cards legal_plays() const;
+    Card relevant_bird() const;
   private:
     Ruleset rules_;
     PlayPosition position_;

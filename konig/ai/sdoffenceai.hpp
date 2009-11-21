@@ -9,12 +9,13 @@ class SdOffenceAi : public PlayAi {
   public:
     SdOffenceAi();
 
-    virtual std::vector<Announcement> announce(Ai const&);
-    virtual void play_start(Ai const&);
-    virtual Card play_card(Ai const&);
+    virtual std::vector<Announcement> announce(FateAi const&);
+    virtual void play_start(FateAi const&);
+    virtual Card play_card(FateAi const&);
   private:
     uint8_t num_voids_;
     std::array<int8_t, 4> rippiness_;
+    std::array<bool, 4> void_waiting_;
     Card lowish_trump_;
 };
 

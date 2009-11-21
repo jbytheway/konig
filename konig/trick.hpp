@@ -35,6 +35,10 @@ class Trick {
       return cards_;
     }
 
+    Cards cards_so_far() const {
+      return Cards(cards_.begin(), cards_.begin() + played_);
+    }
+
     Suit suit() const { assert(played_); return cards_[0].suit(); }
 
     uint8_t played() const { return played_; }
