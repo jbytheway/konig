@@ -47,7 +47,7 @@ Card SdOffenceAi::play_card(FateAi const& ai)
 
   if (trick.leader() == ai.position()) {
     // I am leading to the trick
-    
+
     // First we check through the suits and make sure that we don't try to rip
     // in one we have no cards in
     for (Suit s = Suit::min; s<Suit::trump; ++s) {
@@ -111,7 +111,7 @@ Card SdOffenceAi::play_card(FateAi const& ai)
         worthless_card->trump_rank() <= TrumpRank::kakadu) {
       ++worthless_card;
     }
-    
+
     if (winning_play == plays.end()) {
       // I can't win; play the least valuable card
       return *worthless_card;
@@ -128,7 +128,7 @@ Card SdOffenceAi::play_card(FateAi const& ai)
       return *boost::prior(plays.end());
     } else {
       // Defense led a side suit
-      
+
       // Try to win with the king
       if (plays.count(Card(s, SuitRank::king))) {
         rippiness_[s] += 10;
