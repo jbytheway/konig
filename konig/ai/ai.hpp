@@ -2,6 +2,7 @@
 #define KONIG_AI__AI_HPP
 
 #include <boost/array.hpp>
+#include <boost/optional.hpp>
 
 #include <konig/player.hpp>
 #include <konig/trick.hpp>
@@ -43,9 +44,10 @@ class Ai : public Player {
     Cards const& rejected() const { return rejected_; }
     std::vector<Trick> const& tricks() const { return tricks_; }
 
+    uint8_t trick_number() const;
     uint8_t guess_num_offence() const;
     Cards legal_plays() const;
-    Card relevant_bird() const;
+    boost::optional<Card> relevant_bird() const;
   private:
     Ruleset rules_;
     PlayPosition position_;

@@ -48,6 +48,19 @@ Card SdOffenceAi::play_card(FateAi const& ai)
   if (trick.leader() == ai.position()) {
     // I am leading to the trick
 
+    // Abort Pagat on Uhu trick if there are at least 2 trumps unaccounted for
+    if (plays.count(Card(TrumpRank::pagat)) && ai.tricks().size() == 11 &&
+          ai.trumps_out().size() >= 2) {
+      return Card(TrumpRank::pagat);
+    }
+
+    // Cash a bird if it's safe to
+    boost::optional<Card> bird = ai.relevant_bird();
+    if (bird && plays.count(*bird) &&
+          ai.trumps_known_exhausted()) {
+      return *bird;
+    }
+
     // First we check through the suits and make sure that we don't try to rip
     // in one we have no cards in
     for (Suit s = Suit::min; s<Suit::trump; ++s) {
@@ -75,13 +88,13 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     if (plays.count(suit)) {
       return *plays.lower_bound(suit);
     }
-    Card relevant_bird = ai.relevant_bird();
-    if (plays.count(relevant_bird)) {
+    assert(bird);
+    if (plays.count(*bird)) {
       if (ai.trumps_known_exhausted()) {
-        return relevant_bird;
+        return *bird;
       } else {
-        auto something_else = boost::prior(plays.begin());
-        if (*something_else == relevant_bird) --something_else;
+        auto something_else = boost::prior(plays.end());
+        if (*something_else == *bird) --something_else;
         return *something_else;
       }
     }

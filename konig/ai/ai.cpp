@@ -168,6 +168,11 @@ void Ai::notify_invalid_play(std::string m)
   throw InvalidPlayError(std::move(m));
 }
 
+uint8_t Ai::trick_number() const
+{
+  return 13 - tricks().size();
+}
+
 uint8_t Ai::guess_num_offence() const
 {
   // For non-partnership contracts it's always 1
@@ -181,17 +186,20 @@ Cards Ai::legal_plays() const
 {
   assert(!tricks_.empty());
   return tricks_.back().legal_plays(
-      hand_, offence_, 13-tricks_.size(), contract_
+      hand_, offence_, trick_number(), contract_
     );
 }
 
-Card Ai::relevant_bird() const
+boost::optional<Card> Ai::relevant_bird() const
 {
-  unsigned int trick_num = 13-tricks_.size();
-  assert(trick_num > 0);
-  assert(trick_num <= 3);
+  unsigned int trick_num = trick_number();
+  boost::optional<Card> result;
   // HACK: relying on Cheltenham rules
-  return Card(TrumpRank(trick_num));
+  assert(trick_num > 0);
+  if (trick_num <= 3) {
+    result = Card(TrumpRank(trick_num));
+  }
+  return result;
 }
 
 }}

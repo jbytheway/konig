@@ -21,6 +21,7 @@ class FateAi : public Ai {
     std::pair<Fates::iterator, Fates::iterator> fates_of(Suit const);
     std::pair<Fates::const_iterator, Fates::const_iterator>
       fates_of(Suit const) const;
+    Cards trumps_out() const;
     bool trumps_known_exhausted() const;
   private:
     Fates fates_;
