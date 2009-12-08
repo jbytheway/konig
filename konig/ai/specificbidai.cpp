@@ -20,6 +20,7 @@ SpecificBidAi::SpecificBidAi(std::string const& description)
 
 Bid SpecificBidAi::bid(Ai const& ai)
 {
+  if (bid_name_ == "pass") return Bid::pass;
   Contracts const& contracts = ai.rules().contracts();
   Bid bid = contracts.index_by_bid_name(bid_name_);
   if (bid.is_pass()) {

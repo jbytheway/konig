@@ -6,7 +6,6 @@
 #include <konig/ai/nosuchai.hpp>
 #include <konig/ai/noddyai.hpp>
 #include <konig/ai/specificplayai.hpp>
-#include <konig/ai/strongsddefenceai.hpp>
 #include <konig/ai/forwardingai.hpp>
 #include <konig/ai/invalidplayerror.hpp>
 
@@ -24,8 +23,6 @@ Ai::Ptr Ai::create(const std::string& description)
   Ai::Ptr p;
   if (ai_name == "") {
     p.reset(new NoddyAi());
-  } else if (ai_name == "strongsddefence") {
-    p.reset(new StrongSdDefenceAi());
   } else if (ai_name == "play") {
     p.reset(new SpecificPlayAi(ai_args));
   } else if (ai_name == "forward") {

@@ -15,7 +15,9 @@ BidAi::Ptr BidAi::create(std::string const& description)
     ai_args.erase(ai_args.begin());
   }
   BidAi::Ptr p;
-  if (ai_name == "specific") {
+  if (ai_name == "") {
+    p.reset(new SpecificBidAi("contract=pass"));
+  } else if (ai_name == "specific") {
     p.reset(new SpecificBidAi(ai_args));
   } else {
     throw NoSuchAi("BidAi: "+description);

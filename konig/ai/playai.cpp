@@ -2,6 +2,7 @@
 
 #include <konig/ai/nosuchai.hpp>
 #include <konig/ai/sdoffenceai.hpp>
+#include <konig/ai/sddefenceai.hpp>
 
 namespace konig { namespace ai {
 
@@ -17,8 +18,10 @@ PlayAi::Ptr PlayAi::create(std::string const& description)
   PlayAi::Ptr p;
   if (ai_name == "sdoffence") {
     p.reset(new SdOffenceAi());
+  } else if (ai_name == "sddefence") {
+    p.reset(new SdDefenceAi());
   } else {
-    throw NoSuchAi("BidAi: "+description);
+    throw NoSuchAi("PlayAi: "+description);
   }
   return p;
 }
