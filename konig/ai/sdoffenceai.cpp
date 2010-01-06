@@ -101,9 +101,6 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     return *boost::prior(plays.end());
   } else {
     // I am following to someone else's trick
-    if (plays.size() == 1) {
-      return *plays.begin();
-    }
     Suit s = trick.suit();
 
     // See if I can possibly beat what's played so far
