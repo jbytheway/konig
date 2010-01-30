@@ -5,10 +5,13 @@
 #include <boost/range/size.hpp>
 #include <boost/spirit/home/phoenix/operator/comparison.hpp>
 
+#include <konig/fatal.hpp>
+
 namespace konig { namespace ai {
 
-void SdDefenceAi::play_start(FateAi const& ai)
+void SdDefenceAi::play_start(FateAi const&)
 {
+#if 0
   sizes_of_suits_.clear();
   cards_to_preserve_.clear();
   // collect size and value of each suit
@@ -47,6 +50,7 @@ void SdDefenceAi::play_start(FateAi const& ai)
     }
     longest_suit_ = suit;
   }
+#endif
 }
 
 std::vector<Announcement> SdDefenceAi::announce(FateAi const&) {
@@ -54,42 +58,56 @@ std::vector<Announcement> SdDefenceAi::announce(FateAi const&) {
 }
 
 Card SdDefenceAi::play_card(FateAi const& ai) {
-  Cards legal = ai.legal_plays();
-  const Trick& trick = ai.tricks().back();
-  Cards unpreserved;
-  Cards preserved;
-  // Slower than using proper algorithms...
-  BOOST_FOREACH(const Card& c, legal) {
-    if (cards_to_preserve_.count(c)) {
-      preserved.insert(c);
-    } else {
-      unpreserved.insert(c);
-    }
+  Trick const& trick = ai.tricks().back();
+  //Cards const& hand = ai.hand();
+  Cards const plays = ai.legal_plays();
+
+  // If there's only one legal play, play it
+  if (plays.size() == 1) {
+    return *plays.begin();
   }
 
   if (trick.played() == 0) {
     // We're leading
-    return play_low_short(unpreserved, preserved);
+  } else {
+    // We're following
+    Suit s = trick.suit();
+
+    const int declarers_position_in_trick =
+      (ai.declarer() - trick.leader() + 4)%4;
+    const bool declarer_has_played =
+      trick.played() > declarers_position_in_trick;
+    auto winning_play = plays.lower_bound(trick.winning_card());
+    if (!winning_play->trump() && winning_play->suit() != s) {
+      winning_play = plays.end();
+    }
+
+    // When declarer has played
+    if (declarer_has_played && s != Suit::trumps &&
+        winning_play != plays.end() && s == winning_play->suit()) {
+      // We can win in a side suit; play biggest card in that suit
+    }
   }
-  const int declarers_position_in_trick = (ai.declarer() - trick.leader() + 4)%4;
-  const bool declarer_has_played = trick.played() > declarers_position_in_trick;
+
+  KONIG_FATAL("unimplimented: " << trick);
+#if 0
   const Card declarer_played = trick.cards()[declarers_position_in_trick];
   const bool declarer_played_strongly =
     declarer_has_played &&
     (declarer_played.trump() || declarer_played.suit_rank() == SuitRank::king);
   std::set<Suit> suits;
   std::transform(
-      legal.begin(), legal.end(), inserter(suits, suits.end()),
+      plays.begin(), plays.end(), inserter(suits, suits.end()),
       boost::bind(&Card::suit, _1)
     );
   if (suits.size() == 1) {
     // We're either following suit or trumping or discarding from our only suit
     if (declarer_played_strongly) {
       // Play low
-      return *legal.begin();
+      return *plays.begin();
     } else {
       // Play high
-      return *boost::prior(legal.end());
+      return *boost::prior(plays.end());
     }
   } else {
     // We're discarding
@@ -111,6 +129,7 @@ Card SdDefenceAi::play_card(FateAi const& ai) {
       return available.back();
     }
   }
+#endif
 }
 
 Card SdDefenceAi::play_low_short(

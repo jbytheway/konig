@@ -15,10 +15,6 @@ class SdDefenceAi : public PlayAi {
   private:
     Card play_low_short(const Cards& unpreserved, const Cards& preserved) const;
 
-    typedef std::vector<std::tuple<size_t, size_t, Suit> > SizesOfSuits;
-    SizesOfSuits sizes_of_suits_;
-    Cards cards_to_preserve_;
-    Suit longest_suit_;
     std::mt19937 random_engine_;
 };
 
