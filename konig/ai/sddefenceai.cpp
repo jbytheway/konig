@@ -132,6 +132,7 @@ Card SdDefenceAi::play_card(FateAi const& ai) {
 #endif
 }
 
+#if 0
 Card SdDefenceAi::play_low_short(
     const Cards& unpreserved,
     const Cards& preserved
@@ -153,6 +154,7 @@ Card SdDefenceAi::play_low_short(
   }
   throw std::logic_error("shouldn't get here");
 }
+#endif
 
 }}
 
