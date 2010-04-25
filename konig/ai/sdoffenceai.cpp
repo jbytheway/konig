@@ -81,6 +81,11 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     }
     // No worthwhile ripping suits, so lead trumps
     auto potential_trump = hand.lower_bound(lowish_trump_);
+    if (potential_trump == hand.end()) {
+      // We've exhausted all trumps expect birds and those saved for roughing.
+      // Look for one of the latter
+      potential_trump = hand.upper_bound(Card(TrumpRank::kakadu));
+    }
     if (potential_trump != hand.end()) {
       return *potential_trump;
     }
