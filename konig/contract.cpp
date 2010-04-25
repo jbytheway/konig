@@ -18,7 +18,8 @@ std::vector<Trick> Contract::play_tricks(
     const std::vector<Player::Ptr>& players,
     const ContractAndAnnouncements& whole_contract,
     PlayPosition declarer_position,
-    std::array<bool, 4> const& offence
+    std::array<bool, 4> const& offence,
+    std::ostream* debug_stream
   ) const
 {
   for (size_t i=0; i<4; ++i) {
@@ -60,6 +61,9 @@ std::vector<Trick> Contract::play_tricks(
       declarers_cards.insert(t.cards());
     } else {
       defences_cards.insert(t.cards());
+    }
+    if (debug_stream) {
+      *debug_stream << t << std::endl;
     }
     tricks.push_back(std::move(t));
   }

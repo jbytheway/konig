@@ -27,7 +27,8 @@ class Trischaken : public Contract {
         std::array<Cards, 4> hands,
         std::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
-        PlayPosition declarer_position
+        PlayPosition declarer_position,
+        std::ostream* debug_stream
       ) const;
 
     virtual bool grants_lead() const { return false; }

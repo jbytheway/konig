@@ -53,7 +53,8 @@ std::string PositiveContract::outcome_name(
 
 boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
     std::array<Cards, 4> hands, std::array<Cards, 2> talon,
-    const std::vector<Player::Ptr>& players, PlayPosition declarer_position
+    const std::vector<Player::Ptr>& players, PlayPosition declarer_position,
+    std::ostream* debug_stream
   ) const
 {
   Player::Ptr declarer = players[declarer_position];
@@ -189,7 +190,7 @@ boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
 
   std::vector<Trick> tricks = play_tricks(
       hands, declarers_cards, defences_cards,
-      players, whole_contract, declarer_position, offence
+      players, whole_contract, declarer_position, offence, debug_stream
     );
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, offence);

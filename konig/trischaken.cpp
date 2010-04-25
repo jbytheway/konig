@@ -62,7 +62,8 @@ boost::tuple<Outcome, std::vector<Trick> > Trischaken::play(
     std::array<Cards, 4> hands,
     std::array<Cards, 2> /*talon*/,
     const std::vector<boost::shared_ptr<Player>>& players,
-    PlayPosition declarer_position
+    PlayPosition declarer_position,
+    std::ostream* debug_stream
   ) const
 {
   std::array<bool, 4> offence = {{false, false, false, false}};
@@ -81,7 +82,7 @@ boost::tuple<Outcome, std::vector<Trick> > Trischaken::play(
   Cards defences_cards;
   std::vector<Trick> tricks = play_tricks(
       hands, declarers_cards, defences_cards,
-      players, whole_contract, declarer_position, offence
+      players, whole_contract, declarer_position, offence, debug_stream
     );
   // For Trischaken things are complicated, so we have to do some stuff here
   // that would normally be inside Feat

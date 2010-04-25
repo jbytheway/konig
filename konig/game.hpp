@@ -32,7 +32,8 @@ class Game {
       deal.copy_talon(talon_.begin());
     }
 
-    boost::tuple<Outcome, std::vector<Trick> > play() const;
+    boost::tuple<Outcome, std::vector<Trick> >
+    play(std::ostream* debug_stream = NULL) const;
   private:
     const Ruleset rules_;
     const std::vector<Player::Ptr> players_;

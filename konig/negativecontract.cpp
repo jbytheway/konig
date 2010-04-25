@@ -50,7 +50,8 @@ boost::tuple<Outcome, std::vector<Trick> > NegativeContract::play(
     std::array<Cards, 4> hands,
     std::array<Cards, 2> /*talon*/,
     const std::vector<boost::shared_ptr<Player>>& players,
-    PlayPosition declarer_position
+    PlayPosition declarer_position,
+    std::ostream* debug_stream
   ) const
 {
   std::array<bool, 4> offence = {{false, false, false, false}};
@@ -69,7 +70,7 @@ boost::tuple<Outcome, std::vector<Trick> > NegativeContract::play(
   Cards defences_cards;
   std::vector<Trick> tricks = play_tricks(
       hands, declarers_cards, defences_cards,
-      players, whole_contract, declarer_position, offence
+      players, whole_contract, declarer_position, offence, debug_stream
     );
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, offence);

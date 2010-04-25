@@ -17,6 +17,7 @@ struct Options {
   Options() :
     help(false),
     num_deals(1),
+    on_fly(false),
     show_deal(true),
     show_tricks(true)
   {}
@@ -26,6 +27,7 @@ struct Options {
   unsigned long num_deals;
   boost::optional<unsigned long> seed;
 
+  bool on_fly;
   bool show_deal;
   bool show_tricks;
 };
@@ -44,6 +46,8 @@ void usage(std::ostream& o)
 "  -n, --num-deals N\n"
 "                Make N random deals in total (default 1).\n"
 "  -s, --seed N  Seed dealer with N (default seeds from /dev/urandom).\n"
+"  -f, --on-fly  Show contract and deal as they happen (rather than waiting\n"
+"                for the hand to end).\n"
 "  -d-, --no-show-deal\n"
 "                Don't show the deal.\n"
 "  -t-, --no-show-tricks\n"
@@ -56,11 +60,12 @@ void usage(std::ostream& o)
 int main(int argc, char const* const* const argv) {
   konig::simulator::Options options;
   optimal::OptionsParser parser;
-  parser.addOption("help",        'h', &options.help);
   parser.addOption("ais",         'a', &options.ais,    ",");
   parser.addOption("chunks",      'c', &options.chunks, ",");
-  parser.addOption("num-deals",   'n', &options.num_deals);
   parser.addOption("show-deal",   'd', &options.show_deal);
+  parser.addOption("on-fly",      'f', &options.on_fly);
+  parser.addOption("help",        'h', &options.help);
+  parser.addOption("num-deals",   'n', &options.num_deals);
   parser.addOption("seed",        's', &options.seed);
   parser.addOption("show-tricks", 't', &options.show_tricks);
 
@@ -100,6 +105,7 @@ int main(int argc, char const* const* const argv) {
     options.chunks.push_back(std::string());
   }
 
+  std::ostream* debug_stream = ( options.on_fly ? &std::cout : NULL );
   konig::Ruleset rules = konig::Ruleset::solodreier_only();
   konig::Dealer::Ptr dealer = options.seed ?
     konig::Dealer::create(options.chunks, *options.seed) :
@@ -112,7 +118,7 @@ int main(int argc, char const* const* const argv) {
     konig::Game game(rules, ais, deal);
     konig::Outcome outcome;
     std::vector<konig::Trick> tricks;
-    boost::tie(outcome, tricks) = game.play();
+    boost::tie(outcome, tricks) = game.play(debug_stream);
     std::cout << outcome << '\n';
     if (options.show_tricks) {
       std::cout << '\n';

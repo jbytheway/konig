@@ -41,7 +41,8 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         std::array<Cards, 4> hands,
         std::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
-        PlayPosition declarer_position
+        PlayPosition declarer_position,
+        std::ostream* debug_stream
       ) const = 0;
 
     virtual bool grants_lead() const = 0;
@@ -63,7 +64,8 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         const std::vector<boost::shared_ptr<Player>>& players,
         const ContractAndAnnouncements& whole_contract,
         PlayPosition declarer_position,
-        std::array<bool, 4> const& offence
+        std::array<bool, 4> const& offence,
+        std::ostream* debug_stream
       ) const;
 
     // Contracts
