@@ -1,0 +1,41 @@
+NO_AUTO_COMPILING = yes
+EXPS := $(wildcard *.exp)
+BASES := $(basename $(EXPS))
+RESULTS := $(addsuffix .results,$(BASES))
+
+NUM_TRIALS := 100
+NUM_STD_HANDS := 100
+NUMS := $(shell seq -w 0 $$(($(NUM_STD_HANDS)-1)))
+
+HAND_NUMS := $(addprefix hands/,$(NUMS))
+RESULTS_NUMS := $(foreach result,$(RESULTS),$(addprefix $(result).,$(NUMS)))
+
+SIM := ../konig-simulator
+
+test: $(RESULTS)
+
+$(HAND_NUMS): hands/%: $(SIM)
+	mkdir -p $(dir $@)
+	$< -p- -m -s $* | cut -d , -f 1 > $@
+
+define MAKE_RESULTS
+$(1)_RESULTS_NUMS := $(addprefix $(1)/results.,$(NUMS))
+$(1)_FULL_NUMS := $(addprefix $(1).full.,$(NUMS))
+$$($(1)_RESULTS_NUMS): $(1)/results.%: $(1).exp hands/% \
+		$(this_srcdir)Makefile.local
+	mkdir -p $$(dir $$@)
+	cat hand.$$* | tr '\n' ' ' > $$@
+	set -o pipefail && \
+		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s 0 -d- -t- |\
+		sort | uniq -c | sed 's/^ *//' | tr '\n' ' ' >> $$@
+	echo >> $$@
+
+$$($(1)_FULL_NUMS): $(1).full.%: $(1).exp hands/%
+	$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s 0 -f -t- >> $$@
+
+$(1).results: $$($(1)_RESULTS_NUMS)
+	cat $$^ > $$@
+endef
+
+$(foreach base,$(BASES),$(eval $(call MAKE_RESULTS,$(base))))
+
