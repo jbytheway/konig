@@ -17,6 +17,7 @@ struct Options {
   Options() :
     help(false),
     num_deals(1),
+    play(true),
     on_fly(false),
     show_deal(true),
     show_tricks(true)
@@ -26,7 +27,7 @@ struct Options {
   std::vector<std::string> chunks;
   unsigned long num_deals;
   boost::optional<unsigned long> seed;
-
+  bool play;
   bool on_fly;
   bool show_deal;
   bool show_tricks;
@@ -37,19 +38,21 @@ void usage(std::ostream& o)
   o <<
 "Usage : konig-simulator [OPTIONS]\n"
 "\n"
-"  -h, --help    Display this message.\n"
 "  -a, --ais AI,AI,...\n"
 "                Comma-separated list of AI specifications.\n"
 "  -c, --chunks CHUNK,...\n"
 "                Comma-separated list of partial specifications for the\n"
 "                chunks of cards (4 hands, 2 talon-halves).\n"
-"  -n, --num-deals N\n"
-"                Make N random deals in total (default 1).\n"
-"  -s, --seed N  Seed dealer with N (default seeds from /dev/urandom).\n"
-"  -f, --on-fly  Show contract and deal as they happen (rather than waiting\n"
-"                for the hand to end).\n"
 "  -d-, --no-show-deal\n"
 "                Don't show the deal.\n"
+"  -f, --on-fly  Show contract and deal as they happen (rather than waiting\n"
+"                for the hand to end).\n"
+"  -h, --help    Display this message.\n"
+"  -n, --num-deals N\n"
+"                Make N random deals in total (default 1).\n"
+"  -p-, --no-play\n"
+"                Don't play, just deal.\n"
+"  -s, --seed N  Seed dealer with N (default seeds from /dev/urandom).\n"
 "  -t-, --no-show-tricks\n"
 "                Don't show the tricks.\n"
   << std::flush;
@@ -66,6 +69,7 @@ int main(int argc, char const* const* const argv) {
   parser.addOption("on-fly",      'f', &options.on_fly);
   parser.addOption("help",        'h', &options.help);
   parser.addOption("num-deals",   'n', &options.num_deals);
+  parser.addOption("play",        'p', &options.play);
   parser.addOption("seed",        's', &options.seed);
   parser.addOption("show-tricks", 't', &options.show_tricks);
 
@@ -115,6 +119,7 @@ int main(int argc, char const* const* const argv) {
     if (options.show_deal) {
       std::cout << deal << std::endl;
     }
+    if (!options.play) continue;
     konig::Game game(rules, ais, deal);
     konig::Outcome outcome;
     std::vector<konig::Trick> tricks;
