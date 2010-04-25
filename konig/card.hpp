@@ -21,8 +21,30 @@ class Card {
     static bool from_string(Card&, std::string const&);
 
     struct CompareRanks {
-      bool operator()(const Card& l, const Card& r) {
+      bool operator()(const Card& l, const Card& r) const {
         return l.rank_ < r.rank_;
+      }
+    };
+
+    // Like CompareRanks, but reverse the order of the pip cards (undefined
+    // behaviour on trumps)
+    struct CompareRanksReversePips {
+      bool operator()(const Card& l, const Card& r) const {
+        SuitRank const lRank = l.suit_rank();
+        SuitRank const rRank = r.suit_rank();
+        if (lRank.face()) {
+          if (rRank.face()) {
+            return lRank < rRank;
+          } else {
+            return false;
+          }
+        } else {
+          if (rRank.face()) {
+            return true;
+          } else {
+            return rRank < lRank;
+          }
+        }
       }
     };
 
