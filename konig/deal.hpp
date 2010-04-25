@@ -23,10 +23,10 @@ class Deal {
             int
           >::type = 0
       );
-    
+
     template<typename Range1, typename Range2>
     Deal(Range1 hands, Range2 talon);
-    
+
     template<typename OutputIterator>
     void copy_hands(OutputIterator o) const {
       std::copy(hands_.begin(), hands_.end(), o);
@@ -36,8 +36,10 @@ class Deal {
     void copy_talon(OutputIterator o) const {
       std::copy(talon_.begin(), talon_.end(), o);
     }
+
+    void write(std::ostream&, std::string delimiter) const;
   private:
-    void sanity_check();
+    void sanity_check() const;
 
     std::array<Cards, 4> hands_;
     std::array<Cards, 2> talon_;

@@ -2,7 +2,15 @@
 
 namespace konig {
 
-void Deal::sanity_check() {
+void Deal::write(std::ostream& o, std::string delimiter) const
+{
+  typedef std::ostream_iterator<Cards> out;
+  copy_hands(out(o, delimiter.c_str()));
+  copy_talon(out(o, delimiter.c_str()));
+}
+
+void Deal::sanity_check() const
+{
   BOOST_FOREACH(const Cards& hand, hands_) {
     if (hand.size() != 12) {
       throw std::logic_error("wrong number cards in hand");
@@ -18,9 +26,7 @@ void Deal::sanity_check() {
 
 std::ostream& operator<<(std::ostream& o, const Deal& d)
 {
-  typedef std::ostream_iterator<Cards> out;
-  d.copy_hands(out(o, "\n"));
-  d.copy_talon(out(o, "\n"));
+  d.write(o, "\n");
   return o;
 }
 
