@@ -23,6 +23,7 @@ class FateAi : public Ai {
       fates_of(Suit const) const;
     Cards trumps_out() const;
     bool trumps_known_exhausted() const;
+    bool guaranteed_to_win_against(Card const&, PlayPosition const) const;
   private:
     Fates fates_;
 };

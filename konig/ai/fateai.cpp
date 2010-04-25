@@ -151,5 +151,39 @@ bool FateAi::trumps_known_exhausted() const
   return trumps_out().empty();
 }
 
+bool FateAi::guaranteed_to_win_against(
+  Card const& card,
+  PlayPosition const pos
+) const
+{
+  /** \bug Could be made faster */
+  CardFate in_pos_hand(pos);
+  if (card.trump()) {
+    for (TrumpRank better_rank = boost::next(card.trump_rank());
+      better_rank < TrumpRank::max; ++better_rank) {
+      if (fates_.find(Card(better_rank))->second.count(in_pos_hand)) {
+        return false;
+      }
+    }
+    return true;
+  } else {
+    for (SuitRank better_rank = boost::next(card.suit_rank());
+      better_rank < SuitRank::max; ++better_rank) {
+      auto p = fates_.find(Card(card.suit(), better_rank));
+      assert(p != fates_.end());
+      if (p->second.count(in_pos_hand)) {
+        return false;
+      }
+    }
+    BOOST_FOREACH(auto const& p, fates_of(Suit::trumps)) {
+      std::set<CardFate> const& fates = p.second;
+      if (fates.count(in_pos_hand)) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
 }}
 
