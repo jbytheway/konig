@@ -15,7 +15,8 @@ class TrumpRank {
       kakadu = 3,
       maribu = 4,
       mond = 21,
-      skus = 22
+      skus = 22,
+      max = 23
     };
 
     TrumpRank(const internal_enum v) : value_(v) {}
