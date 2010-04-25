@@ -16,6 +16,22 @@ class SdDefenceAi : public PlayAi {
     Card play_low_short(const Cards& unpreserved, const Cards& preserved) const;
 
     std::mt19937 random_engine_;
+
+    bool guess_master_defender_;
+
+    struct SuitProfile {
+      size_t size;
+      size_t points;
+      Suit suit;
+
+      friend bool operator<(SuitProfile const& l, SuitProfile const& r) {
+        return std::make_tuple(l.size, l.points) <
+          std::make_tuple(r.size, r.points);
+      }
+    };
+
+    typedef std::vector<SuitProfile> SuitProfiles;
+    SuitProfiles suit_profiles_;
 };
 
 }}
