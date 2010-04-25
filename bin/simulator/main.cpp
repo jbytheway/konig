@@ -16,6 +16,7 @@ namespace konig { namespace simulator {
 struct Options {
   Options() :
     help(false),
+    machine(false),
     num_deals(1),
     play(true),
     on_fly(false),
@@ -25,6 +26,7 @@ struct Options {
   bool help;
   std::vector<std::string> ais;
   std::vector<std::string> chunks;
+  bool machine;
   unsigned long num_deals;
   boost::optional<unsigned long> seed;
   bool play;
@@ -48,6 +50,7 @@ void usage(std::ostream& o)
 "  -f, --on-fly  Show contract and deal as they happen (rather than waiting\n"
 "                for the hand to end).\n"
 "  -h, --help    Display this message.\n"
+"  -m, --machine Use machine-readable output rather than human-readable.\n"
 "  -n, --num-deals N\n"
 "                Make N random deals in total (default 1).\n"
 "  -p-, --no-play\n"
@@ -68,6 +71,7 @@ int main(int argc, char const* const* const argv) {
   parser.addOption("show-deal",   'd', &options.show_deal);
   parser.addOption("on-fly",      'f', &options.on_fly);
   parser.addOption("help",        'h', &options.help);
+  parser.addOption("machine",     'm', &options.machine);
   parser.addOption("num-deals",   'n', &options.num_deals);
   parser.addOption("play",        'p', &options.play);
   parser.addOption("seed",        's', &options.seed);
@@ -117,7 +121,8 @@ int main(int argc, char const* const* const argv) {
   for (unsigned long i=0; i<options.num_deals; ++i) {
     konig::Deal deal = dealer->deal();
     if (options.show_deal) {
-      std::cout << deal << std::endl;
+      deal.write(std::cout, ( options.machine ? "," : "\n" ));
+      std::cout << std::endl;
     }
     if (!options.play) continue;
     konig::Game game(rules, ais, deal);
