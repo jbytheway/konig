@@ -26,11 +26,12 @@ class Suit {
       max
     };
 
+    static Suit from_value(const int v) { return Suit(internal_enum(v)); }
+    static Suit from_char(char c) { return Suit(std::string(1, c)); }
     Suit() : value_(min) {}
-    Suit(const internal_enum v) : value_(v) {}
-    explicit Suit(const int v) : value_(v) {}
+    Suit(const internal_enum v) : value_(v) { assert(valid()); }
 
-    explicit Suit(const std::string& s);
+    explicit Suit(const std::string&);
 
     explicit Suit(const KingCall v) : value_(v) {
       if (v == KingCall::fourth_king) {

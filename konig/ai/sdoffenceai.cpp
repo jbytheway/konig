@@ -72,7 +72,7 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     // Try ripping in a side suit.  Do this if either it's a good suit
     // for ripping or we have at most as many trumps as non-trumps
     auto suit_it = std::max_element(rippiness_.begin(), rippiness_.end());
-    Suit suit(suit_it-rippiness_.begin());
+    Suit suit = Suit::from_value(suit_it-rippiness_.begin());
     if (*suit_it >= 3 || hand.count(Suit::trumps)*2 <= hand.size()) {
       // Make more rippy so we're inclined to continue on the same suit
       ++*suit_it;
@@ -105,7 +105,8 @@ Card SdOffenceAi::play_card(FateAi const& ai)
 
     // See if I can possibly beat what's played so far
     auto winning_play = plays.lower_bound(trick.winning_card());
-    if (!winning_play->trump() && winning_play->suit() != s) {
+    if (winning_play != plays.end() && !winning_play->trump() &&
+      winning_play->suit() != s) {
       winning_play = plays.end();
     }
     while (winning_play != plays.end() &&

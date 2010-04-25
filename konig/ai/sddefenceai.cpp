@@ -94,7 +94,8 @@ Card SdDefenceAi::play_card(FateAi const& ai) {
 
       if (declarer_is_winning) {
         auto winning_play = plays.lower_bound(trick.winning_card());
-        if (!winning_play->trump() && winning_play->suit() != s) {
+        if (winning_play != plays.end() && !winning_play->trump() &&
+          winning_play->suit() != s) {
           winning_play = plays.end();
         }
 

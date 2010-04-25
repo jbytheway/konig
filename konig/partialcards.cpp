@@ -4,45 +4,54 @@
 #include <boost/spirit/home/phoenix/operator/self.hpp>
 #include <boost/spirit/home/phoenix/object/construct.hpp>
 #include <boost/spirit/home/phoenix/stl/container.hpp>
-#include <boost/spirit/include/classic_core.hpp>
+#include <boost/spirit/home/phoenix/bind.hpp>
+#include <boost/spirit/include/qi_parse.hpp>
+#include <boost/spirit/include/qi_uint.hpp>
+#include <boost/spirit/include/qi_action.hpp>
+#include <boost/spirit/include/qi_lit.hpp>
+#include <boost/spirit/include/qi_char_.hpp>
+#include <boost/spirit/include/qi_operator.hpp>
 
 namespace konig {
 
 PartialCards::PartialCards(const std::string& description, size_t size)
 {
-  using namespace boost::spirit::classic;
+  namespace qi = boost::spirit::qi;
+  auto first = description.begin();
+  auto const last = description.end();
   Suit temp;
-  bool x = parse(
-      description.c_str(),
+  bool x = qi::phrase_parse(
+      first,
+      last,
       *(
-        uint_p[px::push_back(px::ref(fixed_), px::construct<Card>(arg1))] |
-        str_p("Sk")[px::push_back(px::ref(fixed_), Card(TrumpRank::skus))] |
+        qi::uint_[px::push_back(
+            px::ref(fixed_),
+            px::construct<Card>(px::construct<TrumpRank>(qi::_1))
+          )] |
+        qi::lit("Sk")[px::push_back(px::ref(fixed_), Card(TrumpRank::skus))] |
         (
-          (ch_p('C') | ch_p('D') | ch_p('H') | ch_p('S'))[
-              px::ref(temp) =
-                px::construct<Suit>(px::construct<std::string>(arg1, arg2))
+          (qi::char_('C') | qi::char_('D') | qi::char_('H') | qi::char_('S'))[
+              px::ref(temp) = px::bind(&Suit::from_char, qi::_1)
             ] >>
-          ch_p(':') >>
+          qi::lit(':') >>
           *(
-            ch_p('K') | ch_p('Q') | ch_p('N') | ch_p('J') |
-            ch_p('t') | ch_p('9') | ch_p('8') | ch_p('7') |
-            ch_p('1') | ch_p('2') | ch_p('3') | ch_p('4')
+            qi::char_('K') | qi::char_('Q') | qi::char_('N') | qi::char_('J') |
+            qi::char_('t') | qi::char_('9') | qi::char_('8') | qi::char_('7') |
+            qi::char_('1') | qi::char_('2') | qi::char_('3') | qi::char_('4')
           )[
               px::push_back(
                 px::ref(fixed_),
                 px::construct<Card>(
                   px::ref(temp),
-                  px::construct<SuitRank>(
-                    px::construct<std::string>(arg1, arg2)
-                  )
+                  px::bind(&SuitRank::from_char, qi::_1)
                 )
               )
             ]
         )
       ),
-      space_p
-    ).full;
-  if (!x) {
+      qi::space
+    );
+  if (!x || first != last) {
     throw std::logic_error("invalid partial cards specification");
   }
   std::sort(fixed_.begin(), fixed_.end());

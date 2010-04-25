@@ -25,9 +25,16 @@ class SuitRank {
       max = 15
     };
 
-    SuitRank(const internal_enum v) : value_(v) {}
+    static SuitRank from_value(const uint8_t v) {
+      return SuitRank(internal_enum(v));
+    }
 
-    explicit SuitRank(const uint8_t v) : value_(v) {}
+    static SuitRank from_char(const char c) {
+      return SuitRank(std::string(1, c));
+    }
+
+    SuitRank(const internal_enum v) : value_(v) { assert(valid()); }
+
     explicit SuitRank(const std::string& s);
 
     bool valid() const { return value_ >= low_pip && value_ <= king; }
