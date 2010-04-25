@@ -21,14 +21,17 @@ class SuitRank {
       jack = 11,
       knight = 12,
       queen = 13,
-      king = 14
+      king = 14,
+      max = 15
     };
 
     SuitRank(const internal_enum v) : value_(v) {}
 
+    explicit SuitRank(const uint8_t v) : value_(v) {}
     explicit SuitRank(const std::string& s);
 
     bool valid() const { return value_ >= low_pip && value_ <= king; }
+    bool face() const { assert(valid()); return value_ >= jack; }
 
     operator internal_enum() const { return internal_enum(value_); }
     SuitRank& operator++() { ++value_; return *this; }
