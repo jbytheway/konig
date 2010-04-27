@@ -32,9 +32,12 @@ void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
 std::array<int, 4>
 Outcome::compute_scores(std::array<bool, 4> const& achievers) const
 {
-  int num_achievers = std::accumulate(achievers.begin(), achievers.end(), 0);
+  assert(
+    num_game_achievers_ ==
+    std::accumulate(achievers.begin(), achievers.end(), 0)
+  );
   int achiever_score, other_score;
-  switch (num_achievers) {
+  switch (num_game_achievers_) {
     case 1:
       achiever_score = 3*achiever_score_;
       other_score = -achiever_score_;
