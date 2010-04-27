@@ -58,7 +58,7 @@ std::string Trischaken::outcome_name(
   return result;
 }
 
-boost::tuple<Outcome, std::vector<Trick> > Trischaken::play(
+PlayResult Trischaken::play(
     std::array<Cards, 4> hands,
     std::array<Cards, 2> /*talon*/,
     const std::vector<boost::shared_ptr<Player>>& players,
@@ -116,7 +116,8 @@ boost::tuple<Outcome, std::vector<Trick> > Trischaken::play(
   }
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, achievers);
-  return boost::make_tuple(outcome, tricks);
+  std::array<int, 4> scores = outcome.compute_scores(achievers);
+  return PlayResult{outcome, tricks, scores};
 }
 
 Announcednesses Trischaken::initial_announcednesses() const
@@ -129,6 +130,11 @@ bool Trischaken::valid_first_announcements(
   ) const
 {
   return announcements.empty();
+}
+
+int Trischaken::value_of(Feat, Announcedness, Achievement) const
+{
+  KONIG_FATAL("not implemented");
 }
 
 Achievement Trischaken::result_for(const Cards& /*declarers_cards*/) const

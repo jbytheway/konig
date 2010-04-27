@@ -12,6 +12,7 @@
 #include <konig/trick.hpp>
 #include <konig/announcement.hpp>
 #include <konig/announcednesses.hpp>
+#include <konig/playresult.hpp>
 
 namespace konig {
 
@@ -37,7 +38,7 @@ class Contract : public boost::enable_shared_from_this<Contract> {
 
     const std::string& name() const { return name_; }
 
-    virtual boost::tuple<Outcome, std::vector<Trick> > play(
+    virtual PlayResult play(
         std::array<Cards, 4> hands,
         std::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
@@ -56,6 +57,8 @@ class Contract : public boost::enable_shared_from_this<Contract> {
       ) const = 0;
 
     virtual Achievement result_for(const Cards& declarers_cards) const = 0;
+
+    virtual int value_of(Feat, Announcedness, Achievement) const = 0;
 
     std::vector<Trick> play_tricks(
         std::array<Cards, 4> hands,

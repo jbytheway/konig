@@ -28,9 +28,13 @@ class Outcome {
     const Results& results() const { return results_; }
 
     void add(bool offence, Feat, Announcedness, Achievement);
+
+    std::array<int, 4>
+    compute_scores(std::array<bool, 4> const& achievers) const;
   private:
     boost::shared_ptr<Contract const> contract_;
     uint8_t num_game_achievers_;
+    int achiever_score_;
     Results results_;
 };
 

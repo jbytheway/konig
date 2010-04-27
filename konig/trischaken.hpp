@@ -23,7 +23,7 @@ class Trischaken : public Contract {
         Achievement const
       ) const;
 
-    virtual boost::tuple<Outcome, std::vector<Trick> > play(
+    virtual PlayResult play(
         std::array<Cards, 4> hands,
         std::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
@@ -40,6 +40,8 @@ class Trischaken : public Contract {
     virtual bool valid_first_announcements(
         const std::vector<Announcement>&
       ) const;
+
+    virtual int value_of(Feat, Announcedness, Achievement) const;
 
     virtual Achievement result_for(const Cards& declarers_cards) const;
   private:

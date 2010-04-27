@@ -14,12 +14,18 @@ namespace konig {
 PositiveContract::PositiveContract(
     std::string short_name,
     std::string name,
+    const int value,
+    const int off_multiplier,
+    FeatValues feat_values,
     const bool partnership,
     const uint8_t talon_halves,
     const bool must_announce_bird,
     const bool no_initial_announcements
   ) :
   Contract(std::move(short_name), std::move(name)),
+  value_(value),
+  off_multiplier_(off_multiplier),
+  feat_values_(std::move(feat_values)),
   partnership_(partnership),
   talon_halves_(talon_halves),
   must_announce_bird_(must_announce_bird),
@@ -51,7 +57,7 @@ std::string PositiveContract::outcome_name(
   return result;
 }
 
-boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
+PlayResult PositiveContract::play(
     std::array<Cards, 4> hands, std::array<Cards, 2> talon,
     const std::vector<Player::Ptr>& players, PlayPosition declarer_position,
     std::ostream* debug_stream
@@ -194,7 +200,8 @@ boost::tuple<Outcome, std::vector<Trick> > PositiveContract::play(
     );
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, offence);
-  return boost::make_tuple(outcome, tricks);
+  std::array<int, 4> scores = outcome.compute_scores(offence);
+  return PlayResult{outcome, tricks, scores};
 }
 
 Announcednesses PositiveContract::initial_announcednesses() const
@@ -241,6 +248,22 @@ bool PositiveContract::valid_first_announcements(
     return false;
   }
   return true;
+}
+
+int PositiveContract::value_of(Feat f, Announcedness an, Achievement ac) const
+{
+  if (f == Feat::game) {
+    int value = value_ * an.multiplier();
+    if (ac == Achievement::off) value *= off_multiplier_;
+    return value;
+  }
+
+  // Non-game feats
+  int value = feat_values_.value_of(f, an != Announcedness::unannounced);
+  if (an != Announcedness::unannounced) {
+    value *= an.multiplier();
+  }
+  return value;
 }
 
 Achievement PositiveContract::result_for(const Cards& declarers_cards) const

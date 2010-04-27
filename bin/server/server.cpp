@@ -247,13 +247,11 @@ void Server::go()
       auto deal = dealer->deal();
       out_ << deal << std::endl;
       Game game(rules, players, deal);
-      konig::Outcome outcome;
-      std::vector<konig::Trick> tricks;
-      boost::tie(outcome, tricks) = game.play();
-      out_ << outcome << '\n';
+      auto result = game.play();
+      out_ << result.outcome << '\n';
       out_ << '\n';
       std::copy(
-          tricks.begin(), tricks.end(),
+          result.tricks.begin(), result.tricks.end(),
           std::ostream_iterator<konig::Trick>(out_, "\n")
         );
     }

@@ -13,11 +13,13 @@ namespace konig {
 NegativeContract::NegativeContract(
     std::string short_name,
     std::string name,
+    const int value,
     const uint8_t tricks_to_win,
     const bool ouvert,
     const bool grants_lead
   ) :
   Contract(std::move(short_name), std::move(name)),
+  value_(value),
   tricks_to_win_(tricks_to_win),
   ouvert_(ouvert),
   grants_lead_(grants_lead)
@@ -46,7 +48,7 @@ std::string NegativeContract::outcome_name(
   return result;
 }
 
-boost::tuple<Outcome, std::vector<Trick> > NegativeContract::play(
+PlayResult NegativeContract::play(
     std::array<Cards, 4> hands,
     std::array<Cards, 2> /*talon*/,
     const std::vector<boost::shared_ptr<Player>>& players,
@@ -74,7 +76,8 @@ boost::tuple<Outcome, std::vector<Trick> > NegativeContract::play(
     );
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, offence);
-  return boost::make_tuple(outcome, tricks);
+  std::array<int, 4> scores = outcome.compute_scores(offence);
+  return PlayResult{outcome, tricks, scores};
 }
 
 Announcednesses NegativeContract::initial_announcednesses() const
@@ -90,6 +93,17 @@ bool NegativeContract::valid_first_announcements(
   ) const
 {
   return announcements.empty();
+}
+
+int NegativeContract::value_of(Feat f, Announcedness an, Achievement ac) const
+{
+  if (f != Feat::game) {
+    throw std::logic_error("unexpected feat");
+  }
+
+  int value = value_ * an.multiplier();
+  if (ac == Achievement::off) value *= -1;
+  return value;
 }
 
 Achievement NegativeContract::result_for(const Cards& declarers_cards) const

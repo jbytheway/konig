@@ -126,14 +126,12 @@ int main(int argc, char const* const* const argv) {
     }
     if (!options.play) continue;
     konig::Game game(rules, ais, deal);
-    konig::Outcome outcome;
-    std::vector<konig::Trick> tricks;
-    boost::tie(outcome, tricks) = game.play(debug_stream);
-    std::cout << outcome << '\n';
+    auto result = game.play(debug_stream);
+    std::cout << result.outcome << '\n';
     if (options.show_tricks) {
       std::cout << '\n';
       std::copy(
-          tricks.begin(), tricks.end(),
+          result.tricks.begin(), result.tricks.end(),
           std::ostream_iterator<konig::Trick>(std::cout, "\n")
         );
     }

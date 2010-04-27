@@ -1,12 +1,15 @@
 #include <konig/outcome.hpp>
 
+#include <numeric>
+
 #include <konig/contract.hpp>
 
 namespace konig {
 
 Outcome::Outcome(Contract::ConstPtr contract, uint8_t num_game_achievers) :
   contract_(std::move(contract)),
-  num_game_achievers_(num_game_achievers)
+  num_game_achievers_(num_game_achievers),
+  achiever_score_{0}
 {}
 
 void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
@@ -16,7 +19,47 @@ void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
   // If it was announced and didn't make, then it's off
   if (ac == Achievement::neutral)
     ac = Achievement::off;
+  assert(!results_.count(std::make_pair(f, offence)));
   results_[std::make_pair(f, offence)] = std::make_pair(an, ac);
+  int score = contract_->value_of(f, an, ac);
+  if (offence) {
+    achiever_score_ += score;
+  } else {
+    achiever_score_ -= score;
+  }
+}
+
+std::array<int, 4>
+Outcome::compute_scores(std::array<bool, 4> const& achievers) const
+{
+  int num_achievers = std::accumulate(achievers.begin(), achievers.end(), 0);
+  int achiever_score, other_score;
+  switch (num_achievers) {
+    case 1:
+      achiever_score = 3*achiever_score_;
+      other_score = -achiever_score_;
+      break;
+    case 2:
+      achiever_score = achiever_score_;
+      other_score = -achiever_score_;
+      break;
+    // 3 and 4 can only happen in Trischaken
+    case 3:
+      achiever_score = achiever_score_;
+      other_score = -3*achiever_score_;
+      break;
+    case 4:
+      achiever_score = 0;
+      other_score = 0;
+      break;
+    default:
+      throw std::logic_error("invalid number of achievers");
+  }
+  std::array<int, 4> scores;
+  for (size_t i=0; i<4; ++i) {
+    scores[i] = ( achievers[i] ? achiever_score : other_score );
+  }
+  return scores;
 }
 
 std::ostream& operator<<(std::ostream& o, const Outcome& outcome)

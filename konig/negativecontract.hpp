@@ -14,6 +14,7 @@ class NegativeContract : public Contract {
     NegativeContract(
         std::string short_name,
         std::string name,
+        const int value,
         const uint8_t tricks_to_win,
         const bool ouvert,
         const bool grants_lead
@@ -29,7 +30,7 @@ class NegativeContract : public Contract {
         Achievement const
       ) const;
 
-    virtual boost::tuple<Outcome, std::vector<Trick> > play(
+    virtual PlayResult play(
         std::array<Cards, 4> hands,
         std::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
@@ -47,6 +48,8 @@ class NegativeContract : public Contract {
         const std::vector<Announcement>&
       ) const;
 
+    virtual int value_of(Feat, Announcedness, Achievement) const;
+
     virtual Achievement result_for(const Cards& declarers_cards) const;
   private:
     NegativeContract() = default; // For serialization
@@ -56,11 +59,13 @@ class NegativeContract : public Contract {
       ar & boost::serialization::make_nvp(
           "base", boost::serialization::base_object<Contract>(*this)
         ) &
+        BOOST_SERIALIZATION_NVP(value_) &
         BOOST_SERIALIZATION_NVP(tricks_to_win_) &
         BOOST_SERIALIZATION_NVP(ouvert_) &
         BOOST_SERIALIZATION_NVP(grants_lead_);
     }
 
+    int value_;
     // Declarer must win exactly this many tricks to succeed
     uint8_t tricks_to_win_;
     bool ouvert_;

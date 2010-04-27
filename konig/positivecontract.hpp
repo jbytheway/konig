@@ -5,6 +5,7 @@
 
 #include <konig/feat.hpp>
 #include <konig/contract.hpp>
+#include <konig/featvalues.hpp>
 
 namespace konig {
 
@@ -14,6 +15,9 @@ class PositiveContract : public Contract {
     PositiveContract(
         std::string short_name,
         std::string name,
+        const int value,
+        const int off_multiplier,
+        FeatValues feat_values,
         const bool partnership,
         const uint8_t talon_halves,
         const bool must_announce_bird,
@@ -30,7 +34,7 @@ class PositiveContract : public Contract {
         Achievement const
       ) const;
 
-    virtual boost::tuple<Outcome, std::vector<Trick> > play(
+    virtual PlayResult play(
         std::array<Cards, 4> hands,
         std::array<Cards, 2> talon,
         const std::vector<boost::shared_ptr<Player>>& players,
@@ -48,6 +52,8 @@ class PositiveContract : public Contract {
         const std::vector<Announcement>&
       ) const;
 
+    virtual int value_of(Feat, Announcedness, Achievement) const;
+
     virtual Achievement result_for(const Cards& declarers_cards) const;
   private:
     PositiveContract() = default; // For serialization
@@ -57,12 +63,18 @@ class PositiveContract : public Contract {
       ar & boost::serialization::make_nvp(
           "base", boost::serialization::base_object<Contract>(*this)
         ) &
+        BOOST_SERIALIZATION_NVP(value_) &
+        BOOST_SERIALIZATION_NVP(off_multiplier_) &
+        BOOST_SERIALIZATION_NVP(feat_values_) &
         BOOST_SERIALIZATION_NVP(partnership_) &
         BOOST_SERIALIZATION_NVP(talon_halves_) &
         BOOST_SERIALIZATION_NVP(must_announce_bird_) &
         BOOST_SERIALIZATION_NVP(no_initial_announcements_);
     }
 
+    int value_;
+    int off_multiplier_;
+    FeatValues feat_values_;
     bool partnership_;
     uint8_t talon_halves_; // How many halves of the talon declarer gets
     bool must_announce_bird_;

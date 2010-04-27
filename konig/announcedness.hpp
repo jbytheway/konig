@@ -39,6 +39,8 @@ class Announcedness {
     }
 
     std::string string(const Achievement) const;
+
+    int multiplier() const;
   private:
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int) {

@@ -7,8 +7,7 @@
 
 namespace konig {
 
-boost::tuple<Outcome, std::vector<Trick> >
-Game::play(std::ostream* debug_stream) const
+PlayResult Game::play(std::ostream* debug_stream) const
 {
   for (PlayPosition i=position_forehand; i<position_max; ++i) {
     players_[i]->start_game(rules_, i, hands_[i]);

@@ -73,7 +73,9 @@ std::vector<Trick> Contract::play_tricks(
 
 Contract::Ptr Contract::rufer()
 {
-  return Ptr(new PositiveContract("r", "rufer", true, 1, false, false));
+  return Ptr(new PositiveContract(
+      "r", "rufer", 1, -1, FeatValues::cheltenham(), true, 1, false, false
+    ));
 }
 
 Contract::Ptr Contract::trischaken()
@@ -83,54 +85,68 @@ Contract::Ptr Contract::trischaken()
 
 Contract::Ptr Contract::sechserdreier()
 {
-  return
-    Ptr(new PositiveContract("6d", "sechserdreier", false, 2, false, true));
+  return Ptr(new PositiveContract(
+      "6d", "sechserdreier", 3, -2, FeatValues::cheltenham(), false, 2, false,
+      true
+    ));
 }
 
 Contract::Ptr Contract::solo()
 {
-  return Ptr(new PositiveContract("s", "solo", true, 0, false, false));
+  return Ptr(new PositiveContract(
+      "s", "solo", 2, -1, FeatValues::cheltenham()*2, true, 0, false, false
+    ));
 }
 
 Contract::Ptr Contract::piccolo()
 {
-  return Ptr(new NegativeContract("p", "piccolo", 1, false, false));
+  return Ptr(new NegativeContract("p", "piccolo", 2, 1, false, false));
 }
 
 Contract::Ptr Contract::besserrufer()
 {
-  return Ptr(new PositiveContract("br", "besserrufer", true, 1, true, false));
+  return Ptr(new PositiveContract(
+      "br", "besserrufer", 1, -1, FeatValues::cheltenham(), true, 1, true,
+      false
+    ));
 }
 
 Contract::Ptr Contract::bettel()
 {
-  return Ptr(new NegativeContract("b", "bettel", 0, false, true));
+  return Ptr(new NegativeContract("b", "bettel", 3, 0, false, true));
 }
 
 Contract::Ptr Contract::dreier()
 {
-  return Ptr(new PositiveContract("d", "dreier", false, 1, false, false));
+  return Ptr(new PositiveContract(
+      "d", "dreier", 3, -1, FeatValues::cheltenham(), false, 1, false, false
+    ));
 }
 
 Contract::Ptr Contract::piccolo_ouvert()
 {
-  return Ptr(new NegativeContract("po", "piccolo ouvert", 1, true, false));
+  return Ptr(new NegativeContract("po", "piccolo ouvert", 4, 1, true, false));
 }
 
 Contract::Ptr Contract::besserdreier()
 {
-  return
-    Ptr(new PositiveContract("bd", "besserdreier", false, 1, true, false));
+  return Ptr(new PositiveContract(
+      "bd", "besserdreier", 3, -1, FeatValues::cheltenham(), false, 1, true,
+      false
+    ));
 }
 
 Contract::Ptr Contract::bettel_ouvert()
 {
-  return Ptr(new NegativeContract("bo", "bettel ouvert", 0, true, true));
+  return Ptr(new NegativeContract("bo", "bettel ouvert", 6, 0, true, true));
 }
 
 Contract::Ptr Contract::solodreier()
 {
-  return Ptr(new PositiveContract("sd", "solodreier", false, 0, false, false));
+  return Ptr(new PositiveContract(
+      "sd", "solodreier", 6, -1, FeatValues::cheltenham()*2, false, 0, false,
+      false
+    ));
 }
 
 }
