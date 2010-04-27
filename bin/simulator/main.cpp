@@ -15,6 +15,7 @@ namespace konig { namespace simulator {
 
 struct Options {
   Options() :
+    show_scores(false),
     help(false),
     machine(false),
     num_deals(1),
@@ -23,6 +24,7 @@ struct Options {
     show_deal(true),
     show_tricks(true)
   {}
+  bool show_scores;
   bool help;
   std::vector<std::string> ais;
   std::vector<std::string> chunks;
@@ -40,6 +42,7 @@ void usage(std::ostream& o)
   o <<
 "Usage : konig-simulator [OPTIONS]\n"
 "\n"
+"  -#, --scores  Show the scores for each hand.\n"
 "  -a, --ais AI,AI,...\n"
 "                Comma-separated list of AI specifications.\n"
 "  -c, --chunks CHUNK,...\n"
@@ -66,6 +69,7 @@ void usage(std::ostream& o)
 int main(int argc, char const* const* const argv) {
   konig::simulator::Options options;
   optimal::OptionsParser parser;
+  parser.addOption("scores",      '#', &options.show_scores);
   parser.addOption("ais",         'a', &options.ais,    ",");
   parser.addOption("chunks",      'c', &options.chunks, ",");
   parser.addOption("show-deal",   'd', &options.show_deal);
@@ -128,6 +132,13 @@ int main(int argc, char const* const* const argv) {
     konig::Game game(rules, ais, deal);
     auto result = game.play(debug_stream);
     std::cout << result.outcome << '\n';
+    if (options.show_scores) {
+      std::copy(
+        result.scores.begin(), result.scores.end(),
+        std::ostream_iterator<int>(std::cout, " ")
+      );
+      std::cout << '\n';
+    }
     if (options.show_tricks) {
       std::cout << '\n';
       std::copy(
