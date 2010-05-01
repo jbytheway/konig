@@ -25,10 +25,19 @@ $$($(1)_RESULTS_NUMS): $(1)/results.%: $(1).exp hands/% \
 		$(this_srcdir)Makefile.local
 	mkdir -p $$(dir $$@)
 	set -o pipefail && \
-		cat hands/$$* | tr '\n' ' ' > $$@
+		cat hands/$$* | sed 's/ $$$$//;s/ /_/g' | tr '\n' ' ' > $$@
 	set -o pipefail && \
-		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s 0 -d- -t- |\
-		sort | uniq -c | sed 's/^ *//' | tr '\n' ' ' >> $$@
+		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s 0 \
+		-d- -t- -# | \
+		awk ' \
+			/^[a-z]/ { outcomes[$$$$0]++ } \
+			/^[-0-9]/ { total_score += $$$$1; num_hands++ } \
+			END { \
+				printf("%f", total_score/num_hands); \
+				for (outcome in outcomes) \
+					printf(" %d %s", outcomes[outcome], outcome); \
+			} \
+		' >> $$@
 	echo >> $$@
 
 $$($(1)_FULL_NUMS): $(1).full.%: $(1).exp hands/%
