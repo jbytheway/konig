@@ -54,6 +54,8 @@ Card SdOffenceAi::play_card(FateAi const& ai)
   Trick const& trick = ai.tricks().back();
   Cards const& hand = ai.hand();
   Cards const plays = ai.legal_plays();
+  size_t const trick_number = ai.tricks().size();
+  size_t const num_trumps_out = ai.trumps_out().size();
 
   // If there's only one legal play, play it
   if (plays.size() == 1) {
@@ -64,8 +66,8 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     // I am leading to the trick
 
     // Abort Pagat on Uhu trick if there are at least 2 trumps unaccounted for
-    if (plays.count(Card(TrumpRank::pagat)) && ai.tricks().size() == 11 &&
-          ai.trumps_out().size() >= 2) {
+    if (plays.count(Card(TrumpRank::pagat)) && trick_number == 11 &&
+          num_trumps_out >= 2) {
       return Card(TrumpRank::pagat);
     }
 
@@ -74,6 +76,36 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     if (bird && plays.count(*bird) &&
           ai.trumps_known_exhausted()) {
       return *bird;
+    }
+
+    // More complex abortion logic
+    {
+      TrumpRank abortable_bird = TrumpRank::kakadu;
+      if (trick_number == 10) {
+        abortable_bird = TrumpRank::uhu;
+      } else if (trick_number == 11) {
+        abortable_bird = TrumpRank::pagat;
+      }
+      auto const before_birds = plays.lower_bound(Suit::trumps);
+      auto const after_birds = plays.upper_bound(Card(abortable_bird));
+      if (before_birds != after_birds &&
+        after_birds == boost::next(before_birds) &&
+        after_birds == plays.end())
+      {
+        // We are looking at a bird and that's the only trump we have (wxcept
+        // perhaps for announced birds)
+        Card const bird = *before_birds;
+        size_t const tricks_of_grace = 12 - bird.trump_rank() - trick_number;
+        // Zero means that this is our last chance to abort, larger numbers
+        // more tricks of grace.  Remember that num_trumps_out includes those
+        // in the talon (probably 1 or 2)
+        assert(tricks_of_grace < 11);
+        if ((tricks_of_grace == 0 && num_trumps_out >= 4) ||
+          (tricks_of_grace == 1 && num_trumps_out >= 6) ||
+          (tricks_of_grace == 2 && num_trumps_out >= 10)) {
+          return bird;
+        }
+      }
     }
 
     // First we check through the suits and make sure that we don't try to rip
