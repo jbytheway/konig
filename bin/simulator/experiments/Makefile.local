@@ -2,9 +2,10 @@ NO_AUTO_COMPILING = yes
 EXPS := $(wildcard *.exp)
 BASES := $(basename $(EXPS))
 RESULTS := $(addsuffix .results,$(BASES))
+ESTABLISHED := $(addsuffix .established,$(BASES))
 
 NUM_TRIALS := 100
-NUM_STD_HANDS := 100
+NUM_STD_HANDS := 1000
 NUMS := $(shell seq -w 0 $$(($(NUM_STD_HANDS)-1)))
 
 HAND_NUMS := $(addprefix hands/,$(NUMS))
@@ -13,6 +14,8 @@ RESULTS_NUMS := $(foreach result,$(RESULTS),$(addprefix $(result).,$(NUMS)))
 SIM := ../konig-simulator
 
 test: $(RESULTS)
+
+reestablish: $(ESTABLISHED)
 
 $(HAND_NUMS): hands/%: $(SIM)
 	mkdir -p $(dir $@)
@@ -49,4 +52,7 @@ $(1).results: $$($(1)_RESULTS_NUMS)
 endef
 
 $(foreach base,$(BASES),$(eval $(call MAKE_RESULTS,$(base))))
+
+$(ESTABLISHED): %.established: %.results
+	cp $< $@
 
