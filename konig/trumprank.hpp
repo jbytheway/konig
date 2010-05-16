@@ -30,6 +30,7 @@ class TrumpRank {
 
     operator internal_enum() const { return internal_enum(value_); }
     TrumpRank& operator++() { ++value_; return *this; }
+    TrumpRank& operator--() { --value_; return *this; }
   private:
     uint8_t value_;
 };
