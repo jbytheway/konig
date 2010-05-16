@@ -45,7 +45,7 @@ $$($(1)_RESULTS_NUMS): $(1)/results.%: $(1).exp hands/% \
 	echo >> $$@
 
 $$($(1)_FULL_NUMS): $(1).full.%: $(1).exp hands/%
-	$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s 0 -f -t- >> $$@
+	$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s 0 -f -t- > $$@
 
 $(1).results: $$($(1)_RESULTS_NUMS)
 	cat $$^ > $$@
