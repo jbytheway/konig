@@ -103,3 +103,13 @@ BOOST_AUTO_TEST_CASE(contract_names_correct)
   }
 }
 
+BOOST_AUTO_TEST_CASE(contract_feat_scoring_correct)
+{
+  {
+    Contract::ConstPtr contract = Contract::solodreier();
+    BOOST_CHECK_EQUAL(contract->value_of(
+        Feat::uhu, Announcedness::unannounced, Achievement::off
+      ), -2);
+  }
+}
+

@@ -38,6 +38,20 @@ BOOST_AUTO_TEST_CASE(outcomes_correctly_output)
     o.add(true, Feat::pagat, Announcedness::unannounced, Achievement::made);
     BOOST_CHECK_EQUAL(boost::lexical_cast<std::string>(o), "sd1");
   }
+  {
+    Outcome o(contract, 1);
+    o.add(true, Feat::game, Announcedness::announced, Achievement::off);
+    o.add(true, Feat::uhu, Announcedness::unannounced, Achievement::off);
+    BOOST_CHECK_EQUAL(boost::lexical_cast<std::string>(o), "sd/2/");
+  }
+  {
+    Outcome o(contract, 1);
+    o.add(true, Feat::game, Announcedness::announced, Achievement::off);
+    o.add(true, Feat::uhu, Announcedness::unannounced, Achievement::off);
+    o.add(
+      false, Feat::forty_five, Announcedness::unannounced, Achievement::made);
+    BOOST_CHECK_EQUAL(boost::lexical_cast<std::string>(o), "sd/2/f!");
+  }
 }
 
 BOOST_AUTO_TEST_CASE(outcomes_correctly_score)
@@ -71,6 +85,20 @@ BOOST_AUTO_TEST_CASE(outcomes_correctly_score)
     o.add(true, Feat::game, Announcedness::announced, Achievement::made);
     o.add(true, Feat::pagat, Announcedness::unannounced, Achievement::made);
     BOOST_CHECK((o.compute_scores(achievers) == Scores{{24, -8, -8, -8}}));
+  }
+  {
+    Outcome o(contract, 1);
+    o.add(true, Feat::game, Announcedness::announced, Achievement::off);
+    o.add(true, Feat::uhu, Announcedness::unannounced, Achievement::off);
+    BOOST_CHECK((o.compute_scores(achievers) == Scores{{-24, 8, 8, 8}}));
+  }
+  {
+    Outcome o(contract, 1);
+    o.add(true, Feat::game, Announcedness::announced, Achievement::off);
+    o.add(true, Feat::uhu, Announcedness::unannounced, Achievement::off);
+    o.add(
+      false, Feat::forty_five, Announcedness::unannounced, Achievement::made);
+    BOOST_CHECK((o.compute_scores(achievers) == Scores{{-24, 8, 8, 8}}));
   }
 }
 

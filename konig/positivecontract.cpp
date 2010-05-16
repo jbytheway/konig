@@ -263,6 +263,7 @@ int PositiveContract::value_of(Feat f, Announcedness an, Achievement ac) const
   if (an != Announcedness::unannounced) {
     value *= an.multiplier();
   }
+  if (ac == Achievement::off) value *= -1;
   return value;
 }
 
