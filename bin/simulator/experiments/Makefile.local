@@ -24,8 +24,9 @@ $(1)_FULL_NUMS := $(addprefix $(1).full.,$(NUMS))
 $$($(1)_RESULTS_NUMS): $(1)/results.%: $(1).exp hands/% \
 		$(this_srcdir)Makefile.local
 	mkdir -p $$(dir $$@)
+	printf "%s " "$$*" > $$@
 	set -o pipefail && \
-		cat hands/$$* | sed 's/ $$$$//;s/ /_/g' | tr '\n' ' ' > $$@
+		cat hands/$$* | sed 's/ $$$$//;s/ /_/g' | tr '\n' ' ' >> $$@
 	set -o pipefail && \
 		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s 0 \
 		-d- -t- -# | \
