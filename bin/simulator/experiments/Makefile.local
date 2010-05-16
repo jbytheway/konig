@@ -3,6 +3,7 @@ EXPS := $(wildcard *.exp)
 BASES := $(basename $(EXPS))
 RESULTS := $(addsuffix .results,$(BASES))
 ESTABLISHED := $(addsuffix .established,$(BASES))
+COMPARES := $(addsuffix .compare,$(BASES))
 
 NUM_TRIALS := 100
 NUM_STD_HANDS := 1000
@@ -56,4 +57,24 @@ $(foreach base,$(BASES),$(eval $(call MAKE_RESULTS,$(base))))
 
 $(ESTABLISHED): %.established: %.results
 	cp $< $@
+
+$(COMPARES): %.compare: %.results
+	awk ' \
+		{ \
+			if (FILENAME == "$<") { new[$$1]=$$0; newval[$$1]=$$3 } \
+			else { old[$$1]=$$0; oldval[$$1]=$$3 } \
+		} \
+		END { \
+			for (ind in old) { \
+				oldline=old[ind]; newline=new[ind]; \
+				if (oldline == newline) continue; \
+				if (newval[ind] > oldval[ind]) change="++"; \
+				else if (newval[ind] == oldval[ind]) change="=="; \
+				else change="--"; \
+				print change, oldline; \
+				print change, newline; \
+				print ""; \
+			} \
+		} \
+		' $< $*.established > $@
 
