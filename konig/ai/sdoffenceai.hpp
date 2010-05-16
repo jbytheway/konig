@@ -16,7 +16,8 @@ class SdOffenceAi : public PlayAi {
     uint8_t num_voids_;
     std::array<int8_t, 4> rippiness_;
     std::array<bool, 4> void_waiting_;
-    Card lowish_trump_;
+    Card lowest_trump_to_rough_;
+    Card lowest_trump_to_lead_;
 };
 
 }}

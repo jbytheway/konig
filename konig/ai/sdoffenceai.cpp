@@ -25,12 +25,27 @@ void SdOffenceAi::play_start(FateAi const& ai)
       rippiness_[s] -= 10;
     }
   }
+  // Determine which birds are even vaguely worth trying for
+  TrumpRank first_non_bird(4);
+  // Following four lines ook good but in fact make things worse for now
+  //size_t num_trumps = ai.hand().count(Suit::trumps);
+  //if (num_trumps < 5) --first_non_bird;
+  //if (num_trumps < 6) --first_non_bird;
+  //if (num_trumps < 7) --first_non_bird;
+  assert(first_non_bird >= TrumpRank::pagat);
   // Get non-bird trumps
-  Cards trumps(ai.hand().upper_bound(Card(TrumpRank::kakadu)), ai.hand().end());
-  if (trumps.size() <= num_voids_) {
-    lowish_trump_ = Card(TrumpRank::skus);
+  Cards non_bird_trumps(
+    ai.hand().lower_bound(Card(first_non_bird)), ai.hand().end()
+  );
+  if (non_bird_trumps.empty()) {
+    lowest_trump_to_rough_ = Card(TrumpRank::skus);
   } else {
-    lowish_trump_ = *boost::next(trumps.begin(), num_voids_);
+    lowest_trump_to_rough_ = *non_bird_trumps.begin();
+  }
+  if (non_bird_trumps.size() <= num_voids_) {
+    lowest_trump_to_lead_ = Card(TrumpRank::skus);
+  } else {
+    lowest_trump_to_lead_ = *boost::next(non_bird_trumps.begin(), num_voids_);
   }
 }
 
@@ -80,16 +95,16 @@ Card SdOffenceAi::play_card(FateAi const& ai)
       return *plays.lower_bound(suit);
     }
     // No worthwhile ripping suits, so lead trumps
-    auto potential_trump = hand.lower_bound(lowish_trump_);
+    auto potential_trump = hand.lower_bound(lowest_trump_to_lead_);
     if (potential_trump == hand.end()) {
-      // We've exhausted all trumps expect birds and those saved for roughing.
-      // Look for one of the latter
-      potential_trump = hand.upper_bound(Card(TrumpRank::kakadu));
+      // We've exhausted all trumps expect plausible birds and those saved for
+      // roughing.  Look for one of the latter
+      potential_trump = hand.lower_bound(lowest_trump_to_rough_);
     }
     if (potential_trump != hand.end()) {
       return *potential_trump;
     }
-    // All trumps are birds.  Play any non-trump if we have one
+    // All trumps are plausible birds.  Play any non-trump if we have one
     if (plays.count(suit)) {
       return *plays.lower_bound(suit);
     }
@@ -124,7 +139,7 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     auto worthless_card = plays.begin();
     while (boost::next(worthless_card) != plays.end() &&
         worthless_card->trump() &&
-        worthless_card->trump_rank() <= TrumpRank::kakadu) {
+        worthless_card->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
       ++worthless_card;
     }
 
