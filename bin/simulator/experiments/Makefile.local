@@ -1,4 +1,5 @@
 NO_AUTO_COMPILING = yes
+SHELL = bash # for pipefail
 EXPS := $(wildcard *.exp)
 BASES := $(basename $(EXPS))
 RESULTS := $(addsuffix .results,$(BASES))
