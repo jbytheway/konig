@@ -10,7 +10,7 @@
 
 namespace konig { namespace ai {
 
-void SdDefenceAi::play_start(FateAi const& ai)
+void SdDefenceAi::reset(FateAi const& ai)
 {
   guess_master_defender_ = ai.hand().count(Suit::trumps) >= 5;
 

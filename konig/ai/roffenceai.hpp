@@ -7,8 +7,11 @@ namespace konig { namespace ai {
 
 class ROffenceAi : public PlayAi {
   public:
+    virtual void reset(FateAi const&);
+    virtual KingCall call_king(FateAi const&);
+    virtual uint8_t choose_talon_half(FateAi const&);
+    virtual Cards discard(FateAi const&);
     virtual std::vector<Announcement> announce(FateAi const&);
-    virtual void play_start(FateAi const&);
     virtual Card play_card(FateAi const&);
   private:
 };

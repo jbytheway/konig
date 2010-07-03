@@ -1,5 +1,6 @@
 #include <konig/ai/playai.hpp>
 
+#include <konig/fatal.hpp>
 #include <konig/ai/nosuchai.hpp>
 #include <konig/ai/sdoffenceai.hpp>
 #include <konig/ai/sddefenceai.hpp>
@@ -27,6 +28,21 @@ PlayAi::Ptr PlayAi::create(std::string const& description)
     throw NoSuchAi("PlayAi: "+description);
   }
   return p;
+}
+
+KingCall PlayAi::call_king(FateAi const&)
+{
+  KONIG_FATAL("not implemented in " << typeid(*this).name());
+}
+
+uint8_t PlayAi::choose_talon_half(FateAi const&)
+{
+  KONIG_FATAL("not implemented in " << typeid(*this).name());
+}
+
+Cards PlayAi::discard(FateAi const&)
+{
+  KONIG_FATAL("not implemented in " << typeid(*this).name());
 }
 
 PlayAi::~PlayAi() = default;

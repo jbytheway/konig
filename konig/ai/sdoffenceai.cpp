@@ -8,12 +8,7 @@ SdOffenceAi::SdOffenceAi()
 {
 }
 
-std::vector<Announcement> SdOffenceAi::announce(FateAi const&)
-{
-  return std::vector<Announcement>();
-}
-
-void SdOffenceAi::play_start(FateAi const& ai)
+void SdOffenceAi::reset(FateAi const& ai)
 {
   num_voids_ = 0;
   for (Suit s = Suit::min; s<Suit::trumps; ++s) {
@@ -47,6 +42,11 @@ void SdOffenceAi::play_start(FateAi const& ai)
   } else {
     lowest_trump_to_lead_ = *boost::next(non_bird_trumps.begin(), num_voids_);
   }
+}
+
+std::vector<Announcement> SdOffenceAi::announce(FateAi const&)
+{
+  return std::vector<Announcement>();
 }
 
 Card SdOffenceAi::play_card(FateAi const& ai)

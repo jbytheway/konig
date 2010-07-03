@@ -9,6 +9,7 @@
 #include <konig/fatal.hpp>
 #include <konig/ai/aierror.hpp>
 #include <konig/ai/roffenceai.hpp>
+#include <konig/ai/rdefenceai.hpp>
 
 namespace konig { namespace ai {
 
@@ -41,17 +42,17 @@ Bid ForwardingAi::bid()
 
 KingCall ForwardingAi::call_king()
 {
-  KONIG_FATAL("not implemented");
+  return player_->call_king(*this);
 }
 
 uint8_t ForwardingAi::choose_talon_half()
 {
-  KONIG_FATAL("not implemented");
+  return player_->choose_talon_half(*this);
 }
 
 Cards ForwardingAi::discard()
 {
-  KONIG_FATAL("not implemented");
+  return player_->discard(*this);
 }
 
 std::vector<Announcement> ForwardingAi::announce()
@@ -94,13 +95,17 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
   } else {
     me = partner;
   }
-  auto contract_name = contract().contract()->name();
+  auto contract_name = contract().contract()->bid_name();
   switch (me) {
     case declarer:
       if (contract_name == "r") {
         return PlayAi::Ptr(new ROffenceAi());
       }
       break;
+    case defender:
+      if (contract_name == "r") {
+        return PlayAi::Ptr(new RDefenceAi());
+      }
     default:
       break;
   }
