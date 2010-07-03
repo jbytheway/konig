@@ -18,10 +18,14 @@ class ForwardingAi : public FateAi {
     virtual std::vector<Announcement> announce();
     virtual Card play_card();
 
+    virtual void contract_established_hook();
     virtual void play_start_hook();
     virtual void trick_complete_hook();
   private:
+    PlayAi::Ptr pick_auto_ai();
+
     bool debug_;
+    bool auto_play_;
     BidAi::Ptr bidder_;
     PlayAi::Ptr player_;
 };

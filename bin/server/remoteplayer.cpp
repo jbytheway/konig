@@ -40,6 +40,13 @@ void RemotePlayer::notify_bid(PlayPosition pos, Bid bid)
       ));
 }
 
+void RemotePlayer::notify_contract_established(Bid bid)
+{
+  client_.send(Message<MessageType::notifyContractEstablished>(
+        std::move(bid)
+      ));
+}
+
 void RemotePlayer::notify_call_king(KingCall call)
 {
   client_.send(Message<MessageType::notifyCallKing>(

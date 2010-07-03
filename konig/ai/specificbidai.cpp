@@ -29,7 +29,10 @@ Bid SpecificBidAi::bid(Ai const& ai)
   if (ai.last_non_pass().is_pass() && bid < contracts.reserved_bids()) {
     return Bid(0);
   }
-  if (bid > ai.last_non_pass()) return bid;
+  if (bid >= ai.last_non_pass() &&
+     (bid > ai.last_non_pass() || ai.position() == position_forehand)) {
+    return bid;
+  }
   return Bid::pass;
 }
 

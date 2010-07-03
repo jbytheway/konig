@@ -8,11 +8,13 @@
 
 #include <konig/fatal.hpp>
 #include <konig/ai/aierror.hpp>
+#include <konig/ai/roffenceai.hpp>
 
 namespace konig { namespace ai {
 
 ForwardingAi::ForwardingAi(std::string const& args) :
-  debug_(false)
+  debug_(false),
+  auto_play_(false)
 {
   std::string bid_spec;
   std::string play_spec;
@@ -25,7 +27,11 @@ ForwardingAi::ForwardingAi(std::string const& args) :
     throw AiError(boost::algorithm::join(parser.getErrors(), "\n"));
   }
   bidder_ = BidAi::create(bid_spec);
-  player_ = PlayAi::create(play_spec);
+  if (play_spec == "auto") {
+    auto_play_ = true;
+  } else {
+    player_ = PlayAi::create(play_spec);
+  }
 }
 
 Bid ForwardingAi::bid()
@@ -58,6 +64,14 @@ Card ForwardingAi::play_card()
   return player_->play_card(*this);
 }
 
+void ForwardingAi::contract_established_hook()
+{
+  // If we were asked for an automatic play AI then we need to fill it in here
+  if (auto_play_) {
+    player_ = pick_auto_ai();
+  }
+}
+
 void ForwardingAi::play_start_hook()
 {
   player_->play_start(*this);
@@ -68,6 +82,30 @@ void ForwardingAi::trick_complete_hook()
   if (debug_) {
     std::cout << tricks().back() << std::endl;
   }
+}
+
+PlayAi::Ptr ForwardingAi::pick_auto_ai()
+{
+  enum { declarer, partner, defender } me;
+  if (!offence()) {
+    me = defender;
+  } else if (position() == this->declarer()) {
+    me = declarer;
+  } else {
+    me = partner;
+  }
+  auto contract_name = contract().contract()->name();
+  switch (me) {
+    case declarer:
+      if (contract_name == "r") {
+        return PlayAi::Ptr(new ROffenceAi());
+      }
+      break;
+    default:
+      break;
+  }
+
+  KONIG_FATAL("no auto AI for contract "<<contract_name<<" with me "<<me);
 }
 
 }}

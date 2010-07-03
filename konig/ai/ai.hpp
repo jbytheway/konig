@@ -20,6 +20,7 @@ class Ai : public Player {
 
     virtual void start_game(Ruleset, PlayPosition, Cards hand);
     virtual void notify_bid(PlayPosition, Bid);
+    virtual void notify_contract_established(Bid bid);
     virtual void notify_call_king(KingCall);
     virtual void notify_talon(const std::array<Cards, 2>& talon);
     virtual void notify_talon_choice(uint8_t);
@@ -29,6 +30,7 @@ class Ai : public Player {
     virtual void notify_invalid_play(std::string);
 
     virtual void game_start_hook() {}
+    virtual void contract_established_hook() {}
     virtual void play_start_hook() {}
     virtual void trick_complete_hook() {}
 

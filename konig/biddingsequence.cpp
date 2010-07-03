@@ -115,6 +115,11 @@ BiddingSequence::get_bids(const std::vector<Player::Ptr>& players)
       );
   }
 
+  std::for_each(
+      players.begin(), players.end(),
+      boost::bind(&Player::notify_contract_established, _1, current)
+    );
+
   return contracts_[current];
 }
 

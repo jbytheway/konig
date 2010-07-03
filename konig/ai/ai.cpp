@@ -84,6 +84,11 @@ void Ai::notify_bid(PlayPosition p, Bid bid)
   bidding_.push_back(bid);
 }
 
+void Ai::notify_contract_established(Bid)
+{
+  contract_established_hook();
+}
+
 void Ai::notify_call_king(KingCall call)
 {
   king_call_ = call;

@@ -14,6 +14,7 @@ class RemotePlayer : public Player {
     virtual void start_game(Ruleset, PlayPosition, Cards);
     virtual Bid bid();
     virtual void notify_bid(PlayPosition, Bid);
+    virtual void notify_contract_established(Bid bid);
     virtual KingCall call_king();
     virtual void notify_call_king(KingCall);
     virtual void notify_talon(std::array<Cards, 2> const& talon);

@@ -94,6 +94,13 @@ void ServerInterface::message(Message<MessageType::notifyBid> const& m)
   client_.player().notify_bid(m.get<fields::position>(), m.get<fields::bid>());
 }
 
+void ServerInterface::message(
+  Message<MessageType::notifyContractEstablished> const& m
+)
+{
+  client_.player().notify_contract_established(m.get<fields::bid>());
+}
+
 void ServerInterface::message(Message<MessageType::notifyPlayCard> const& m)
 {
   client_.player().notify_play_card(

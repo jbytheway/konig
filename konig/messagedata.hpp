@@ -84,6 +84,13 @@ struct MessageData<MessageType::notifyBid> {
 };
 
 template<>
+struct MessageData<MessageType::notifyContractEstablished> {
+  typedef fusion::map<
+    fusion::pair<fields::bid, Bid>
+  > type;
+};
+
+template<>
 struct MessageData<MessageType::requestCallKing> {
   typedef fusion::map<
   > type;
