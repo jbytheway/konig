@@ -118,7 +118,7 @@ int main(int argc, char const* const* const argv) {
   }
 
   std::ostream* debug_stream = ( options.on_fly ? &std::cout : NULL );
-  konig::Ruleset rules = konig::Ruleset::solodreier_only();
+  konig::Ruleset rules = konig::Ruleset::cheltenham();
   konig::Dealer::Ptr dealer = options.seed ?
     konig::Dealer::create(options.chunks, *options.seed) :
     konig::Dealer::create(options.chunks);
