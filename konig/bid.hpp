@@ -23,21 +23,19 @@ class Bid {
     bool is_pass() const { return value_ == -1; }
     value_type value() const { return value_; }
 
-    friend inline bool operator>=(Bid const& l, Bid const& r) {
-      return l.value_ >= r.value_;
+    #define KONIG_BID_COMPARISON_OPERATOR(op) \
+    friend inline bool operator op(Bid const& l, Bid const& r) { \
+      return l.value_ op r.value_;            \
     }
 
-    friend inline bool operator>(Bid const& l, Bid const& r) {
-      return l.value_ > r.value_;
-    }
+    KONIG_BID_COMPARISON_OPERATOR(==)
+    KONIG_BID_COMPARISON_OPERATOR(!=)
+    KONIG_BID_COMPARISON_OPERATOR(>=)
+    KONIG_BID_COMPARISON_OPERATOR(<=)
+    KONIG_BID_COMPARISON_OPERATOR(>)
+    KONIG_BID_COMPARISON_OPERATOR(<)
 
-    friend inline bool operator<=(Bid const& l, Bid const& r) {
-      return l.value_ <= r.value_;
-    }
-
-    friend inline bool operator<(Bid const& l, Bid const& r) {
-      return l.value_ < r.value_;
-    }
+    #undef KONIG_BID_COMPARISON_OPERATOR
   private:
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int) {
