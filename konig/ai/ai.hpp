@@ -42,6 +42,7 @@ class Ai : public Player {
     PlayPosition declarer() const { return declarer_; }
     bool offence() const { return offence_; }
     ContractAndAnnouncements const& contract() const { return contract_; }
+    std::array<Cards, 2> const& talon() const { return talon_; }
     Cards const& accepted() const { return accepted_; }
     Cards const& rejected() const { return rejected_; }
     std::vector<Trick> const& tricks() const { return tricks_; }
