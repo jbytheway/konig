@@ -1,4 +1,6 @@
 SUBDIRS := konig bin
 
-all-recurse-bin : all-recurse-konig
+all-recurse-bin: all-recurse-konig
+
+test-recurse-bin: test-recurse-konig
 
