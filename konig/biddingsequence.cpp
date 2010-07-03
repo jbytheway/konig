@@ -16,8 +16,7 @@ namespace {
       Bid const upper_bound
     ) {
     while (1) {
-      Bid bid = Bid::pass;
-      bid = player->bid();
+      Bid bid = player->bid();
       // Ensure it's in a sane range
       if (bid >= Bid::pass && bid < upper_bound) {
         if (final_bid) {
@@ -25,19 +24,35 @@ namespace {
           if (!bid.is_pass() && bid < reserved_bids) {
             return bid;
           }
-        } else if (
-            // Ensure it beats the previous bid
-            (bid.is_pass() || (bid >= current && (bid > current || forehand)))
-            // Ensure we don't pass at first
-            && (!bid.is_pass() || !current.is_pass())
-            // Ensure only first bid uses reserved bids
-            && (bid >= reserved_bids || bid.is_pass() || current.is_pass())
-            // Ensure only valid reserved bid is 0
-            && (bid >= reserved_bids || bid <= Bid(0))) {
+          player->notify_invalid_play(
+            "invalid final bid; must select from reserved bids"
+          );
+        } else if (!(bid.is_pass() || bid >= current)) {
+          player->notify_invalid_play(
+            "bid must match or beat prefvious bid (or be pass)"
+          );
+        } else if (bid == current && !forehand) {
+          player->notify_invalid_play(
+            "only forehand may hold a previous bid"
+          );
+        } else if (bid.is_pass() && current.is_pass()) {
+          player->notify_invalid_play(
+            "the opening bid may not be pass"
+          );
+        } else if (bid<reserved_bids && !bid.is_pass() && !current.is_pass()) {
+          player->notify_invalid_play(
+            "only forehand may use the reserved bids"
+          );
+        } else if (bid < reserved_bids && bid > Bid(0)) {
+          player->notify_invalid_play(
+            "to use a reserved bid, open with the lowest"
+          );
+        } else {
           return bid;
         }
+      } else {
+        player->notify_invalid_play("bid out of range");
       }
-      player->notify_invalid_play("invalid bid");
     }
   }
 }
