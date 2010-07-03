@@ -22,6 +22,9 @@ class KingCall {
       invalid
     };
 
+    static KingCall from_value(const int v) {
+      return KingCall(internal_enum(v));
+    }
     static bool from_string(KingCall&, std::string const&);
 
     KingCall() = default; // For serialization
