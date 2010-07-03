@@ -1,7 +1,7 @@
 NO_AUTO_COMPILING = yes
 SHELL = bash # for pipefail
-EXPS := $(wildcard *.exp)
-BASES := $(basename $(EXPS))
+EXPS := $(wildcard $(this_srcdir)*.exp)
+BASES := $(notdir $(basename $(EXPS)))
 RESULTS := $(addsuffix .results,$(BASES))
 ESTABLISHED := $(addsuffix .established,$(BASES))
 COMPARES := $(addsuffix .compare,$(BASES))
@@ -17,6 +17,8 @@ SIM := ../konig-simulator
 
 test: $(RESULTS)
 
+compare: $(COMPARES)
+
 reestablish: $(ESTABLISHED)
 
 $(HAND_NUMS): hands/%: $(SIM)
@@ -26,14 +28,14 @@ $(HAND_NUMS): hands/%: $(SIM)
 define MAKE_RESULTS
 $(1)_RESULTS_NUMS := $(addprefix $(1)/results.,$(NUMS))
 $(1)_FULL_NUMS := $(addprefix $(1).full.,$(NUMS))
-$$($(1)_RESULTS_NUMS): $(1)/results.%: $(1).exp hands/% \
+$$($(1)_RESULTS_NUMS): $(1)/results.%: $(this_srcdir)$(1).exp hands/% \
 		$(this_srcdir)Makefile.local
 	mkdir -p $$(dir $$@)
 	printf "%s " "$$*" > $$@
 	set -o pipefail && \
 		cat hands/$$* | sed 's/ $$$$//;s/ /_/g' | tr '\n' ' ' >> $$@
 	set -o pipefail && \
-		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s 0 \
+		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s "$$*" \
 		-d- -t- -# | \
 		awk ' \
 			/^[a-z]/ { outcomes[$$$$0]++ } \
