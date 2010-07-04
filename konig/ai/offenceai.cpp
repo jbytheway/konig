@@ -1,30 +1,8 @@
 #include <konig/ai/sdoffenceai.hpp>
 
-#include <boost/assign/list_of.hpp>
-#include <boost/spirit/home/phoenix/operator/comparison.hpp>
-
 #include <konig/fatal.hpp>
 
 namespace konig { namespace ai {
-
-OffenceAi::OffenceAi() :
-  king_rippiness_penalty_{10},
-  trumps_for_unannounced_bird_{5, 6, 7},
-  trumps_out_to_abort_pagat_{2},
-  trumps_out_to_abort_bird_{4, 6, 10},
-  min_desired_rippiness_{3},
-  valuable_card_points_{10}
-{
-  assert(trumps_for_unannounced_bird_.size() == 3);
-  assert(std::adjacent_find(
-      trumps_for_unannounced_bird_.begin(), trumps_for_unannounced_bird_.end(),
-      arg1 > arg2
-    ) == trumps_for_unannounced_bird_.end());
-  assert(std::adjacent_find(
-      trumps_out_to_abort_bird_.begin(), trumps_out_to_abort_bird_.end(),
-      arg1 > arg2
-    ) == trumps_out_to_abort_bird_.end());
-}
 
 void OffenceAi::reset(FateAi const& ai)
 {
