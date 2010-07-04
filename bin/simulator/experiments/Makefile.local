@@ -3,7 +3,7 @@ SHELL = bash # for pipefail
 EXPS := $(wildcard $(this_srcdir)*.exp)
 BASES := $(notdir $(basename $(EXPS)))
 RESULTS := $(addsuffix .results,$(BASES))
-ESTABLISHED := $(addsuffix .established,$(BASES))
+ESTABLISHED := $(foreach base,$(BASES),$(this_srcdir)$(base).established)
 COMPARES := $(addsuffix .compare,$(BASES))
 
 NUM_TRIALS := 100
@@ -79,5 +79,5 @@ $(COMPARES): %.compare: %.results
 				print ""; \
 			} \
 		} \
-		' $< $*.established > $@
+		' $< $(this_srcdir)$*.established > $@
 
