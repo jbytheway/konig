@@ -1,11 +1,29 @@
 #include <konig/ai/sdoffenceai.hpp>
 
+#include <boost/assign/list_of.hpp>
+#include <boost/spirit/home/phoenix/operator/comparison.hpp>
+
 #include <konig/fatal.hpp>
 
 namespace konig { namespace ai {
 
-OffenceAi::OffenceAi()
+OffenceAi::OffenceAi() :
+  king_rippiness_penalty_{10},
+  trumps_for_unannounced_bird_{5, 6, 7},
+  trumps_out_to_abort_pagat_{2},
+  trumps_out_to_abort_bird_{4, 6, 10},
+  min_desired_rippiness_{3},
+  valuable_card_points_{10}
 {
+  assert(trumps_for_unannounced_bird_.size() == 3);
+  assert(std::adjacent_find(
+      trumps_for_unannounced_bird_.begin(), trumps_for_unannounced_bird_.end(),
+      arg1 > arg2
+    ) == trumps_for_unannounced_bird_.end());
+  assert(std::adjacent_find(
+      trumps_out_to_abort_bird_.begin(), trumps_out_to_abort_bird_.end(),
+      arg1 > arg2
+    ) == trumps_out_to_abort_bird_.end());
 }
 
 void OffenceAi::reset(FateAi const& ai)
@@ -17,15 +35,15 @@ void OffenceAi::reset(FateAi const& ai)
     void_waiting_[s] = in_suit.empty();
     rippiness_[s] = in_suit.size();
     if (in_suit.count(SuitRank::king)) {
-      rippiness_[s] -= 10;
+      rippiness_[s] -= king_rippiness_penalty_;
     }
   }
   // Determine which birds are even vaguely worth trying for
   TrumpRank first_non_bird(4);
   size_t num_trumps = ai.hand().count(Suit::trumps);
-  if (num_trumps < 5) --first_non_bird;
-  if (num_trumps < 6) --first_non_bird;
-  if (num_trumps < 7) --first_non_bird;
+  BOOST_FOREACH(auto const limit, trumps_for_unannounced_bird_) {
+    if (num_trumps < limit) --first_non_bird;
+  }
   assert(first_non_bird >= TrumpRank::pagat);
   // Get non-bird trumps
   Cards non_bird_trumps(
@@ -85,7 +103,7 @@ Card OffenceAi::play_card(FateAi const& ai)
 
   // Abort Pagat on Uhu trick if there are at least 2 trumps unaccounted for
   if (plays.count(Card(TrumpRank::pagat)) && trick_number == 11 &&
-        num_trumps_out >= 2) {
+        num_trumps_out >= trumps_out_to_abort_pagat_) {
     return Card(TrumpRank::pagat);
   }
 
@@ -111,12 +129,11 @@ Card OffenceAi::play_card(FateAi const& ai)
         Card const bird = *before_birds;
         size_t const tricks_of_grace = 12 - bird.trump_rank() - trick_number;
         // Zero means that this is our last chance to abort, larger numbers
-        // more tricks of grace.  Remember that num_trumps_out includes those
-        // in the talon (probably 1 or 2)
+        // more tricks of grace.  Remember that in some contracts
+        // num_trumps_out includes those in the talon (probably 1 or 2)
         assert(tricks_of_grace < 11);
-        if ((tricks_of_grace == 0 && num_trumps_out >= 4) ||
-          (tricks_of_grace == 1 && num_trumps_out >= 6) ||
-          (tricks_of_grace == 2 && num_trumps_out >= 10)) {
+        if (tricks_of_grace < trumps_out_to_abort_bird_.size() &&
+            num_trumps_out >= trumps_out_to_abort_bird_[tricks_of_grace]) {
           return bird;
         }
       }
@@ -134,7 +151,8 @@ Card OffenceAi::play_card(FateAi const& ai)
     // for ripping or we have at most as many trumps as non-trumps
     auto suit_it = std::max_element(rippiness_.begin(), rippiness_.end());
     Suit suit = Suit::from_value(suit_it-rippiness_.begin());
-    if (*suit_it >= 3 || hand.count(Suit::trumps)*2 <= hand.size()) {
+    if (*suit_it >= min_desired_rippiness_ ||
+        hand.count(Suit::trumps)*2 <= hand.size()) {
       // Make more rippy so we're inclined to continue on the same suit
       ++*suit_it;
       assert(plays.count(suit));
@@ -235,7 +253,7 @@ Card OffenceAi::play_card(FateAi const& ai)
 
       // Try to win with the king
       if (plays.count(Card(s, SuitRank::king))) {
-        rippiness_[s] += 10;
+        rippiness_[s] += king_rippiness_penalty_;
         return Card(s, SuitRank::king);
       }
 
@@ -252,7 +270,7 @@ Card OffenceAi::play_card(FateAi const& ai)
       }
 
       // If the trick's worth much already, play a big trump
-      if (trick.cards_so_far().total_card_points() >= 10) {
+      if (trick.cards_so_far().total_card_points() >= valuable_card_points_) {
         return *boost::prior(plays.end());
       }
 
