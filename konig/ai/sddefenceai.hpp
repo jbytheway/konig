@@ -2,6 +2,7 @@
 #define KONIG_AI__SDDEFENCEAI_HPP
 
 #include <konig/ai/playai.hpp>
+#include <konig/ai/suitprofile.hpp>
 
 namespace konig { namespace ai {
 
@@ -14,17 +15,6 @@ class SdDefenceAi : public PlayAi {
     Card play_low_short(const Cards& unpreserved, const Cards& preserved) const;
 
     bool guess_master_defender_;
-
-    struct SuitProfile {
-      size_t size;
-      size_t points;
-      Suit suit;
-
-      friend bool operator<(SuitProfile const& l, SuitProfile const& r) {
-        return std::make_tuple(l.size, l.points) <
-          std::make_tuple(r.size, r.points);
-      }
-    };
 
     typedef std::vector<SuitProfile> SuitProfiles;
     SuitProfiles suit_profiles_;

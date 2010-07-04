@@ -12,12 +12,16 @@ class FateAi : public Ai {
   public:
     typedef std::map<Card, std::set<CardFate>> Fates;
 
+    FateAi();
+
     virtual void start_game(Ruleset, PlayPosition, Cards hand);
+    virtual void notify_call_king(KingCall);
     virtual void notify_talon(const std::array<Cards, 2>& talon);
     virtual void notify_talon_choice(uint8_t);
     virtual void notify_discard(Cards);
     virtual void notify_play_card(PlayPosition, Card);
 
+    Suit called_suit() const;
     std::pair<Fates::iterator, Fates::iterator> fates_of(Suit const);
     std::pair<Fates::const_iterator, Fates::const_iterator>
       fates_of(Suit const) const;
@@ -25,6 +29,7 @@ class FateAi : public Ai {
     bool trumps_known_exhausted() const;
     bool guaranteed_to_win_against(Card const&, PlayPosition const) const;
   private:
+    Suit called_suit_;
     Fates fates_;
 };
 

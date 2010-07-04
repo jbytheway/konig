@@ -14,23 +14,7 @@ void SdDefenceAi::reset(FateAi const& ai)
 {
   guess_master_defender_ = ai.hand().count(Suit::trumps) >= 5;
 
-  suit_profiles_.clear();
-  // collect size and value of each suit
-  std::map<Suit, std::pair<size_t, size_t>> suits;
-  BOOST_FOREACH(const Card& card, ai.hand()) {
-    std::map<Suit, std::pair<size_t, size_t>>::iterator i =
-      suits.insert(std::make_pair(card.suit(), std::make_pair(0, 0))).first;
-    i->second.first += 1;
-    i->second.second += card.card_points();
-  }
-  // Invert the map so we know what our shortest suits are
-  typedef std::pair<Suit, std::pair<size_t, size_t>> SuitSizeAndPoints;
-  BOOST_FOREACH(const SuitSizeAndPoints& s, suits) {
-    suit_profiles_.push_back(
-        SuitProfile{s.second.first, s.second.second, s.first}
-      );
-  }
-  std::sort(suit_profiles_.begin(), suit_profiles_.end());
+  suit_profiles_ = SuitProfile::make_profiles(ai.hand());
 }
 
 std::vector<Announcement> SdDefenceAi::announce(FateAi const&) {

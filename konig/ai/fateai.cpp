@@ -2,9 +2,15 @@
 
 #include <boost/assign/list_of.hpp>
 
+#include <konig/fatal.hpp>
 #include <konig/utility/intersects.hpp>
 
 namespace konig { namespace ai {
+
+FateAi::FateAi() :
+  called_suit_(Suit::trumps)
+{
+}
 
 void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
 {
@@ -27,6 +33,15 @@ void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
     } else {
       fates_.insert(std::make_pair(c, other_places));
     }
+  }
+}
+
+void FateAi::notify_call_king(KingCall call)
+{
+  if (call == KingCall::fourth_king) {
+    KONIG_FATAL("not implemented");
+  } else {
+    called_suit_ = Suit::from_value(call);
   }
 }
 
@@ -102,6 +117,15 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
   }
 
   Ai::notify_play_card(p, c);
+}
+
+Suit FateAi::called_suit() const
+{
+  if (called_suit_ == Suit::trumps) {
+    KONIG_FATAL("don't know called suit yet");
+  }
+
+  return called_suit_;
 }
 
 std::pair<FateAi::Fates::iterator, FateAi::Fates::iterator>
