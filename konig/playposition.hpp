@@ -16,6 +16,12 @@ inline PlayPosition& operator++(PlayPosition& p) {
   return p = PlayPosition(p+1);
 }
 
+inline PlayPosition& operator%=(PlayPosition& p, int v) {
+  assert(v==4);
+  p = PlayPosition(p%4);
+  return p;
+}
+
 }
 
 #endif // KONIG__PLAYPOSITION_HPP
