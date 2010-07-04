@@ -58,7 +58,7 @@ endef
 
 $(foreach base,$(BASES),$(eval $(call MAKE_RESULTS,$(base))))
 
-$(ESTABLISHED): %.established: %.results
+$(ESTABLISHED): $(this_srcdir)%.established: %.results
 	cp $< $@
 
 $(COMPARES): %.compare: %.results
