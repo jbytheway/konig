@@ -99,8 +99,8 @@ void Ai::notify_call_king(KingCall call)
       contract_.set_called_king(*king);
     }
   } else {
-    Card called_king(call);
-    offence_ = hand_.count(called_king);
+    Card called_king(Suit(call), SuitRank::king);
+    offence_ = offence_ || hand_.count(called_king);
     contract_.set_called_king(called_king);
   }
 }
@@ -119,7 +119,7 @@ void Ai::notify_talon(const std::array<Cards, 2>& talon)
       contract_.set_called_king(*king);
     }
   } else if (king_call_ != KingCall::invalid) {
-    Card called_king(king_call_);
+    Card called_king(Suit(king_call_), SuitRank::king);
     called_king_in_talon_ = accepted_.count(called_king);
   }
 }

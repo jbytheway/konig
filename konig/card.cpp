@@ -13,7 +13,9 @@ bool Card::from_string(Card& card, std::string const& description)
   Suit temp;
   return parse(
       description.c_str(),
-      uint_p[px::ref(card) = px::construct<Card>(arg1)] |
+      uint_p[
+        px::ref(card) = px::construct<Card>(px::construct<TrumpRank>(arg1))
+      ] |
       str_p("Sk")[px::ref(card) = Card(TrumpRank::skus)] |
       (
         (ch_p('C') | ch_p('D') | ch_p('H') | ch_p('S'))[

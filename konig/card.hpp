@@ -49,9 +49,6 @@ class Card {
     };
 
     Card() : suit_(Suit::trumps), rank_(TrumpRank::pagat) {}
-    explicit Card(const unsigned long r) : suit_(Suit::trumps), rank_(r) {
-      static_cast<void>(TrumpRank(r)); // construction checks validity
-    }
     explicit Card(const TrumpRank r) : suit_(Suit::trumps), rank_(r) {
       assert(r.valid());
     }
