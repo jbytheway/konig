@@ -11,6 +11,7 @@
 #include <boost/serialization/nvp.hpp>
 
 #include <konig/card.hpp>
+#include <konig/cardpoints.hpp>
 
 namespace konig {
 
@@ -174,8 +175,8 @@ class Cards : public std::set<Card> {
       return true;
     }
 
-    unsigned int total_card_points() const {
-      unsigned int tally = 0;
+    CardPoints total_card_points() const {
+      CardPoints tally = 0;
       BOOST_FOREACH(const Card& card, *this) {
         tally += card.card_points();
       }
