@@ -22,7 +22,7 @@ void SdOffenceAi::reset(FateAi const& ai)
   }
   // Determine which birds are even vaguely worth trying for
   TrumpRank first_non_bird(4);
-  // Following four lines ook good but in fact make things worse for now
+  // Following four lines look good but in fact make things worse for now
   //size_t num_trumps = ai.hand().count(Suit::trumps);
   //if (num_trumps < 5) --first_non_bird;
   //if (num_trumps < 6) --first_non_bird;
@@ -92,7 +92,7 @@ Card SdOffenceAi::play_card(FateAi const& ai)
         after_birds == boost::next(before_birds) &&
         after_birds == plays.end())
       {
-        // We are looking at a bird and that's the only trump we have (wxcept
+        // We are looking at a bird and that's the only trump we have (except
         // perhaps for announced birds)
         Card const bird = *before_birds;
         size_t const tricks_of_grace = 12 - bird.trump_rank() - trick_number;
