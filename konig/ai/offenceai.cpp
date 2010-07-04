@@ -49,6 +49,12 @@ Card OffenceAi::play_card(FateAi const& ai)
   Trick const& trick = ai.tricks().back();
   Cards const& hand = ai.hand();
   Cards const plays = ai.legal_plays();
+
+  // If there's only one legal play, play it
+  if (plays.size() == 1) {
+    return *plays.begin();
+  }
+
   size_t const trick_number = ai.tricks().size();
   size_t const num_trumps_out = ai.trumps_out().size();
   std::set<CardFate> hands_yet_to_play;
@@ -62,11 +68,6 @@ Card OffenceAi::play_card(FateAi const& ai)
   }
   size_t const trumps_in_hands_yet_to_play =
     ai.trumps_in(hands_yet_to_play).size();
-
-  // If there's only one legal play, play it
-  if (plays.size() == 1) {
-    return *plays.begin();
-  }
 
   boost::optional<Card> bird = ai.relevant_bird();
 
