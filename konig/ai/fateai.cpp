@@ -145,7 +145,7 @@ FateAi::fates_of(Suit const s)
 }
 
 std::pair<FateAi::Fates::const_iterator, FateAi::Fates::const_iterator>
-  FateAi::fates_of(Suit const s) const
+FateAi::fates_of(Suit const s) const
 {
   if (s == Suit::trumps) {
     return
@@ -158,18 +158,23 @@ std::pair<FateAi::Fates::const_iterator, FateAi::Fates::const_iterator>
   }
 }
 
-Cards FateAi::trumps_out() const
+Cards FateAi::trumps_in(std::set<CardFate> const& places) const
 {
   Cards result;
+  BOOST_FOREACH(auto const& p, fates_of(Suit::trumps)) {
+    std::set<CardFate> const& fates = p.second;
+    if (utility::intersects(places, fates)) result.insert(p.first);
+  }
+  return result;
+}
+
+Cards FateAi::trumps_out() const
+{
   std::set<CardFate> hands =
       boost::assign::list_of
         (CardFate::hand0)(CardFate::hand1)(CardFate::hand2)(CardFate::hand3);
   hands.erase(CardFate(position()));
-  BOOST_FOREACH(auto const& p, fates_of(Suit::trumps)) {
-    std::set<CardFate> const& fates = p.second;
-    if (utility::intersects(hands, fates)) result.insert(p.first);
-  }
-  return result;
+  return trumps_in(hands);
 }
 
 bool FateAi::trumps_known_exhausted() const
