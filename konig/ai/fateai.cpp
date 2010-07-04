@@ -67,7 +67,7 @@ void FateAi::notify_discard(Cards discard)
 
   std::set<CardFate> discarded =
     boost::assign::list_of(CardFate::discard);
-  BOOST_FOREACH(Card const& c, this->discard()) {
+  BOOST_FOREACH(Card const& c, discard) {
     fates_[c] = discarded;
   }
 }
