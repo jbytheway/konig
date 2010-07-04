@@ -48,7 +48,7 @@ $$($(1)_RESULTS_NUMS): $(1)/results.%: $(this_srcdir)$(1).exp hands/% \
 		' >> $$@
 	echo >> $$@
 
-$$($(1)_FULL_NUMS): $(1).full.%: $(1).exp hands/%
+$$($(1)_FULL_NUMS): $(1).full.%: $(this_srcdir)$(1).exp hands/%
 	$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" \
 		-n $(NUM_TRIALS) -s 0 -f -t- -# > $$@
 
