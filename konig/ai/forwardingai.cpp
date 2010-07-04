@@ -9,6 +9,7 @@
 #include <konig/fatal.hpp>
 #include <konig/ai/aierror.hpp>
 #include <konig/ai/roffenceai.hpp>
+#include <konig/ai/rpartnerai.hpp>
 #include <konig/ai/rdefenceai.hpp>
 
 namespace konig { namespace ai {
@@ -118,6 +119,11 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
     case declarer:
       if (contract_name == "r") {
         return PlayAi::Ptr(new ROffenceAi());
+      }
+      break;
+    case partner:
+      if (contract_name == "r") {
+        return PlayAi::Ptr(new RPartnerAi());
       }
       break;
     case defender:
