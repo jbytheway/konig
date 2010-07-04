@@ -62,6 +62,8 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     return *plays.begin();
   }
 
+  boost::optional<Card> bird = ai.relevant_bird();
+
   if (trick.leader() == ai.position()) {
     // I am leading to the trick
 
@@ -72,7 +74,6 @@ Card SdOffenceAi::play_card(FateAi const& ai)
     }
 
     // Cash a bird if it's safe to
-    boost::optional<Card> bird = ai.relevant_bird();
     if (bird && plays.count(*bird) &&
           ai.trumps_known_exhausted()) {
       return *bird;
@@ -173,6 +174,16 @@ Card SdOffenceAi::play_card(FateAi const& ai)
         worthless_card->trump() &&
         worthless_card->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
       ++worthless_card;
+    }
+
+    // Make sure the worthless card isn't this trick's bird
+    if (bird && *worthless_card == *bird) {
+      if (boost::next(worthless_card) != plays.end()) {
+        ++worthless_card;
+      } else {
+        assert(worthless_card != plays.begin());
+        --worthless_card;
+      }
     }
 
     if (winning_play == plays.end()) {
