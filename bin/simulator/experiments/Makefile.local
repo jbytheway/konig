@@ -18,6 +18,7 @@ SIM := ../konig-simulator
 test: $(RESULTS)
 
 compare: $(COMPARES)
+	wc $(COMPARES)
 
 reestablish: $(ESTABLISHED)
 
