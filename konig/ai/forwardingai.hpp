@@ -11,6 +11,8 @@ class ForwardingAi : public FateAi {
   public:
     ForwardingAi(std::string const& args);
 
+    virtual void notify_call_king(KingCall);
+
     virtual Bid bid();
     virtual KingCall call_king();
     virtual uint8_t choose_talon_half();

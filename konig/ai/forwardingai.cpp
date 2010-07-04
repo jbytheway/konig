@@ -35,6 +35,20 @@ ForwardingAi::ForwardingAi(std::string const& args) :
   }
 }
 
+void ForwardingAi::notify_call_king(KingCall call)
+{
+  FateAi::notify_call_king(call);
+
+  // Now the partnerships are known, so non-declarers can have their PlayAis
+  // set
+  if (position() != declarer()) {
+    if (auto_play_) {
+      player_ = pick_auto_ai();
+    }
+    player_->reset(*this);
+  }
+}
+
 Bid ForwardingAi::bid()
 {
   return bidder_->bid(*this);
@@ -68,8 +82,12 @@ Card ForwardingAi::play_card()
 void ForwardingAi::contract_established_hook()
 {
   // If we were asked for an automatic play AI then we need to fill it in here
-  if (auto_play_) {
-    player_ = pick_auto_ai();
+  // for declarer, and (in non-partnership contracts) for everyone else
+  if (position() == declarer() || !contract().contract()->is_partnership()) {
+    if (auto_play_) {
+      player_ = pick_auto_ai();
+    }
+    player_->reset(*this);
   }
 }
 
