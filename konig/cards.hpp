@@ -49,6 +49,24 @@ class Cards : public std::set<Card> {
       }
     }
 
+    using std::set<Card>::upper_bound;
+
+    iterator upper_bound(Suit suit) {
+      if (suit == Suit::trumps) {
+        return upper_bound(Card(TrumpRank::skus));
+      } else {
+        return upper_bound(Card(suit, SuitRank::king));
+      }
+    }
+
+    const_iterator upper_bound(Suit suit) const {
+      if (suit == Suit::trumps) {
+        return upper_bound(Card(TrumpRank::skus));
+      } else {
+        return upper_bound(Card(suit, SuitRank::king));
+      }
+    }
+
     using std::set<Card>::equal_range;
 
     std::pair<iterator, iterator> equal_range(Suit suit) {
@@ -136,6 +154,16 @@ class Cards : public std::set<Card> {
     void erase(const Cards& to_erase) {
       BOOST_FOREACH(const Card& c, to_erase) {
         erase(c);
+      }
+    }
+
+    void erase(const Suit s) {
+      erase(lower_bound(s), upper_bound(s));
+    }
+
+    void erase(SuitRank rank) {
+      for (Suit s = Suit::min; s<Suit::trumps; ++s) {
+        erase(Card(s, rank));
       }
     }
 
