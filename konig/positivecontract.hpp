@@ -42,6 +42,8 @@ class PositiveContract : public Contract {
         std::ostream* debug_stream
       ) const;
 
+    virtual bool is_partnership() const { return partnership_; }
+
     virtual bool grants_lead() const { return false; }
 
     virtual bool rising_rule() const { return false; }

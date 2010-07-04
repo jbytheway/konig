@@ -38,6 +38,8 @@ class NegativeContract : public Contract {
         std::ostream* debug_stream
       ) const;
 
+    virtual bool is_partnership() const { return false; }
+
     virtual bool grants_lead() const { return grants_lead_; }
 
     virtual bool rising_rule() const { return true; }

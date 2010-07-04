@@ -46,6 +46,8 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         std::ostream* debug_stream
       ) const = 0;
 
+    virtual bool is_partnership() const = 0;
+
     virtual bool grants_lead() const = 0;
 
     virtual bool rising_rule() const = 0;
