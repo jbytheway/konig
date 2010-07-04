@@ -22,11 +22,10 @@ void SdOffenceAi::reset(FateAi const& ai)
   }
   // Determine which birds are even vaguely worth trying for
   TrumpRank first_non_bird(4);
-  // Following four lines look good but in fact make things worse for now
-  //size_t num_trumps = ai.hand().count(Suit::trumps);
-  //if (num_trumps < 5) --first_non_bird;
-  //if (num_trumps < 6) --first_non_bird;
-  //if (num_trumps < 7) --first_non_bird;
+  size_t num_trumps = ai.hand().count(Suit::trumps);
+  if (num_trumps < 5) --first_non_bird;
+  if (num_trumps < 6) --first_non_bird;
+  if (num_trumps < 7) --first_non_bird;
   assert(first_non_bird >= TrumpRank::pagat);
   // Get non-bird trumps
   Cards non_bird_trumps(
@@ -56,6 +55,17 @@ Card SdOffenceAi::play_card(FateAi const& ai)
   Cards const plays = ai.legal_plays();
   size_t const trick_number = ai.tricks().size();
   size_t const num_trumps_out = ai.trumps_out().size();
+  std::set<CardFate> hands_yet_to_play;
+  {
+    PlayPosition pos = ai.position();
+    for (size_t i=trick.played(); i<3; ++i) {
+      ++pos;
+      pos %= 4;
+      hands_yet_to_play.insert(CardFate(pos));
+    }
+  }
+  size_t const trumps_in_hands_yet_to_play =
+    ai.trumps_in(hands_yet_to_play).size();
 
   // If there's only one legal play, play it
   if (plays.size() == 1) {
@@ -64,20 +74,23 @@ Card SdOffenceAi::play_card(FateAi const& ai)
 
   boost::optional<Card> bird = ai.relevant_bird();
 
-  if (trick.leader() == ai.position()) {
-    // I am leading to the trick
-
-    // Abort Pagat on Uhu trick if there are at least 2 trumps unaccounted for
-    if (plays.count(Card(TrumpRank::pagat)) && trick_number == 11 &&
-          num_trumps_out >= 2) {
-      return Card(TrumpRank::pagat);
-    }
-
-    // Cash a bird if it's safe to
-    if (bird && plays.count(*bird) &&
-          ai.trumps_known_exhausted()) {
+  // Cash a bird if it's safe to
+  if (bird && plays.count(*bird) && trumps_in_hands_yet_to_play == 0) {
+    // Also need to make sure that there isn't a better card in the trick
+    // already
+    if (trick.played() == 0 || trick.winning_card() < *bird) {
       return *bird;
     }
+  }
+
+  // Abort Pagat on Uhu trick if there are at least 2 trumps unaccounted for
+  if (plays.count(Card(TrumpRank::pagat)) && trick_number == 11 &&
+        num_trumps_out >= 2) {
+    return Card(TrumpRank::pagat);
+  }
+
+  if (trick.leader() == ai.position()) {
+    // I am leading to the trick
 
     // More complex abortion logic
     {
@@ -128,13 +141,30 @@ Card SdOffenceAi::play_card(FateAi const& ai)
       return *plays.lower_bound(suit);
     }
     // No worthwhile ripping suits, so lead trumps
-    auto potential_trump = hand.lower_bound(lowest_trump_to_lead_);
-    if (potential_trump == hand.end()) {
+    auto potential_trump = plays.lower_bound(lowest_trump_to_lead_);
+    if (potential_trump == plays.end()) {
       // We've exhausted all trumps expect plausible birds and those saved for
       // roughing.  Look for one of the latter
-      potential_trump = hand.lower_bound(lowest_trump_to_rough_);
+      potential_trump = plays.lower_bound(lowest_trump_to_rough_);
     }
-    if (potential_trump != hand.end()) {
+    while (potential_trump != plays.end()) {
+      // Make sure we don't play this trick's bird
+      if (bird && *potential_trump == *bird && !ai.trumps_known_exhausted()) {
+        ++potential_trump;
+        continue;
+      }
+      // It's dangerous to lead the uhu on the kakadu trick if we hold the
+      // pagat and a non-trump, because we might have to follow suit on the
+      // uhu trick and go off in pagat.  So, try to avoid that.
+      // TODO: Even better if we check whether we could possibly be forced to
+      // follow suit
+      if (hand.size() == 3 &&
+          potential_trump->trump_rank() == TrumpRank::uhu &&
+          hand.count(TrumpRank::pagat) &&
+          hand.count(Suit::trumps) == 2) {
+        ++potential_trump;
+        continue;
+      }
       return *potential_trump;
     }
     // All trumps are plausible birds.  Play any non-trump if we have one
