@@ -38,6 +38,8 @@ void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
 
 void FateAi::notify_call_king(KingCall call)
 {
+  Ai::notify_call_king(call);
+
   if (call == KingCall::fourth_king) {
     KONIG_FATAL("not implemented");
   } else {
