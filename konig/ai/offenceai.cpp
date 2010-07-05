@@ -238,10 +238,14 @@ Card OffenceAi::play_card(FateAi const& ai)
       }
 
       if (s == Suit::trumps) {
-        // Someone led trumps at me
+        // Someone led trumps at me.  Because of the above we know we can lead
+        // the trick, but an opponent will follow, so we'll play strongly to
+        // reduce the chance of losing to them.
+        // TODO: if we know following opponents are out of trumps this is
+        // overkill
         return *boost::prior(plays.end());
       } else {
-        // Defense led a side suit
+        // Someone led a side suit
 
         // Try to win with the king
         if (plays.count(Card(s, SuitRank::king))) {
@@ -255,9 +259,21 @@ Card OffenceAi::play_card(FateAi const& ai)
           return *winning_play;
         }
 
-        // If I'm following suit, assume that the king or a trump will win, so
-        // play minimally
+        // If I'm not roughing
         if (!worthless_card->trump()) {
+          // See if partner is winning, or is likely to because this is the
+          // called suit and the trick hasn't been trumped yet
+          // TODO: notice when partner ducked?
+          if (partner_winning ||
+              (!ai.had_first_round(s) && ai.is_called_suit(s) &&
+                !trick.winning_card().trump())) {
+            // fatten
+            auto most_points = std::max_element(
+              plays.begin(), plays.end(), Card::CompareRanksReversePips()
+            );
+            return *most_points;
+          }
+          // Assume that the king or a trump will win, so play minimally
           return *worthless_card;
         }
 
