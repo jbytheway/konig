@@ -13,9 +13,10 @@ std::vector<Announcement> RDefenceAi::announce(FateAi const&)
   return std::vector<Announcement>();
 }
 
-Card RDefenceAi::play_card(FateAi const&)
+Card RDefenceAi::play_card(FateAi const& ai)
 {
-  KONIG_FATAL("no implemented");
+  Trick const& trick = ai.tricks().back();
+  KONIG_FATAL("not implemented " << trick);
 }
 
 }}
