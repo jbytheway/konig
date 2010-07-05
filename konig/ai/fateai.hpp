@@ -21,8 +21,12 @@ class FateAi : public Ai {
     virtual void notify_discard(Cards);
     virtual void notify_play_card(PlayPosition, Card);
 
+    virtual void trick_complete_hook();
+
     Suit called_suit() const;
+    bool is_called_suit(Suit const) const;
     bool guess_is_partner(PlayPosition const) const;
+    bool had_first_round(Suit const s) const;
     std::pair<Fates::iterator, Fates::iterator> fates_of(Suit const);
     std::pair<Fates::const_iterator, Fates::const_iterator>
       fates_of(Suit const) const;
@@ -31,6 +35,7 @@ class FateAi : public Ai {
     bool trumps_known_exhausted() const;
     bool guaranteed_to_win_against(Card const&, PlayPosition const) const;
   private:
+    std::array<bool, Suit::max> had_first_round_;
     Suit called_suit_;
     Fates fates_;
 };

@@ -10,6 +10,7 @@ namespace konig { namespace ai {
 FateAi::FateAi() :
   called_suit_(Suit::trumps)
 {
+  std::fill(had_first_round_.begin(), had_first_round_.end(), false);
 }
 
 void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
@@ -121,6 +122,11 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
   Ai::notify_play_card(p, c);
 }
 
+void FateAi::trick_complete_hook()
+{
+  had_first_round_[tricks().back().suit()] = true;
+}
+
 Suit FateAi::called_suit() const
 {
   if (called_suit_ == Suit::trumps) {
@@ -130,12 +136,27 @@ Suit FateAi::called_suit() const
   return called_suit_;
 }
 
+bool FateAi::is_called_suit(Suit const s) const
+{
+  if (!contract().contract()->is_partnership()) {
+    return false;
+  }
+  return s == called_suit();
+}
+
 bool FateAi::guess_is_partner(PlayPosition const) const
 {
   if (!contract().contract()->is_partnership()) {
     return false;
   }
   KONIG_FATAL("not implemented");
+}
+
+bool FateAi::had_first_round(Suit const s) const
+{
+  assert(s < Suit::max);
+  assert(s >= 0);
+  return had_first_round_[s];
 }
 
 std::pair<FateAi::Fates::iterator, FateAi::Fates::iterator>
