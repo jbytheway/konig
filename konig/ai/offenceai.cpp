@@ -58,12 +58,16 @@ Card OffenceAi::play_card(FateAi const& ai)
   size_t const trick_number = ai.tricks().size();
   size_t const num_trumps_out = ai.trumps_out().size();
   std::set<CardFate> hands_yet_to_play;
+  std::set<CardFate> opponents_yet_to_play;
   {
     PlayPosition pos = ai.position();
     for (size_t i=trick.played(); i<3; ++i) {
       ++pos;
       pos %= 4;
       hands_yet_to_play.insert(CardFate(pos));
+      if (!ai.guess_is_partner(pos)) {
+        opponents_yet_to_play.insert(CardFate(pos));
+      }
     }
   }
   size_t const trumps_in_hands_yet_to_play =
@@ -181,78 +185,90 @@ Card OffenceAi::play_card(FateAi const& ai)
     // I am following to someone else's trick
     Suit s = trick.suit();
 
-    // See if I can possibly beat what's played so far
-    auto winning_play = plays.lower_bound(trick.winning_card());
-    if (winning_play != plays.end() && !winning_play->trump() &&
-      winning_play->suit() != s) {
-      winning_play = plays.end();
-    }
-    while (winning_play != plays.end() &&
-        boost::next(winning_play) != plays.end() &&
-        winning_play->trump() &&
-        winning_play->trump_rank() <= TrumpRank::kakadu) {
-      ++winning_play;
-    }
+    // See who's winning, and whether they might be a partner
+    PlayPosition const current_winner = trick.winner();
+    bool const partner_winning = ai.guess_is_partner(current_winner);
 
-    auto worthless_card = plays.begin();
-    while (boost::next(worthless_card) != plays.end() &&
-        worthless_card->trump() &&
-        worthless_card->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
-      ++worthless_card;
-    }
+    // See if anyone playing after me is an opponent
+    bool opponent_yet_to_play =
+      trick.played() != 3 &&
+      (trick.played() != 2 || !ai.guess_is_partner((ai.position()+1)%4));
 
-    // Make sure the worthless card isn't this trick's bird
-    if (bird && *worthless_card == *bird) {
-      if (boost::next(worthless_card) != plays.end()) {
-        ++worthless_card;
-      } else {
-        assert(worthless_card != plays.begin());
-        --worthless_card;
-      }
-    }
-
-    if (winning_play == plays.end()) {
-      // I can't win; play the least valuable card
-      return *worthless_card;
-    }
-
-    // If I'm playing a trump and last to play, win minimally
-    if (winning_play->trump() && trick.played() == 3) {
-      return *winning_play;
-    }
-
-    if (s == Suit::trumps) {
-      // Defense led trumps; this is a very bad sign
-      // Play biggest trump
-      return *boost::prior(plays.end());
+    if (partner_winning) {
     } else {
-      // Defense led a side suit
-
-      // Try to win with the king
-      if (plays.count(Card(s, SuitRank::king))) {
-        rippiness_[s] += king_rippiness_penalty_;
-        return Card(s, SuitRank::king);
+      // See if I can possibly beat what's played so far
+      auto winning_play = plays.lower_bound(trick.winning_card());
+      if (winning_play != plays.end() && !winning_play->trump() &&
+          winning_play->suit() != s) {
+        winning_play = plays.end();
+      }
+      while (winning_play != plays.end() &&
+          boost::next(winning_play) != plays.end() &&
+          winning_play->trump() &&
+          winning_play->trump_rank() <= TrumpRank::kakadu) {
+        ++winning_play;
       }
 
-      // Trump first round if I have a void
-      if (void_waiting_[s]) {
-        void_waiting_[s] = false;
-        return *winning_play;
+      auto worthless_card = plays.begin();
+      while (boost::next(worthless_card) != plays.end() &&
+          worthless_card->trump() &&
+          worthless_card->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
+        ++worthless_card;
       }
 
-      // If I'm following suit, assume that the king or a trump will win, so
-      // play minimally
-      if (!worthless_card->trump()) {
+      // Make sure the worthless card isn't this trick's bird
+      if (bird && *worthless_card == *bird) {
+        if (boost::next(worthless_card) != plays.end()) {
+          ++worthless_card;
+        } else {
+          assert(worthless_card != plays.begin());
+          --worthless_card;
+        }
+      }
+
+      if (winning_play == plays.end()) {
+        // I can't win; play the least valuable card
+        // TODO: consider valuable discard if partner might yet win
         return *worthless_card;
       }
 
-      // If the trick's worth much already, play a big trump
-      if (trick.cards_so_far().total_card_points() >= valuable_card_points_) {
-        return *boost::prior(plays.end());
+      // If I'm playing a trump and no opponents follow, win minimally
+      if (winning_play->trump() && !opponent_yet_to_play) {
+        return *winning_play;
       }
 
-      // Otherwise, win minimally
-      return *winning_play;
+      if (s == Suit::trumps) {
+        // Someone led trumps at me
+        return *boost::prior(plays.end());
+      } else {
+        // Defense led a side suit
+
+        // Try to win with the king
+        if (plays.count(Card(s, SuitRank::king))) {
+          rippiness_[s] += king_rippiness_penalty_;
+          return Card(s, SuitRank::king);
+        }
+
+        // Trump first round if I have a void
+        if (void_waiting_[s]) {
+          void_waiting_[s] = false;
+          return *winning_play;
+        }
+
+        // If I'm following suit, assume that the king or a trump will win, so
+        // play minimally
+        if (!worthless_card->trump()) {
+          return *worthless_card;
+        }
+
+        // If the trick's worth much already, play a big trump
+        if (trick.cards_so_far().total_card_points() >= valuable_card_points_) {
+          return *boost::prior(plays.end());
+        }
+
+        // Otherwise, win minimally
+        return *winning_play;
+      }
     }
 
     KONIG_FATAL("not implemented " << trick);
