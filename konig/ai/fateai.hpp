@@ -22,6 +22,7 @@ class FateAi : public Ai {
     virtual void notify_play_card(PlayPosition, Card);
 
     Suit called_suit() const;
+    bool guess_is_partner(PlayPosition const) const;
     std::pair<Fates::iterator, Fates::iterator> fates_of(Suit const);
     std::pair<Fates::const_iterator, Fates::const_iterator>
       fates_of(Suit const) const;

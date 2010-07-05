@@ -130,6 +130,14 @@ Suit FateAi::called_suit() const
   return called_suit_;
 }
 
+bool FateAi::guess_is_partner(PlayPosition const) const
+{
+  if (!contract().contract()->is_partnership()) {
+    return false;
+  }
+  KONIG_FATAL("not implemented");
+}
+
 std::pair<FateAi::Fates::iterator, FateAi::Fates::iterator>
 FateAi::fates_of(Suit const s)
 {
