@@ -2,7 +2,6 @@
 
 #include <numeric>
 
-#include <boost/spirit/home/phoenix/operator/comparison.hpp>
 #include <boost/spirit/home/phoenix/operator/member.hpp>
 #include <boost/spirit/home/phoenix/operator/self.hpp>
 
@@ -11,9 +10,12 @@
 
 namespace konig { namespace ai {
 
-void ROffenceAi::reset(FateAi const&)
-{
-}
+ROffenceAi::ROffenceAi() :
+  OffenceAi(
+    _min_desired_rippiness = 4,
+    _king_rippiness_penalty = 1
+  )
+{}
 
 KingCall ROffenceAi::call_king(FateAi const& ai)
 {
@@ -118,20 +120,6 @@ Cards ROffenceAi::discard(FateAi const& ai)
   }
   if (discard.size() == 3) return discard;
   KONIG_FATAL("trump discard not implemeted");
-}
-
-std::vector<Announcement> ROffenceAi::announce(FateAi const&)
-{
-  return std::vector<Announcement>();
-}
-
-Card ROffenceAi::play_card(FateAi const& ai)
-{
-  Trick const& trick = ai.tricks().back();
-  //Cards const& hand = ai.hand();
-  //Cards const plays = ai.legal_plays();
-
-  KONIG_FATAL("not implemented " << trick);
 }
 
 }}
