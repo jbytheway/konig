@@ -123,7 +123,9 @@ Card OffenceAi::play_card(FateAi const& ai)
     for (Suit s = Suit::min; s<Suit::trump; ++s) {
       // But not if this is the last card in the suit
       if (hand.count(s) == 0) {
-        rippiness_[s] = -10;
+        // This is a value small enough to be certainly smaller than any
+        // rippiness of a non-void suit
+        rippiness_[s] = -king_rippiness_penalty_-1;
       }
     }
     // Try ripping in a side suit.  Do this if either it's a good suit
