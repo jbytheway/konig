@@ -16,7 +16,20 @@ inline PlayPosition& operator++(PlayPosition& p) {
   return p = PlayPosition(p+1);
 }
 
-inline PlayPosition& operator%=(PlayPosition& p, int v) {
+template<typename T>
+inline typename boost::enable_if<std::is_integral<T>, PlayPosition>::type
+operator+(PlayPosition const p, T const v) {
+  // Don't want to reduce mod 4, becasue then couldn't easily loop over all
+  // PlayPositions
+  return PlayPosition(int(p)+v);
+}
+
+inline PlayPosition operator%(PlayPosition const p, int const v) {
+  assert(v==4);
+  return PlayPosition(int(p)%4);
+}
+
+inline PlayPosition& operator%=(PlayPosition& p, int const v) {
   assert(v==4);
   p = PlayPosition(p%4);
   return p;
