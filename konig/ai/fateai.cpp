@@ -144,12 +144,18 @@ bool FateAi::is_called_suit(Suit const s) const
   return s == called_suit();
 }
 
-bool FateAi::guess_is_partner(PlayPosition const) const
+bool FateAi::guess_is_partner(PlayPosition const pos) const
 {
   if (!contract().contract()->is_partnership()) {
     return false;
   }
-  KONIG_FATAL("not implemented");
+  Card called_king(called_suit(), SuitRank::king);
+  auto const& fates = fates_.find(called_king)->second;
+  if (fates.size() == 1) {
+    return pos == *fates.begin();
+  }
+  // TODO: see who's led trumps
+  return false;
 }
 
 bool FateAi::had_first_round(Suit const s) const
