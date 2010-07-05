@@ -172,13 +172,9 @@ Card OffenceAi::play_card(FateAi const& ai)
     }
     assert(bird);
     if (plays.count(*bird)) {
-      if (ai.trumps_known_exhausted()) {
-        return *bird;
-      } else {
-        auto something_else = boost::prior(plays.end());
-        if (*something_else == *bird) --something_else;
-        return *something_else;
-      }
+      auto something_else = boost::prior(plays.end());
+      if (*something_else == *bird) --something_else;
+      return *something_else;
     }
     return *boost::prior(plays.end());
   } else {
