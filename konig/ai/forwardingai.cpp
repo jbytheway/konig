@@ -82,6 +82,8 @@ Card ForwardingAi::play_card()
 
 void ForwardingAi::contract_established_hook()
 {
+  FateAi::contract_established_hook();
+
   // If we were asked for an automatic play AI then we need to fill it in here
   // for declarer, and (in non-partnership contracts) for everyone else
   if (position() == declarer() || !contract().contract()->is_partnership()) {
@@ -94,11 +96,15 @@ void ForwardingAi::contract_established_hook()
 
 void ForwardingAi::play_start_hook()
 {
+  FateAi::play_start_hook();
+
   player_->play_start(*this);
 }
 
 void ForwardingAi::trick_complete_hook()
 {
+  FateAi::trick_complete_hook();
+
   if (debug_) {
     std::cout << tricks().back() << std::endl;
   }
