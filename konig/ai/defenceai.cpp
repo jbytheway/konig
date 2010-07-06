@@ -122,7 +122,7 @@ Card DefenceAi::play_card(FateAi const& ai) {
           // I'm following in trumps, but the defense is already going to win,
           // so just play low
           /** \bug Really person before declarer should deliberately beat
-           * partener sometimes */
+           * the other defenders sometimes */
           return *plays.begin();
         } else {
           // Play card worth most points, or least valuable pip card
