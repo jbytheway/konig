@@ -53,6 +53,7 @@ uint8_t ROffenceAi::choose_talon_half(FateAi const& ai)
   // TODO: worry about when hand is already very trump-full
   // Take half with more trumps
   TAKE_IF_GREATER(talon[,].count(Suit::trumps));
+  // TODO: worry about quality of trumps
   // Take half with more kings
   TAKE_IF_GREATER(talon[,].count(SuitRank::king));
   // Take half with more points
