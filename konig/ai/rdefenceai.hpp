@@ -1,15 +1,13 @@
 #ifndef KONIG_AI__RDEFENCEAI_HPP
 #define KONIG_AI__RDEFENCEAI_HPP
 
-#include <konig/ai/playai.hpp>
+#include <konig/ai/defenceai.hpp>
 
 namespace konig { namespace ai {
 
-class RDefenceAi : public PlayAi {
+class RDefenceAi : public DefenceAi {
   public:
-    virtual void reset(FateAi const&);
     virtual std::vector<Announcement> announce(FateAi const&);
-    virtual Card play_card(FateAi const&);
   private:
 };
 

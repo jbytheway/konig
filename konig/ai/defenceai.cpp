@@ -18,6 +18,7 @@ void DefenceAi::reset(FateAi const& ai)
 }
 
 Card DefenceAi::play_card(FateAi const& ai) {
+  // TODO: Rethink this function for partnership contracts
   Trick const& trick = ai.tricks().back();
   //Cards const& hand = ai.hand();
   Cards const plays = ai.legal_plays();
