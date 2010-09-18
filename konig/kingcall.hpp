@@ -30,6 +30,7 @@ class KingCall {
     KingCall() = default; // For serialization
     KingCall(internal_enum v) : value_(v) {}
 
+    std::string to_string() const;
     operator internal_enum() const { return value_; }
   private:
     template<typename Archive>
@@ -39,6 +40,8 @@ class KingCall {
 
     internal_enum value_;
 };
+
+std::ostream& operator<<(std::ostream&, KingCall const);
 
 }
 

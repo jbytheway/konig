@@ -1,5 +1,7 @@
 #include <konig/kingcall.hpp>
 
+#include <konig/fatal.hpp>
+
 namespace konig {
 
 bool KingCall::from_string(KingCall& call, std::string const& s)
@@ -27,6 +29,29 @@ bool KingCall::from_string(KingCall& call, std::string const& s)
       return true;
   }
   return false;
+}
+
+std::string KingCall::to_string() const
+{
+  switch (value_) {
+    case clubs:
+      return "C";
+    case diamonds:
+      return "D";
+    case hearts:
+      return "H";
+    case spades:
+      return "S";
+    case fourth_king:
+      return "4";
+    default:
+      KONIG_FATAL("invalid KingCall");
+  }
+}
+
+std::ostream& operator<<(std::ostream& o, KingCall const c)
+{
+  return o << c.to_string();
 }
 
 }
