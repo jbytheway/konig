@@ -135,6 +135,11 @@ void Ai::notify_talon_choice(uint8_t choice)
 void Ai::notify_discard(Cards discard)
 {
   discard_ = std::move(discard);
+  if (position() == declarer()) {
+    hand_.insert(accepted_);
+    hand_.erase(discard);
+    assert(hand_.size() == 12);
+  }
 }
 
 void Ai::notify_announcements(std::vector<Announcement> announcements)

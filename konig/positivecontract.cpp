@@ -173,10 +173,13 @@ PlayResult PositiveContract::play(
       end = trump_discards.insert(end, trump_discard);
     }
 
-    std::for_each(
-        players.begin(), players.end(),
-        boost::bind(&Player::notify_discard, _1, boost::cref(trump_discards))
-      );
+    BOOST_FOREACH(Player::Ptr const& p, players) {
+      if (p == declarer) {
+        p->notify_discard(discard);
+      } else {
+        p->notify_discard(trump_discards);
+      }
+    }
   } else {
     // In solo against three, declarer gets the talon
     if (partnership_ &&
