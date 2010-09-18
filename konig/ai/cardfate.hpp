@@ -5,12 +5,41 @@
 
 namespace konig { namespace ai {
 
-#define KONIG_AI_CARDFATE_VALUES() \
-  (hand0)(hand1)(hand2)(hand3)\
-  (talon)(reject)(discard)\
-  (played)
+class CardFate {
+  public:
+    enum internal_enum {
+      hand0,
+      hand1,
+      hand2,
+      hand3,
+      played0,
+      played1,
+      played2,
+      played3,
+      talon,
+      reject,
+      discard
+    };
 
-KONIG_UTILITY_ENUM_HEADER(CardFate, KONIG_AI_CARDFATE_VALUES())
+    static CardFate held_by(PlayPosition const p) {
+      return CardFate(internal_enum(p));
+    }
+
+    static CardFate played_by(PlayPosition const p) {
+      return CardFate(internal_enum(p+played0));
+    }
+
+    CardFate(internal_enum const v) : value_(v) {}
+
+    friend inline bool operator==(CardFate const l, CardFate const r) {
+      return l.value_ == r.value_;
+    }
+    friend inline bool operator<(CardFate const l, CardFate const r) {
+      return l.value_ < r.value_;
+    }
+  private:
+    internal_enum value_;
+};
 
 }}
 

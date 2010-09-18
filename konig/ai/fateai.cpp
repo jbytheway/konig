@@ -20,7 +20,7 @@ void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   fates_.clear();
   std::vector<Card> deck;
   Card::make_deck(std::back_inserter(deck));
-  std::set<CardFate> my_hand = boost::assign::list_of(CardFate(pos));
+  std::set<CardFate> my_hand = boost::assign::list_of(CardFate::held_by(pos));
   std::set<CardFate> other_places =
     boost::assign::list_of
       (CardFate::hand0)(CardFate::hand1)(CardFate::hand2)(CardFate::hand3)
@@ -53,7 +53,7 @@ void FateAi::notify_talon(const std::array<Cards, 2>& talon)
   Ai::notify_talon(talon);
 
   std::set<CardFate> declarers_hand_or_discarded =
-    boost::assign::list_of(CardFate(declarer()))(CardFate::discard);
+    boost::assign::list_of(CardFate::held_by(declarer()))(CardFate::discard);
   BOOST_FOREACH(Card const& c, accepted()) {
     fates_[c] = declarers_hand_or_discarded;
   }
@@ -92,11 +92,11 @@ void FateAi::notify_discard(Cards discard)
 
 void FateAi::notify_play_card(PlayPosition p, Card c)
 {
-  std::set<CardFate> played =
-    boost::assign::list_of(CardFate::played);
-  fates_[c] = played;
+  std::set<CardFate> played_by_p =
+    boost::assign::list_of(CardFate::played_by(p));
+  fates_[c] = played_by_p;
 
-  CardFate players_hand(p);
+  CardFate players_hand = CardFate::held_by(p);
   Trick const& trick = tricks().back();
   if (trick.played()) {
     if (trick.suit() == Suit::trumps) {
@@ -152,7 +152,8 @@ bool FateAi::guess_is_partner(PlayPosition const pos) const
   Card called_king(called_suit(), SuitRank::king);
   auto const& fates = fates_.find(called_king)->second;
   if (fates.size() == 1) {
-    return pos == *fates.begin();
+    auto fate = *fates.begin();
+    return fate == CardFate::held_by(pos);
   }
   // TODO: see who's led trumps
   return false;
@@ -221,7 +222,7 @@ Cards FateAi::trumps_out() const
   std::set<CardFate> hands =
       boost::assign::list_of
         (CardFate::hand0)(CardFate::hand1)(CardFate::hand2)(CardFate::hand3);
-  hands.erase(CardFate(position()));
+  hands.erase(CardFate::held_by(position()));
   return trumps_in(hands);
 }
 
@@ -236,7 +237,7 @@ bool FateAi::guaranteed_to_win_against(
 ) const
 {
   /** \bug Could be made faster */
-  CardFate in_pos_hand(pos);
+  CardFate in_pos_hand = CardFate::held_by(pos);
   if (card.trump()) {
     for (TrumpRank better_rank = boost::next(card.trump_rank());
       better_rank < TrumpRank::max; ++better_rank) {

@@ -64,9 +64,9 @@ Card OffenceAi::play_card(FateAi const& ai)
     for (size_t i=trick.played(); i<3; ++i) {
       ++pos;
       pos %= 4;
-      hands_yet_to_play.insert(CardFate(pos));
+      hands_yet_to_play.insert(CardFate::held_by(pos));
       if (!ai.guess_is_on_my_side(pos)) {
-        opponents_yet_to_play.insert(CardFate(pos));
+        opponents_yet_to_play.insert(CardFate::held_by(pos));
       }
     }
   }
