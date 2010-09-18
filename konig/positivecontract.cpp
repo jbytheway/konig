@@ -90,6 +90,10 @@ PlayResult PositiveContract::play(
       // which is illegal, so ask again
     }
 
+    if (debug_stream) {
+      *debug_stream << "called king is " << king << std::endl;
+    }
+
     // Identify partner
     for (uint8_t i=0; i<4; ++i) {
       if (hands[i].count(called_king)) {
