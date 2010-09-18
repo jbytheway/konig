@@ -307,7 +307,7 @@ Card OffenceAi::play_card(FateAi const& ai)
       }
     }
 
-    KONIG_FATAL("not implemented " << trick);
+    KONIG_FATAL("not implemented\ntrick " << trick << ", hand " << hand);
   }
 }
 
