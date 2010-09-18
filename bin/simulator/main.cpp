@@ -16,6 +16,7 @@ namespace konig { namespace simulator {
 struct Options {
   Options() :
     show_scores(false),
+    gaps(false),
     help(false),
     machine(false),
     num_deals(1),
@@ -25,6 +26,7 @@ struct Options {
     show_tricks(true)
   {}
   bool show_scores;
+  bool gaps;
   bool help;
   std::vector<std::string> ais;
   std::vector<std::string> chunks;
@@ -52,6 +54,7 @@ void usage(std::ostream& o)
 "                Don't show the deal.\n"
 "  -f, --on-fly  Show contract and deal as they happen (rather than waiting\n"
 "                for the hand to end).\n"
+"  -g, --gaps    Print an extra two newlines after each hand.\n"
 "  -h, --help    Display this message.\n"
 "  -m, --machine Use machine-readable output rather than human-readable.\n"
 "  -n, --num-deals N\n"
@@ -74,6 +77,7 @@ int main(int argc, char const* const* const argv) {
   parser.addOption("chunks",      'c', &options.chunks, ",");
   parser.addOption("show-deal",   'd', &options.show_deal);
   parser.addOption("on-fly",      'f', &options.on_fly);
+  parser.addOption("gaps",        'g', &options.gaps);
   parser.addOption("help",        'h', &options.help);
   parser.addOption("machine",     'm', &options.machine);
   parser.addOption("num-deals",   'n', &options.num_deals);
@@ -145,6 +149,9 @@ int main(int argc, char const* const* const argv) {
           result.tricks.begin(), result.tricks.end(),
           std::ostream_iterator<konig::Trick>(std::cout, "\n")
         );
+    }
+    if (options.gaps) {
+      std::cout << "\n\n";
     }
   }
 }
