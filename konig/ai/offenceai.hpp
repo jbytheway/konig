@@ -23,15 +23,15 @@ namespace detail {
 struct OffenceAiImpl {
   template<typename ArgumentPack>
   OffenceAiImpl(ArgumentPack const& args) :
-    king_rippiness_penalty_(args[_king_rippiness_penalty | 10]),
+    king_rippiness_penalty_(args[_king_rippiness_penalty | 1]),
     trumps_out_to_abort_pagat_(args[_trumps_out_to_abort_pagat | 2]),
-    min_desired_rippiness_(args[_min_desired_rippiness | 3]),
+    min_desired_rippiness_(args[_min_desired_rippiness | 4]),
     valuable_card_points_(args[_valuable_card_points | 10])
   {
     // FIXME: It would be nice to have the vectors initialized above, but I
     // can't make that work; it should be possible with brace-initializers, I
     // think...
-    std::vector<Count> const def1 = boost::assign::list_of(5)(6)(7);
+    std::vector<Count> const def1 = boost::assign::list_of(5)(5)(6);
     trumps_for_unannounced_bird_ =
       args[_trumps_for_unannounced_bird | def1];
     std::vector<Count> const def2 = boost::assign::list_of(4)(6)(10);

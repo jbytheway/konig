@@ -11,10 +11,7 @@
 namespace konig { namespace ai {
 
 ROffenceAi::ROffenceAi() :
-  OffenceAi(
-    _min_desired_rippiness = 4,
-    _king_rippiness_penalty = 1
-  )
+  OffenceAi()
 {}
 
 KingCall ROffenceAi::call_king(FateAi const& ai)
