@@ -205,9 +205,12 @@ Card OffenceAi::play_card(FateAi const& ai)
       while (winning_play != plays.end() &&
           boost::next(winning_play) != plays.end() &&
           winning_play->trump() &&
-          winning_play->trump_rank() <= TrumpRank::kakadu) {
-          // TODO: change to
-          //winning_play->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
+          winning_play->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
+        ++winning_play;
+      }
+      // Also watch out for going off in a bird (if it were sensible to play
+      // the bird we would have done so above)
+      if (bird && winning_play != plays.end() && *winning_play == *bird) {
         ++winning_play;
       }
 
