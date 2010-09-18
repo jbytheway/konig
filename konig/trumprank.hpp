@@ -1,8 +1,7 @@
 #ifndef KONIG__TRUMPRANK_HPP
 #define KONIG__TRUMPRANK_HPP
 
-#include <stdexcept>
-
+#include <konig/fatal.hpp>
 #include <konig/core.hpp>
 
 namespace konig {
@@ -22,7 +21,7 @@ class TrumpRank {
     TrumpRank(const internal_enum v) : value_(v) {}
     explicit TrumpRank(const unsigned int v) : value_(v) {
       if (v < pagat || v > skus) {
-        throw std::logic_error("invalid trump rank");
+        KONIG_FATAL("invalid trump rank " << v);
       }
     }
 
