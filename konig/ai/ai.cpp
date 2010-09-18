@@ -44,6 +44,7 @@ Ai::Ai() :
 
 void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
 {
+  assert(hand.size() == 12);
   rules_ = std::move(rules);
   position_ = pos;
   hand_ = std::move(hand);
