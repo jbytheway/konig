@@ -160,6 +160,8 @@ bool FateAi::guess_is_partner(PlayPosition const pos) const
 
 bool FateAi::guess_is_on_my_side(PlayPosition const pos) const
 {
+  if (position() == pos) return true;
+
   if (position() == declarer()) {
     return guess_is_partner(pos);
   } else if (offence()) {
