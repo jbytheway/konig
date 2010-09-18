@@ -26,6 +26,7 @@ class FateAi : public Ai {
     Suit called_suit() const;
     bool is_called_suit(Suit const) const;
     bool guess_is_partner(PlayPosition const) const;
+    bool guess_is_on_my_side(PlayPosition const) const;
     bool had_first_round(Suit const s) const;
     std::pair<Fates::iterator, Fates::iterator> fates_of(Suit const);
     std::pair<Fates::const_iterator, Fates::const_iterator>

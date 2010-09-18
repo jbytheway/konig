@@ -65,7 +65,7 @@ Card OffenceAi::play_card(FateAi const& ai)
       ++pos;
       pos %= 4;
       hands_yet_to_play.insert(CardFate(pos));
-      if (!ai.guess_is_partner(pos)) {
+      if (!ai.guess_is_on_my_side(pos)) {
         opponents_yet_to_play.insert(CardFate(pos));
       }
     }
@@ -187,14 +187,14 @@ Card OffenceAi::play_card(FateAi const& ai)
 
     // See who's winning, and whether they might be a partner
     PlayPosition const current_winner = trick.winner();
-    bool const partner_winning = ai.guess_is_partner(current_winner);
+    bool const my_side_winning = ai.guess_is_on_my_side(current_winner);
 
     // See if anyone playing after me is an opponent
-    bool opponent_yet_to_play =
+    bool const opponent_yet_to_play =
       trick.played() != 3 &&
-      (trick.played() != 2 || !ai.guess_is_partner((ai.position()+1)%4));
+      (trick.played() != 2 || !ai.guess_is_on_my_side((ai.position()+1)%4));
 
-    if (partner_winning) {
+    if (my_side_winning) {
     } else {
       // See if I can possibly beat what's played so far
       auto winning_play = plays.lower_bound(trick.winning_card());
@@ -206,6 +206,8 @@ Card OffenceAi::play_card(FateAi const& ai)
           boost::next(winning_play) != plays.end() &&
           winning_play->trump() &&
           winning_play->trump_rank() <= TrumpRank::kakadu) {
+          // TODO: change to
+          //winning_play->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
         ++winning_play;
       }
 
@@ -248,6 +250,7 @@ Card OffenceAi::play_card(FateAi const& ai)
         // Someone led a side suit
 
         // Try to win with the king
+        // TODO: worry about being trumped
         if (plays.count(Card(s, SuitRank::king))) {
           rippiness_[s] += king_rippiness_penalty_;
           return Card(s, SuitRank::king);
@@ -262,9 +265,11 @@ Card OffenceAi::play_card(FateAi const& ai)
         // If I'm not roughing
         if (!worthless_card->trump()) {
           // See if partner is winning, or is likely to because this is the
-          // called suit and the trick hasn't been trumped yet
+          // called suit and the trick hasn't been trumped yet.  Note that this
+          // can't be true if I *am* partner because then I would have the king
+          // (see above)
           // TODO: notice when partner ducked?
-          if (partner_winning ||
+          if (my_side_winning ||
               (!ai.had_first_round(s) && ai.is_called_suit(s) &&
                 !trick.winning_card().trump())) {
             // fatten

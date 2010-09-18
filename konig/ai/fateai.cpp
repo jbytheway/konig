@@ -158,6 +158,17 @@ bool FateAi::guess_is_partner(PlayPosition const pos) const
   return false;
 }
 
+bool FateAi::guess_is_on_my_side(PlayPosition const pos) const
+{
+  if (position() == declarer()) {
+    return guess_is_partner(pos);
+  } else if (offence()) {
+    return declarer() == pos;
+  } else {
+    return !guess_is_partner(pos);
+  }
+}
+
 bool FateAi::had_first_round(Suit const s) const
 {
   assert(s < Suit::max);
