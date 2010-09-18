@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(guess_partner)
   PlayPosition p0(PlayPosition(0)), p1(PlayPosition(1));
   PlayPosition p2(PlayPosition(2)), p3(PlayPosition(3));
   ListenAi ai;
-  BOOST_TEST_CHECKPOINT("guess partner after one card");
+  BOOST_TEST_CHECKPOINT("guess no partner after one card");
   rig_test(
     ai,
     position_forehand,
@@ -92,6 +92,50 @@ BOOST_AUTO_TEST_CASE(guess_partner)
   BOOST_CHECK(!ai.guess_is_partner(p3));
   BOOST_CHECK(ai.guess_is_on_my_side(p0));
   BOOST_CHECK(!ai.guess_is_on_my_side(p1));
+  BOOST_CHECK(!ai.guess_is_on_my_side(p2));
+  BOOST_CHECK(!ai.guess_is_on_my_side(p3));
+
+  BOOST_TEST_CHECKPOINT("guess partner by process of elimination");
+  rig_test(
+    ai,
+    position_forehand,
+    "D:789tJ H:89tJNQK",
+    list_of("r")("")("")("")("r"),
+    KingCall::diamonds,
+    "1 2 3", "4 5 6",
+    choose0,
+    "H:89t",
+    std::vector<std::string>(),
+    list_of("DJ")("7")("8")
+  );
+  BOOST_CHECK(!ai.guess_is_partner(p0));
+  BOOST_CHECK(!ai.guess_is_partner(p1));
+  BOOST_CHECK(!ai.guess_is_partner(p2));
+  BOOST_CHECK(ai.guess_is_partner(p3));
+  BOOST_CHECK(ai.guess_is_on_my_side(p0));
+  BOOST_CHECK(!ai.guess_is_on_my_side(p1));
+  BOOST_CHECK(!ai.guess_is_on_my_side(p2));
+  BOOST_CHECK(ai.guess_is_on_my_side(p3));
+
+  BOOST_TEST_CHECKPOINT("guess partner by seeing him play");
+  rig_test(
+    ai,
+    position_forehand,
+    "H:789tJNQK D:tJNQ",
+    list_of("r")("")("")("")("r"),
+    KingCall::diamonds,
+    "1 2 3", "4 5 6",
+    choose0,
+    "H:789",
+    std::vector<std::string>(),
+    list_of("DQ")("DK")
+  );
+  BOOST_CHECK(!ai.guess_is_partner(p0));
+  BOOST_CHECK(ai.guess_is_partner(p1));
+  BOOST_CHECK(!ai.guess_is_partner(p2));
+  BOOST_CHECK(!ai.guess_is_partner(p3));
+  BOOST_CHECK(ai.guess_is_on_my_side(p0));
+  BOOST_CHECK(ai.guess_is_on_my_side(p1));
   BOOST_CHECK(!ai.guess_is_on_my_side(p2));
   BOOST_CHECK(!ai.guess_is_on_my_side(p3));
 }

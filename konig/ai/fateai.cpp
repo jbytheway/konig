@@ -153,7 +153,7 @@ bool FateAi::guess_is_partner(PlayPosition const pos) const
   auto const& fates = fates_.find(called_king)->second;
   if (fates.size() == 1) {
     auto fate = *fates.begin();
-    return fate == CardFate::held_by(pos);
+    return fate == CardFate::held_by(pos) || fate == CardFate::played_by(pos);
   }
   // TODO: see who's led trumps
   return false;
