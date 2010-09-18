@@ -34,6 +34,8 @@ class FateAi : public Ai {
     Cards trumps_in(std::set<CardFate> const&) const;
     Cards trumps_out() const;
     bool trumps_known_exhausted() const;
+    bool
+      guaranteed_to_win_against(Card const&, std::set<CardFate> const&) const;
     bool guaranteed_to_win_against(Card const&, PlayPosition const) const;
   private:
     std::array<bool, Suit::max> had_first_round_;

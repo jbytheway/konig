@@ -233,15 +233,16 @@ bool FateAi::trumps_known_exhausted() const
 
 bool FateAi::guaranteed_to_win_against(
   Card const& card,
-  PlayPosition const pos
+  std::set<CardFate> const& hands
 ) const
 {
+  if (hands.empty()) return true;
+
   /** \bug Could be made faster */
-  CardFate in_pos_hand = CardFate::held_by(pos);
   if (card.trump()) {
     for (TrumpRank better_rank = boost::next(card.trump_rank());
       better_rank < TrumpRank::max; ++better_rank) {
-      if (fates_.find(Card(better_rank))->second.count(in_pos_hand)) {
+      if (utility::intersects(fates_.find(Card(better_rank))->second, hands)) {
         return false;
       }
     }
@@ -251,18 +252,27 @@ bool FateAi::guaranteed_to_win_against(
       better_rank < SuitRank::max; ++better_rank) {
       auto p = fates_.find(Card(card.suit(), better_rank));
       assert(p != fates_.end());
-      if (p->second.count(in_pos_hand)) {
+      if (utility::intersects(p->second, hands)) {
         return false;
       }
     }
     BOOST_FOREACH(auto const& p, fates_of(Suit::trumps)) {
-      std::set<CardFate> const& fates = p.second;
-      if (fates.count(in_pos_hand)) {
+      if (utility::intersects(p.second, hands)) {
         return false;
       }
     }
     return true;
   }
+}
+
+bool FateAi::guaranteed_to_win_against(
+  Card const& card,
+  PlayPosition const pos
+) const
+{
+  std::set<CardFate> in_pos_hand =
+    boost::assign::list_of(CardFate::held_by(pos));
+  return guaranteed_to_win_against(card, in_pos_hand);
 }
 
 }}
