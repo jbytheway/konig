@@ -32,7 +32,7 @@ class PartialCards {
       return end;
     }
   private:
-    std::vector<Card> fixed_;
+    Cards fixed_;
     size_t num_random_;
 };
 
