@@ -234,13 +234,24 @@ Card OffenceAi::play_card(FateAi const& ai)
         // I'm playing a trump
       } else {
         // I'm playing a suit card
-        if (!opponent_yet_to_play) {
+        auto most_points = std::max_element(
+          plays.begin(), plays.end(), Card::CompareRanksReversePips()
+        );
+        auto best_card = trick.winning_card();
+        if (most_points->suit() == s || most_points->trump()) {
+          best_card = std::max(best_card, *most_points);
+        }
+        if (ai.guaranteed_to_win_against(best_card, opponents_yet_to_play)) {
           // We are sure to win; fatten
-          auto most_points = std::max_element(
-            plays.begin(), plays.end(), Card::CompareRanksReversePips()
-          );
           return *most_points;
         }
+        // Assume King will win first round of a suit
+        if (!best_card.trump() && best_card.suit_rank() == SuitRank::king &&
+          !ai.had_first_round(s)) {
+          return *most_points;
+        }
+        // Otherwise, we're liable to lose, so play low
+        return *worthless_card;
       }
     } else {
       if (winning_play == plays.end()) {
