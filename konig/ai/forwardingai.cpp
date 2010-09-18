@@ -4,7 +4,7 @@
 
 #include <boost/algorithm/string/join.hpp>
 
-#include <optionsparser.h>
+#include <optimal/optionsparser.hpp>
 
 #include <konig/fatal.hpp>
 #include <konig/ai/aierror.hpp>

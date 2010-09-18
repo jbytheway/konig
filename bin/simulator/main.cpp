@@ -5,7 +5,7 @@
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/join.hpp>
 
-#include <optionsparser.h>
+#include <optimal/optionsparser.hpp>
 
 #include <konig/game.hpp>
 #include <konig/dealer.hpp>

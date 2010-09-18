@@ -5,7 +5,7 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/asio/io_service.hpp>
 
-#include <optionsparser.h>
+#include <optimal/optionsparser.hpp>
 
 #include <konig/tableposition.hpp>
 #include <konig/client/serverinterface.hpp>
