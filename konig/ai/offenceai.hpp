@@ -64,17 +64,20 @@ struct OffenceAiImpl {
 
 class OffenceAi : public PlayAi, private detail::OffenceAiImpl {
   public:
+    using detail::OffenceAiImpl::Rippiness;
+    using detail::OffenceAiImpl::Count;
+
     BOOST_PARAMETER_CONSTRUCTOR(
       OffenceAi,
       (detail::OffenceAiImpl),
       tag,
       (optional
         (king_rippiness_penalty, (Rippiness))
-        (trumps_for_unannounced_bird, (Rippiness))
-        (trumps_out_to_abort_pagat, (Rippiness))
-        (trumps_out_to_abort_bird, (Rippiness))
+        (trumps_for_unannounced_bird, (std::vector<Count>))
+        (trumps_out_to_abort_pagat, (Count))
+        (trumps_out_to_abort_bird, (std::vector<Count>))
         (min_desired_rippiness, (Rippiness))
-        (valuable_card_points, (Rippiness))
+        (valuable_card_points, (CardPoints))
       )
     )
 
