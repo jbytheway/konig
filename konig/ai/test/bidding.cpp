@@ -25,8 +25,9 @@ namespace {
       players.push_back(Player::Ptr(new ai::SpecificPlayAi(std::move(bid))));
     }
     // Fake the game start
+    Cards fake_hand = Cards::from_string("C:789tJNQK D:789t");
     for (PlayPosition p = position_forehand; p != position_max; ++p) {
-      players[p]->start_game(rules, p, Cards());
+      players[p]->start_game(rules, p, fake_hand);
     }
     return bs.get_bids(players).get<0>()->bid_name();
   }
