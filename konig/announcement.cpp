@@ -8,52 +8,83 @@ Announcement::Announcement(Feat f, Announcedness a, bool d) :
   defensive(d)
 {}
 
-bool Announcement::from_string(Announcement& a, std::string const& d)
+bool Announcement::from_range(
+  Announcement& a,
+  std::string::const_iterator& start,
+  std::string::const_iterator const& finish
+)
 {
-  if (d.size() == 0) return false;
-  size_t p = d.size();
-  a.announcedness = Announcedness::announced;
-  while (p != 0 && d[p-1] == 'x' &&
-      a.announcedness != Announcedness::subkontraed) {
-    --p;
-    a.announcedness = a.announcedness.next_level();
+  if (start == finish) return false;
+  switch (*start) {
+    case '1':
+      a.feat = Feat::pagat;
+      ++start;
+      break;
+    case '2':
+      a.feat = Feat::uhu;
+      ++start;
+      break;
+    case '3':
+      a.feat = Feat::kakadu;
+      ++start;
+      break;
+    case 'f':
+      a.feat = Feat::forty_five;
+      ++start;
+      break;
+    case 'v':
+      a.feat = Feat::valat;
+      ++start;
+      break;
+    case 'k':
+      a.feat = Feat::king_ultimo;
+      ++start;
+      break;
+    case 'x':
+      a.feat = Feat::game;
+      // Do *not* increment start
+      break;
+    default:
+      return false;
   }
-  if (p > 2) {
-    return false;
-  } else if (p == 0) {
-    a.feat = Feat::game;
+  a.announcedness = Announcedness::announced;
+  if (start == finish) {
     a.defensive = false;
     return true;
-  } else if (p == 2) {
-    if (d[1] == 'd' || d[1] == '!') {
-      a.defensive = true;
-    } else {
-      return false;
-    }
+  }
+
+  if (*start == 'd' || *start == '!') {
+    a.defensive = true;
+    ++start;
   } else {
     a.defensive = false;
   }
-  switch (d[0]) {
-    case '1':
-      a.feat = Feat::pagat;
-      return true;
-    case '2':
-      a.feat = Feat::uhu;
-      return true;
-    case '3':
-      a.feat = Feat::kakadu;
-      return true;
-    case 'f':
-      a.feat = Feat::forty_five;
-      return true;
-    case 'v':
-      a.feat = Feat::valat;
-      return true;
-    case 'k':
-      a.feat = Feat::king_ultimo;
-      return true;
+
+  while (start != finish && *start == 'x' &&
+      a.announcedness != Announcedness::subkontraed) {
+    ++start;
+    a.announcedness = a.announcedness.next_level();
   }
-  return false;
+  return true;
+}
+
+bool Announcement::from_string(Announcement& a, std::string const& s)
+{
+  auto at = s.begin();
+  if (!from_range(a, at, s.end())) return false;
+  return at == s.end();
+}
+
+bool Announcement::many_from_string(
+  std::vector<Announcement>& v, std::string const& s
+)
+{
+  auto at = s.begin();
+  Announcement a;
+  while (from_range(a, at, s.end())) {
+    v.push_back(a);
+  }
+  return at == s.end();
 }
 
 }

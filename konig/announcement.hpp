@@ -11,7 +11,14 @@ struct Announcement {
   public:
     Announcement() = default; // For serialization
     Announcement(Feat, Announcedness, bool defensive);
+    static bool from_range(
+      Announcement&,
+      std::string::const_iterator& start,
+      std::string::const_iterator const& finish
+    );
     static bool from_string(Announcement&, std::string const&);
+    static bool
+    many_from_string(std::vector<Announcement>&, std::string const&);
 
     Feat feat;
     Announcedness announcedness;
