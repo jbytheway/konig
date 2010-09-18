@@ -68,7 +68,7 @@ void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
 void Ai::notify_bid(PlayPosition p, Bid bid)
 {
   if (bid < Bid::pass || bid >= Bid(rules_.contracts().size())) {
-    KONIG_FATAL("invalid bid");
+    KONIG_FATAL("invalid bid " << bid.value());
   }
   if (!bid.is_pass()) {
     declarer_ = p;
