@@ -194,43 +194,55 @@ Card OffenceAi::play_card(FateAi const& ai)
       trick.played() != 3 &&
       (trick.played() != 2 || !ai.guess_is_on_my_side((ai.position()+1)%4));
 
-    if (my_side_winning) {
-    } else {
-      // See if I can possibly beat what's played so far
-      auto winning_play = plays.lower_bound(trick.winning_card());
-      if (winning_play != plays.end() && !winning_play->trump() &&
-          winning_play->suit() != s) {
-        winning_play = plays.end();
-      }
-      while (winning_play != plays.end() &&
-          boost::next(winning_play) != plays.end() &&
-          winning_play->trump() &&
-          winning_play->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
-        ++winning_play;
-      }
-      // Also watch out for going off in a bird (if it were sensible to play
-      // the bird we would have done so above)
-      if (bird && winning_play != plays.end() && *winning_play == *bird) {
-        ++winning_play;
-      }
+    // See if I can possibly beat what's played so far
+    auto winning_play = plays.lower_bound(trick.winning_card());
+    if (winning_play != plays.end() && !winning_play->trump() &&
+        winning_play->suit() != s) {
+      winning_play = plays.end();
+    }
+    while (winning_play != plays.end() &&
+        boost::next(winning_play) != plays.end() &&
+        winning_play->trump() &&
+        winning_play->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
+      ++winning_play;
+    }
+    // Also watch out for going off in a bird (if it were sensible to play
+    // the bird we would have done so above)
+    if (bird && winning_play != plays.end() && *winning_play == *bird) {
+      ++winning_play;
+    }
 
-      auto worthless_card = plays.begin();
-      while (boost::next(worthless_card) != plays.end() &&
-          worthless_card->trump() &&
-          worthless_card->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
+    auto worthless_card = plays.begin();
+    while (boost::next(worthless_card) != plays.end() &&
+        worthless_card->trump() &&
+        worthless_card->trump_rank() < lowest_trump_to_rough_.trump_rank()) {
+      ++worthless_card;
+    }
+
+    // Make sure the worthless card isn't this trick's bird
+    if (bird && *worthless_card == *bird) {
+      if (boost::next(worthless_card) != plays.end()) {
         ++worthless_card;
+      } else {
+        assert(worthless_card != plays.begin());
+        --worthless_card;
       }
+    }
 
-      // Make sure the worthless card isn't this trick's bird
-      if (bird && *worthless_card == *bird) {
-        if (boost::next(worthless_card) != plays.end()) {
-          ++worthless_card;
-        } else {
-          assert(worthless_card != plays.begin());
-          --worthless_card;
+    if (my_side_winning) {
+      if (worthless_card->trump()) {
+        // I'm playing a trump
+      } else {
+        // I'm playing a suit card
+        if (!opponent_yet_to_play) {
+          // We are sure to win; fatten
+          auto most_points = std::max_element(
+            plays.begin(), plays.end(), Card::CompareRanksReversePips()
+          );
+          return *most_points;
         }
       }
-
+    } else {
       if (winning_play == plays.end()) {
         // I can't win; play the least valuable card
         // TODO: consider valuable discard if partner might yet win
