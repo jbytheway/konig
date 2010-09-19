@@ -89,6 +89,12 @@ Card TAi::play_card(FateAi const& ai)
       auto best = std::max_element(candidates.begin(), candidates.end());
       if (best->first >= 0) return best->second;
     }
+
+    // Try to get rid of a big trump
+    Card candidate = *boost::prior(plays.end());
+    if (candidate.trump()) {
+      return candidate;
+    }
   } else {
     // I am following to the trick
     Suit s = trick.suit();
