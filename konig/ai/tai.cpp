@@ -1,5 +1,7 @@
 #include <konig/ai/tai.hpp>
 
+#include <boost/assign/list_of.hpp>
+
 #include <konig/utility/intersects.hpp>
 
 namespace konig { namespace ai {
@@ -34,12 +36,18 @@ Card TAi::play_card(FateAi const& ai)
     }
   }
 
+  std::set<CardFate> other_hands = boost::assign::list_of
+    (CardFate::hand0)(CardFate::hand1)(CardFate::hand2)(CardFate::hand3);
+  other_hands.erase(CardFate::held_by(ai.position()));
+
+  bool const skus_may_be_out =
+    utility::intersects(other_hands, ai.fates_of(TrumpRank::skus));
+
   if (trick.leader() == ai.position()) {
     // I am leading to the trick
 
     // If I hold the Mond and the Skus might be out there, then lead that
-    if (plays.count(TrumpRank::mond) &&
-      utility::intersects(hands_yet_to_play, ai.fates_of(TrumpRank::skus))) {
+    if (plays.count(TrumpRank::mond) && skus_may_be_out) {
       return Card(TrumpRank::mond);
     }
 
@@ -80,6 +88,59 @@ Card TAi::play_card(FateAi const& ai)
     if (!candidates.empty()) {
       auto best = std::max_element(candidates.begin(), candidates.end());
       if (best->first >= 0) return best->second;
+    }
+  } else {
+    // I am following to the trick
+    Suit s = trick.suit();
+    bool const will_rise =
+      (plays.begin()->trump() && s != Suit::trumps) ||
+      (plays.begin()->suit() == s && *plays.begin() > trick.winning_card());
+
+    if (!will_rise) {
+      // I'm not going to win, so I should discard the most dangerous card I
+      // can
+      std::vector<Card> p(plays.begin(), plays.end());
+      return *std::max_element(p.begin(), p.end(), Card::CompareRanks());
+    }
+
+    if (s == Suit::trumps) {
+      // Trump trick
+    } else {
+      // Suit trick
+
+      if (plays.begin()->suit() == Suit::trumps) {
+        // I am roughing
+
+        if (hands_yet_to_play.empty()) {
+          // I'm last to play, so I am certain to win.  Play biggest trump I
+          // have
+          auto candidate = boost::prior(plays.end());
+          // ... except not the Mond if the Skus is still out
+          if (candidate != plays.begin() &&
+            candidate->trump_rank() == TrumpRank::mond && skus_may_be_out) {
+            --candidate;
+          }
+          return *candidate;
+        }
+      } else {
+        // I am following to a suit trick
+        if (hands_yet_to_play.empty()) {
+          // I'm last to play, so I am certain to win.  Do so in the manner to
+          // gain me fewest points
+          return *std::min_element(
+            plays.begin(), plays.end(), Card::CompareRanksReversePips()
+          );
+        }
+
+        if (!ai.had_first_round(s)) {
+          // First round of this; probably an underled King; just about
+          // anything from Jack upwards will win, so again try to gain fewest
+          // points
+          return *std::min_element(
+            plays.begin(), plays.end(), Card::CompareRanksReversePips()
+          );
+        }
+      }
     }
   }
 
