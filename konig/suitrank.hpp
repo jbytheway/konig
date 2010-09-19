@@ -42,6 +42,7 @@ class SuitRank {
 
     operator internal_enum() const { return internal_enum(value_); }
     SuitRank& operator++() { ++value_; return *this; }
+    SuitRank& operator--() { --value_; return *this; }
   private:
     uint8_t value_;
 };
