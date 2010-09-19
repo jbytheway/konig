@@ -99,7 +99,13 @@ Outcome ContractAndAnnouncements::score(
     std::array<bool, 4> const& game_achievers
   )
 {
-  assert(declarers_cards.size() + defenses_cards.size() == 54);
+#ifndef NDEBUG
+  if (contract_->involves_talon()) {
+    assert(declarers_cards.size() + defenses_cards.size() == 54);
+  } else {
+    assert(declarers_cards.size() + defenses_cards.size() == 48);
+  }
+#endif
   uint8_t num_game_achievers =
     std::count(game_achievers.begin(), game_achievers.end(), true);
   Outcome o(contract_, num_game_achievers);

@@ -44,6 +44,8 @@ class NegativeContract : public Contract {
 
     virtual bool rising_rule() const { return true; }
 
+    virtual bool involves_talon() const { return false; }
+
     virtual Announcednesses initial_announcednesses() const;
 
     virtual bool valid_first_announcements(
