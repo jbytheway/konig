@@ -185,6 +185,10 @@ Card TAi::play_card(FateAi const& ai)
             plays.begin(), plays.end(), Card::CompareRanksReversePips()
           );
         }
+
+        // Hope for a trump and play big
+        // TODO: worry about whether there are any trumps possible after me
+        return *best_to_get_rid_of;
       }
     }
   }
