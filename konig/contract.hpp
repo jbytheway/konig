@@ -52,6 +52,8 @@ class Contract : public boost::enable_shared_from_this<Contract> {
 
     virtual bool rising_rule() const = 0;
 
+    virtual bool hold_pagat() const = 0;
+
     virtual bool involves_talon() const = 0;
 
     virtual Announcednesses initial_announcednesses() const = 0;

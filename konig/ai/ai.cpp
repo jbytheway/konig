@@ -80,7 +80,10 @@ void Ai::notify_bid(PlayPosition p, Bid bid)
       first_leader = declarer_;
     }
     tricks_.clear();
-    tricks_.push_back(Trick(first_leader, contract_.contract()->rising_rule()));
+    tricks_.push_back(Trick(
+        first_leader, contract_.contract()->rising_rule(),
+        contract_.contract()->hold_pagat()
+    ));
   }
   bidding_.push_back(bid);
 }
@@ -160,9 +163,10 @@ void Ai::notify_play_card(PlayPosition p, Card c)
     assert(tricks_.size() < 13);
     trick_complete_hook();
     if (tricks_.size() < 12) {
-      tricks_.push_back(
-          Trick(tricks_.back().winner(), contract_.contract()->rising_rule())
-        );
+      tricks_.push_back(Trick(
+          tricks_.back().winner(), contract_.contract()->rising_rule(),
+          contract_.contract()->hold_pagat()
+      ));
     }
   }
   if (p == position_) {

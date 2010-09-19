@@ -37,6 +37,8 @@ class Trischaken : public Contract {
 
     virtual bool rising_rule() const { return true; }
 
+    virtual bool hold_pagat() const { return true; }
+
     virtual bool involves_talon() const { return false; }
 
     virtual Announcednesses initial_announcednesses() const;

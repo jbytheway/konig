@@ -38,7 +38,7 @@ std::vector<Trick> Contract::play_tricks(
   std::vector<Trick> tricks;
 
   for (unsigned int trick_number = 12; trick_number > 0; --trick_number) {
-    Trick t(leading, rising_rule());
+    Trick t(leading, rising_rule(), hold_pagat());
     for (unsigned int i=0; i<4; ++i) {
       PlayPosition playing = PlayPosition((leading + i) % 4);
       Card c;

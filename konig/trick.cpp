@@ -2,6 +2,7 @@
 
 #include <boost/range/empty.hpp>
 #include <boost/format.hpp>
+#include <boost/spirit/home/phoenix/operator/comparison.hpp>
 
 #include <konig/contractandannouncements.hpp>
 
@@ -43,6 +44,24 @@ Cards Trick::legal_plays(
         legal_plays = make_pair(hand.begin(), hand.end());
       }
     }
+  }
+  // Apply rising rule
+  if (played_ != 0 && rising_rule_) {
+    if (legal_plays.first->trump() ||
+        legal_plays.first->suit() == suit()) {
+      auto first_winner = std::find_if(
+        legal_plays.first, legal_plays.second, arg1 > winning_card()
+      );
+      if (first_winner != legal_plays.second) {
+        legal_plays.first = first_winner;
+      }
+    }
+  }
+  // Apply hold-pagat rule
+  Card pagat(TrumpRank::pagat);
+  if (hold_pagat_ && *legal_plays.first == pagat &&
+      boost::next(legal_plays.first) != legal_plays.second) {
+    ++legal_plays.first;
   }
   std::array<Cards, 3> constraint_levels;
   BOOST_FOREACH(Card legal_play, legal_plays) {

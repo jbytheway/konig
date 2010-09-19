@@ -48,6 +48,8 @@ class PositiveContract : public Contract {
 
     virtual bool rising_rule() const { return false; }
 
+    virtual bool hold_pagat() const { return false; }
+
     virtual bool involves_talon() const { return true; }
 
     virtual Announcednesses initial_announcednesses() const;

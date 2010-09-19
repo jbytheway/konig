@@ -12,9 +12,10 @@ class ContractAndAnnouncements;
 
 class Trick {
   public:
-    Trick(PlayPosition leader, bool rising_rule) :
+    Trick(PlayPosition leader, bool rising_rule, bool hold_pagat) :
       leader_(leader),
       rising_rule_(rising_rule),
+      hold_pagat_(hold_pagat),
       played_(0)
     {}
 
@@ -69,6 +70,7 @@ class Trick {
 
     PlayPosition leader_;
     bool rising_rule_;
+    bool hold_pagat_;
     std::array<Card, 4> cards_;
     uint8_t played_;
     uint8_t winning_card_;
