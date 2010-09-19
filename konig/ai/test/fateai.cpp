@@ -65,13 +65,17 @@ namespace {
       ai.notify_play_card(PlayPosition(i%4), card);
     }
   }
+
+  static PlayPosition const p0(PlayPosition(0));
+  static PlayPosition const p1(PlayPosition(1));
+  static PlayPosition const p2(PlayPosition(2));
+  static PlayPosition const p3(PlayPosition(3));
+
 }
 
 BOOST_AUTO_TEST_CASE(guess_partner)
 {
   boost::optional<uint8_t> choose0(0);
-  PlayPosition p0(PlayPosition(0)), p1(PlayPosition(1));
-  PlayPosition p2(PlayPosition(2)), p3(PlayPosition(3));
   ListenAi ai;
   BOOST_TEST_CHECKPOINT("guess no partner after one card");
   rig_test(
@@ -138,6 +142,105 @@ BOOST_AUTO_TEST_CASE(guess_partner)
   BOOST_CHECK(ai.guess_is_on_my_side(p1));
   BOOST_CHECK(!ai.guess_is_on_my_side(p2));
   BOOST_CHECK(!ai.guess_is_on_my_side(p3));
+}
+
+BOOST_AUTO_TEST_CASE(card_tracking)
+{
+  Card const skus(TrumpRank::skus);
+  Card const uhu(TrumpRank::uhu);
+  Card const kakadu(TrumpRank::kakadu);
+  ListenAi ai;
+  // In solodreier we can't infer that somone who fails to rise couldn't
+  rig_test(
+    ai,
+    position_forehand,
+    "21 C:789tJNQK D:789",
+    list_of("sd")("")("")(""),
+    KingCall::invalid,
+    NULL, NULL,
+    boost::optional<uint8_t>(),
+    NULL,
+    std::vector<std::string>(),
+    list_of("21")("20")
+  );
+  BOOST_CHECK(ai.fates_of(skus).count(CardFate::held_by(p1)));
+
+  // In trischaken we can
+  rig_test(
+    ai,
+    position_forehand,
+    "21 C:789tJNQK D:789",
+    list_of("r")("")("")("")("t"),
+    KingCall::invalid,
+    NULL, NULL,
+    boost::optional<uint8_t>(),
+    NULL,
+    std::vector<std::string>(),
+    list_of("21")("20")
+  );
+  BOOST_CHECK(!ai.fates_of(skus).count(CardFate::held_by(p1)));
+
+  // But we cannot assume that they hold no larger trumps
+  rig_test(
+    ai,
+    position_forehand,
+    "21 C:789tJNQK D:789",
+    list_of("r")("")("")("")("t"),
+    KingCall::invalid,
+    NULL, NULL,
+    boost::optional<uint8_t>(),
+    NULL,
+    std::vector<std::string>(),
+    list_of("21")("2")
+  );
+  BOOST_CHECK(ai.fates_of(kakadu).count(CardFate::held_by(p1)));
+
+  // Unless it's the pagat which implies no other trumps held
+  rig_test(
+    ai,
+    position_forehand,
+    "21 C:789tJNQK D:789",
+    list_of("r")("")("")("")("t"),
+    KingCall::invalid,
+    NULL, NULL,
+    boost::optional<uint8_t>(),
+    NULL,
+    std::vector<std::string>(),
+    list_of("21")("1")
+  );
+  BOOST_CHECK(!ai.fates_of(uhu).count(CardFate::held_by(p1)));
+
+  // Similarly for suit cards
+  rig_test(
+    ai,
+    position_forehand,
+    "21 C:789tJNQK D:9tJ",
+    list_of("r")("")("")("")("t"),
+    KingCall::invalid,
+    NULL, NULL,
+    boost::optional<uint8_t>(),
+    NULL,
+    std::vector<std::string>(),
+    list_of("D9")("DN")("D7")
+  );
+  BOOST_CHECK(!ai.fates_of(Card(Suit::diamond, SuitRank::queen)).
+      count(CardFate::held_by(p2)));
+
+  // Unless there has been a trump between
+  rig_test(
+    ai,
+    position_forehand,
+    "21 C:789tJNQK D:9tJ",
+    list_of("r")("")("")("")("t"),
+    KingCall::invalid,
+    NULL, NULL,
+    boost::optional<uint8_t>(),
+    NULL,
+    std::vector<std::string>(),
+    list_of("D9")("1")("D7")
+  );
+  BOOST_CHECK(ai.fates_of(Card(Suit::diamond, SuitRank::queen)).
+      count(CardFate::held_by(p2)));
 }
 
 }}

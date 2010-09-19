@@ -97,6 +97,7 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
   std::set<CardFate> played_by_p =
     boost::assign::list_of(CardFate::played_by(p));
   fates_[c] = played_by_p;
+  bool const rising_rule = contract().contract()->rising_rule();
 
   CardFate players_hand = CardFate::held_by(p);
   Trick const& trick = tricks().back();
@@ -106,18 +107,36 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
         BOOST_FOREACH(auto& p, fates_of(Suit::trumps)) {
           p.second.erase(players_hand);
         }
+      } else if (rising_rule && c < trick.winning_card()) {
+        auto winners_start = fates_.upper_bound(trick.winning_card());
+        BOOST_FOREACH(auto& p, make_pair(winners_start, fates_.end())) {
+          p.second.erase(players_hand);
+        }
       }
     } else {
       if (c.suit() != trick.suit()) {
         BOOST_FOREACH(auto& p, fates_of(trick.suit())) {
           p.second.erase(players_hand);
         }
-        if (c.suit() != Suit::trumps) {
+        if (!c.trump()) {
           BOOST_FOREACH(auto& p, fates_of(Suit::trumps)) {
             p.second.erase(players_hand);
           }
         }
+      } else if (rising_rule && !trick.winning_card().trump() &&
+          c < trick.winning_card()) {
+        auto winners_start = fates_.upper_bound(trick.winning_card());
+        auto suit_end = fates_.upper_bound(Card(c.suit(), SuitRank::king));
+        BOOST_FOREACH(auto& p, make_pair(winners_start, suit_end)) {
+          p.second.erase(players_hand);
+        }
       }
+    }
+  }
+
+  if (contract().contract()->hold_pagat() && c == Card(TrumpRank::pagat)) {
+    BOOST_FOREACH(auto& p, fates_of(Suit::trumps)) {
+      p.second.erase(players_hand);
     }
   }
 
