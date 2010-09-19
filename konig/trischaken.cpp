@@ -87,16 +87,16 @@ PlayResult Trischaken::play(
   // For Trischaken things are complicated, so we have to do some stuff here
   // that would normally be inside Feat
   std::array<bool, 4> achievers;
-  std::array<unsigned int, 4> card_points = {{0, 0, 0, 0}};
+  std::array<CardPoints, 4> card_points = {{0, 0, 0, 0}};
   BOOST_FOREACH(Trick const& t, tricks) {
     card_points[t.winner()] += Cards(t.cards()).total_card_points();
   }
   // Divide by three (round to nearest) to get 'honest' card points
-  BOOST_FOREACH(unsigned int& p, card_points) {
+  BOOST_FOREACH(CardPoints& p, card_points) {
     p = (p+1)/3;
   }
   auto p = boost::minmax_element(card_points.begin(), card_points.end());
-  unsigned int min = *p.first, max = *p.second;
+  CardPoints min = *p.first, max = *p.second;
   if (min == 0) {
     // Winners are those who took no tricks
     for (PlayPosition p = position_forehand; p != position_max; ++p) {
