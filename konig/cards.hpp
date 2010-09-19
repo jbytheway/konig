@@ -143,13 +143,9 @@ class Cards : public std::set<Card> {
 
     using std::set<Card>::insert;
 
-    void insert(const Cards& to_insert) {
-      copy(to_insert.begin(), to_insert.end(), inserter(*this, end()));
-    }
-
-    template<size_t size>
-    void insert(const std::array<Card, size>& to_insert) {
-      copy(to_insert.begin(), to_insert.end(), inserter(*this, end()));
+    template<typename Range>
+    void insert(Range const& r) {
+      std::copy(boost::begin(r), boost::end(r), std::inserter(*this, end()));
     }
 
     using std::set<Card>::erase;
