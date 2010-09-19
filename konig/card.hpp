@@ -100,6 +100,9 @@ class Card {
     bool operator<(const Card& r) const {
       return suit_ < r.suit_ || (suit_ == r.suit_ && rank_ < r.rank_);
     }
+    bool operator>(const Card& r) const {
+      return r < *this;
+    }
   private:
     template<typename Archive>
     void serialize(Archive& ar, unsigned int) {
