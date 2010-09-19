@@ -102,15 +102,41 @@ Card TAi::play_card(FateAi const& ai)
       (plays.begin()->trump() && s != Suit::trumps) ||
       (plays.begin()->suit() == s && *plays.begin() > trick.winning_card());
 
+    // Save the biggest thing we can play
+    auto best_to_get_rid_of = boost::prior(plays.end());
+    if (best_to_get_rid_of->trump()) {
+      // Not the Mond if the Skus is still out
+      if (best_to_get_rid_of != plays.begin() &&
+        best_to_get_rid_of->trump_rank() == TrumpRank::mond &&
+        skus_may_be_out) {
+          --best_to_get_rid_of;
+      }
+    } else {
+      // and if we're not playing trumps we want the biggest rank
+      best_to_get_rid_of =
+        std::max_element(plays.begin(), plays.end(), Card::CompareRanks());
+    }
+
     if (!will_rise) {
       // I'm not going to win, so I should discard the most dangerous card I
       // can
-      std::vector<Card> p(plays.begin(), plays.end());
-      return *std::max_element(p.begin(), p.end(), Card::CompareRanks());
+      return *best_to_get_rid_of;
     }
 
     if (s == Suit::trumps) {
       // Trump trick
+      assert(plays.begin()->suit() == Suit::trumps); // (since am rising)
+      // I am playing a trump to a trump trick, and rising
+      Card minimal = *plays.begin();
+
+      if (ai.guaranteed_to_win_against(minimal, hands_yet_to_play)) {
+        // No matter what I play I shall win, so play big
+        return *best_to_get_rid_of;
+      }
+
+      // We might yet lose, so play small
+      // TODO: it might be worth winning to get control
+      return minimal;
     } else {
       // Suit trick
 
@@ -118,15 +144,8 @@ Card TAi::play_card(FateAi const& ai)
         // I am roughing
 
         if (hands_yet_to_play.empty()) {
-          // I'm last to play, so I am certain to win.  Play biggest trump I
-          // have
-          auto candidate = boost::prior(plays.end());
-          // ... except not the Mond if the Skus is still out
-          if (candidate != plays.begin() &&
-            candidate->trump_rank() == TrumpRank::mond && skus_may_be_out) {
-            --candidate;
-          }
-          return *candidate;
+          // I'm last to play, so I am certain to win.  Play big
+          return *best_to_get_rid_of;
         }
       } else {
         // I am following to a suit trick
