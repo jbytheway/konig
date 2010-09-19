@@ -232,6 +232,12 @@ Card OffenceAi::play_card(FateAi const& ai)
     if (my_side_winning) {
       if (worthless_card->trump()) {
         // I'm playing a trump
+
+        // If I can't win, don't try
+        if (winning_play == plays.end()) {
+          return *worthless_card;
+        }
+
         if (ai.guaranteed_to_win_against(
             trick.winning_card(), opponents_yet_to_play)) {
           // We are sure to win; play low
