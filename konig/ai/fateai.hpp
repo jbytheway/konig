@@ -28,6 +28,8 @@ class FateAi : public Ai {
     bool guess_is_partner(PlayPosition const) const;
     bool guess_is_on_my_side(PlayPosition const) const;
     bool had_first_round(Suit const s) const;
+    std::set<CardFate> fates_of(Card const&) const;
+    std::set<CardFate> fates_of(TrumpRank const) const;
     std::pair<Fates::iterator, Fates::iterator> fates_of(Suit const);
     std::pair<Fates::const_iterator, Fates::const_iterator>
       fates_of(Suit const) const;

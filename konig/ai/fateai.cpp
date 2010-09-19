@@ -179,6 +179,16 @@ bool FateAi::had_first_round(Suit const s) const
   return had_first_round_[s];
 }
 
+std::set<CardFate> FateAi::fates_of(Card const& card) const
+{
+  return fates_.find(card)->second;
+}
+
+std::set<CardFate> FateAi::fates_of(TrumpRank const rank) const
+{
+  return fates_of(Card(rank));
+}
+
 std::pair<FateAi::Fates::iterator, FateAi::Fates::iterator>
 FateAi::fates_of(Suit const s)
 {
