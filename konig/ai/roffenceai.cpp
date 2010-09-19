@@ -88,7 +88,7 @@ Cards ROffenceAi::discard(FateAi const& ai)
     (&arg1)->*&SuitProfile::size
   );
   std::vector<size_t> cumulative(profiles.size());
-  std::accumulate(sizes.begin(), sizes.end(), cumulative.begin());
+  std::partial_sum(sizes.begin(), sizes.end(), cumulative.begin());
   auto start = std::find_if(cumulative.begin(), cumulative.end(), arg1);
   auto finish = std::find_if(cumulative.begin(), cumulative.end(), arg1 <= 3);
   size_t const max_voids_gainable = finish-start;
