@@ -102,6 +102,7 @@ Cards ROffenceAi::discard(FateAi const& ai)
     default:
       KONIG_FATAL("not implemented; max_voids=" << max_voids_gainable);
   }
+  assert(discard.size() <= 3);
   if (discard.size() == 3) return discard;
   // We've added as many voids as possible, but still need to discard more
   // cards.  So we'll discard the most valuable cards we're allowed to
