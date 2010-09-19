@@ -4,6 +4,8 @@
 
 #include <konig/fatal.hpp>
 #include <konig/utility/intersects.hpp>
+#include <konig/utility/intersection_into.hpp>
+#include <konig/utility/union_into.hpp>
 
 namespace konig { namespace ai {
 
@@ -239,6 +241,20 @@ Cards FateAi::trumps_out() const
 bool FateAi::trumps_known_exhausted() const
 {
   return trumps_out().empty();
+}
+
+size_t FateAi::num_players_known_out_of_trumps() const
+{
+  std::set<CardFate> result;
+  BOOST_FOREACH(auto const& p, fates_of(Suit::trumps)) {
+    std::set<CardFate> const& fates = p.second;
+    utility::union_into(result, fates);
+  }
+  std::set<CardFate> hands =
+      boost::assign::list_of
+        (CardFate::hand0)(CardFate::hand1)(CardFate::hand2)(CardFate::hand3);
+  utility::intersection_into(result, hands);
+  return 4-result.size();
 }
 
 bool FateAi::guaranteed_to_win_against(

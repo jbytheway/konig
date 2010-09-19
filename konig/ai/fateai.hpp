@@ -36,6 +36,7 @@ class FateAi : public Ai {
     Cards trumps_in(std::set<CardFate> const&) const;
     Cards trumps_out() const;
     bool trumps_known_exhausted() const;
+    size_t num_players_known_out_of_trumps() const;
     bool
       guaranteed_to_win_against(Card const&, std::set<CardFate> const&) const;
     bool guaranteed_to_win_against(Card const&, PlayPosition const) const;
