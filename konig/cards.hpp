@@ -166,6 +166,10 @@ class Cards : public std::set<Card> {
       }
     }
 
+    void erase(TrumpRank rank) {
+      erase(Card(rank));
+    }
+
     bool contains(const Cards& c) {
       BOOST_FOREACH(const Card card, c) {
         if (!count(card)) return false;
