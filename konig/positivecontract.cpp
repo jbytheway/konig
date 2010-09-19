@@ -131,6 +131,11 @@ PlayResult PositiveContract::play(
           boost::bind(&Player::notify_talon_choice, _1, talon_half)
         );
 
+      if (debug_stream) {
+        *debug_stream << "chosen talon half is " << talon[talon_half] <<
+          std::endl;
+      }
+
       Cards& chosen_half = talon[talon_half];
       Cards& rejected_half = talon[!talon_half];
       declarers_hand.insert(chosen_half);
@@ -162,6 +167,10 @@ PlayResult PositiveContract::play(
         continue;
       // All conditions OK
       break;
+    }
+
+    if (debug_stream) {
+      *debug_stream << "discard is " << discard << std::endl;
     }
 
     declarers_hand.erase(discard);
