@@ -108,6 +108,9 @@ Card TAi::play_card(FateAi const& ai)
     if (end_pips != plays.begin()) {
       return *std::max_element(plays.begin(), end_pips, Card::CompareRanks());
     }
+
+    // Or finally a small trump
+    return *plays.begin();
   } else {
     // I am following to the trick
     Suit s = trick.suit();
