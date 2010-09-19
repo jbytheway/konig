@@ -90,19 +90,24 @@ Card TAi::play_card(FateAi const& ai)
       if (best->first >= 0) return best->second;
     }
 
-    // Try to get rid of a big trump
-    Card candidate = *boost::prior(plays.end());
-    if (candidate.trump()) {
-      return candidate;
+    // In the early part of the hand try to get rid of a big trump
+    if (ai.num_players_known_out_of_trumps() < 2) {
+      Card candidate = *boost::prior(plays.end());
+      if (candidate.trump()) {
+        return candidate;
+      }
     }
 
-    // No trumps; try one of the less profitable king/queen proposals
+    // No good trumps; try one of the less profitable king/queen proposals
     if (!candidates.empty()) {
       return std::max_element(candidates.begin(), candidates.end())->second;
     }
 
-    // Failing all else, just play the pip of biggest rank
-    return *std::max_element(plays.begin(), plays.end(), Card::CompareRanks());
+    // Try the pip of biggest rank
+    auto end_pips = plays.lower_bound(Suit::trumps);
+    if (end_pips != plays.begin()) {
+      return *std::max_element(plays.begin(), end_pips, Card::CompareRanks());
+    }
   } else {
     // I am following to the trick
     Suit s = trick.suit();
