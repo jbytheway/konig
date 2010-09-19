@@ -51,7 +51,7 @@ std::string PositiveContract::outcome_name(
   ) const
 {
   std::string result = bid_name();
-  if (partnership_ && num_achievers == 1) result += "3";
+  if (partnership_ && num_achievers == 1) result += "t";
   result += announcedness.string(Achievement::neutral);
   if (achievement == Achievement::off) result += "/";
   return result;

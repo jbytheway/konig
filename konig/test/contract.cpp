@@ -49,16 +49,16 @@ BOOST_AUTO_TEST_CASE(contract_names_correct)
         ), "rx/");
     BOOST_CHECK_EQUAL(contract->outcome_name(
           1, Announcedness::announced, Achievement::made
-        ), "r3");
+        ), "rt");
     BOOST_CHECK_EQUAL(contract->outcome_name(
           1, Announcedness::announced, Achievement::off
-        ), "r3/");
+        ), "rt/");
     BOOST_CHECK_EQUAL(contract->outcome_name(
           1, Announcedness::kontraed, Achievement::made
-        ), "r3x");
+        ), "rtx");
     BOOST_CHECK_EQUAL(contract->outcome_name(
           1, Announcedness::kontraed, Achievement::off
-        ), "r3x/");
+        ), "rtx/");
   }
   {
     Contract::ConstPtr contract = Contract::bettel();
