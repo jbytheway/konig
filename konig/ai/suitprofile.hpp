@@ -8,6 +8,7 @@
 namespace konig { namespace ai {
 
 struct SuitProfile {
+  /// Makes a list of profiles, sorted (not stably) by size and then points
   static std::vector<SuitProfile> make_profiles(Cards const&);
 
   size_t size;
