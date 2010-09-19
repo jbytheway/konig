@@ -156,8 +156,9 @@ Card TAi::play_card(FateAi const& ai)
       if (plays.begin()->suit() == Suit::trumps) {
         // I am roughing
 
-        if (hands_yet_to_play.empty()) {
-          // I'm last to play, so I am certain to win.  Play big
+        Card minimal = *plays.begin();
+        if (ai.guaranteed_to_win_against(minimal, hands_yet_to_play)) {
+          // I am certain to win.  Play big
           return *best_to_get_rid_of;
         }
       } else {
