@@ -232,8 +232,26 @@ Card OffenceAi::play_card(FateAi const& ai)
     if (my_side_winning) {
       if (worthless_card->trump()) {
         // I'm playing a trump
+        if (ai.guaranteed_to_win_against(
+            trick.winning_card(), opponents_yet_to_play)) {
+          // We are sure to win; play low
+          return *worthless_card;
+        }
+
         if (s == Suit::trumps) {
-          // I'm following in trumps
+          // I'm following in trumps; we are already winning but not guaranteed
+          // to win with the trick as it stands.
+
+          // If my partner who's winning played a big trump, then play
+          // something worthless
+          if (trick.winning_card().trump() &&
+            trick.winning_card().trump_rank() >= big_trump_threshold_) {
+            return *worthless_card;
+          }
+
+          // Play a big trump to maintain control
+          // TODO: this is somewhat inconsistent with the roughing branch below
+          return *boost::prior(plays.end());
         } else {
           // I'm roughing
 
