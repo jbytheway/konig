@@ -232,6 +232,33 @@ Card OffenceAi::play_card(FateAi const& ai)
     if (my_side_winning) {
       if (worthless_card->trump()) {
         // I'm playing a trump
+        if (s == Suit::trumps) {
+          // I'm following in trumps
+        } else {
+          // I'm roughing
+
+          // Trump first round if I have a void
+          if (void_waiting_[s]) {
+            void_waiting_[s] = false;
+            return *winning_play;
+          }
+
+          // If my partner who's winning played a big trump, then play
+          // something worthless
+          if (trick.winning_card().trump() &&
+            trick.winning_card().trump_rank() >= big_trump_threshold_) {
+            return *worthless_card;
+          }
+
+          // If the trick's worth much already, play a big trump
+          if (trick.cards_so_far().total_card_points() >=
+            valuable_card_points_) {
+            return *boost::prior(plays.end());
+          }
+
+          // Otherwise, play minimally
+          return *worthless_card;
+        }
       } else {
         // I'm playing a suit card
         auto most_points = std::max_element(

@@ -16,6 +16,7 @@ BOOST_PARAMETER_NAME(trumps_out_to_abort_pagat)
 BOOST_PARAMETER_NAME(trumps_out_to_abort_bird)
 BOOST_PARAMETER_NAME(min_desired_rippiness)
 BOOST_PARAMETER_NAME(valuable_card_points)
+BOOST_PARAMETER_NAME(big_trump_threshold)
 
 namespace detail {
 
@@ -26,7 +27,8 @@ struct OffenceAiImpl {
     king_rippiness_penalty_(args[_king_rippiness_penalty | 1]),
     trumps_out_to_abort_pagat_(args[_trumps_out_to_abort_pagat | 2]),
     min_desired_rippiness_(args[_min_desired_rippiness | 4]),
-    valuable_card_points_(args[_valuable_card_points | 10])
+    valuable_card_points_(args[_valuable_card_points | 10]),
+    big_trump_threshold_(args[_big_trump_threshold | 10])
   {
     // FIXME: It would be nice to have the vectors initialized above, but I
     // can't make that work; it should be possible with brace-initializers, I
@@ -58,6 +60,7 @@ struct OffenceAiImpl {
   std::vector<Count> trumps_out_to_abort_bird_;
   Rippiness const min_desired_rippiness_;
   CardPoints const valuable_card_points_;
+  TrumpRank const big_trump_threshold_;
 };
 
 }
