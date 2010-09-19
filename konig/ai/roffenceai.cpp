@@ -96,6 +96,9 @@ Cards ROffenceAi::discard(FateAi const& ai)
   switch (max_voids_gainable) {
     case 0:
       break;
+    case 1:
+      discard.insert(promising_cards.equal_range(profiles[0].suit));
+      break;
     default:
       KONIG_FATAL("not implemented; max_voids=" << max_voids_gainable);
   }
