@@ -89,18 +89,11 @@ Cards ROffenceAi::discard(FateAi const& ai)
   );
   std::vector<size_t> cumulative(profiles.size());
   std::partial_sum(sizes.begin(), sizes.end(), cumulative.begin());
-  auto start = std::find_if(cumulative.begin(), cumulative.end(), arg1);
+  assert(cumulative.empty() || cumulative[0] > 0);
   auto finish = std::find_if(cumulative.begin(), cumulative.end(), arg1 > 3);
-  size_t const max_voids_gainable = finish-start;
   Cards discard;
-  switch (max_voids_gainable) {
-    case 0:
-      break;
-    case 1:
-      discard.insert(promising_cards.equal_range(profiles[0].suit));
-      break;
-    default:
-      KONIG_FATAL("not implemented; max_voids=" << max_voids_gainable);
+  for (size_t i=0; i<size_t(finish-cumulative.begin()); ++i) {
+    discard.insert(promising_cards.equal_range(profiles[i].suit));
   }
   assert(discard.size() <= 3);
   if (discard.size() == 3) return discard;
