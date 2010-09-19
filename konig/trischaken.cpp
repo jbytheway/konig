@@ -109,8 +109,7 @@ PlayResult Trischaken::play(
     }
     // except when declarer was the only one to take the most, in which case
     // everything is inverted
-    if (1 == std::accumulate(achievers.begin(), achievers.end(), 0) &&
-        achievers[declarer_position] == false) {
+    if (!achievers[0] && achievers[1] && achievers[2] && achievers[3]) {
       std::for_each(achievers.begin(), achievers.end(), arg1 = !arg1);
     }
   }
