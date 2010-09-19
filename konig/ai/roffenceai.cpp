@@ -129,6 +129,7 @@ Cards ROffenceAi::discard(FateAi const& ai)
       auto best = available.upper_bound(Card(TrumpRank::kakadu));
       if (best == available.end()) {
         // We are force to discard a bird; prefer uhu
+        // (this is actually impossible, but whatever...)
         best = available.begin();
       }
       discard.insert(*best);
