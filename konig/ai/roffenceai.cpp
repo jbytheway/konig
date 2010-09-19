@@ -70,7 +70,7 @@ Cards ROffenceAi::discard(FateAi const& ai)
     std::inserter(hand, hand.end())
   );
   assert(hand.size() == 15);
-  Cards promising_cards(hand.begin(), hand.end());
+  Cards promising_cards(hand);
   promising_cards.erase(Suit::trumps);
   // Probably don't want to discard from a suit in which we hold the king, of
   // which we called
