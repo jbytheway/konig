@@ -121,7 +121,8 @@ Cards ROffenceAi::discard(FateAi const& ai)
     best_options.pop_back();
   }
   if (discard.size() == 3) return discard;
-  KONIG_FATAL("trump discard not implemeted");
+  KONIG_FATAL("trump discard not implemeted\nhand " <<
+    hand << " discard " << discard);
 }
 
 }}
