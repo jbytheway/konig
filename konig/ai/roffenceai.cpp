@@ -99,23 +99,43 @@ Cards ROffenceAi::discard(FateAi const& ai)
   if (discard.size() == 3) return discard;
   // We've added as many voids as possible, but still need to discard more
   // cards.  So we'll discard the most valuable cards we're allowed to
-  Cards available = hand;
-  available.erase(discard);
-  available.erase(Suit::trumps);
-  available.erase(SuitRank::king);
+  {
+    Cards available = hand;
+    available.erase(discard);
+    available.erase(Suit::trumps);
+    available.erase(SuitRank::king);
 
-  std::vector<Card> best_options(available.begin(), available.end());
-  std::sort(
-    best_options.begin(), best_options.end(),
-    Card::CompareRanksReversePips()
-  );
-  while (discard.size() < 3 && !best_options.empty()) {
-    discard.insert(best_options.back());
-    best_options.pop_back();
+    std::vector<Card> best_options(available.begin(), available.end());
+    std::sort(
+      best_options.begin(), best_options.end(),
+      Card::CompareRanksReversePips()
+    );
+    while (discard.size() < 3 && !best_options.empty()) {
+      discard.insert(best_options.back());
+      best_options.pop_back();
+    }
   }
-  if (discard.size() == 3) return discard;
-  KONIG_FATAL("trump discard not implemeted\nhand " <<
-    hand << " discard " << discard);
+  assert (discard.size() <= 3);
+  if (discard.size() < 3) {
+    // We must discard some trumps
+    Cards available = hand;
+    available.erase(discard);
+    available.erase(TrumpRank::pagat);
+    available.erase(TrumpRank::mond);
+    available.erase(TrumpRank::skus);
+    available.erase(SuitRank::king);
+
+    while (discard.size() < 3) {
+      auto best = available.upper_bound(Card(TrumpRank::kakadu));
+      if (best == available.end()) {
+        // We are force to discard a bird; prefer uhu
+        best = available.begin();
+      }
+      discard.insert(*best);
+      available.erase(*best);
+    }
+  }
+  return discard;
 }
 
 }}
