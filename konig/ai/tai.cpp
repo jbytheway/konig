@@ -95,6 +95,14 @@ Card TAi::play_card(FateAi const& ai)
     if (candidate.trump()) {
       return candidate;
     }
+
+    // No trumps; try one of the less profitable king/queen proposals
+    if (!candidates.empty()) {
+      return std::max_element(candidates.begin(), candidates.end())->second;
+    }
+
+    // Failing all else, just play the pip of biggest rank
+    return *std::max_element(plays.begin(), plays.end(), Card::CompareRanks());
   } else {
     // I am following to the trick
     Suit s = trick.suit();
