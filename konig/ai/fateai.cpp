@@ -9,16 +9,16 @@
 
 namespace konig { namespace ai {
 
-FateAi::FateAi() :
-  called_suit_(Suit::trumps)
+FateAi::FateAi()
 {
-  std::fill(had_first_round_.begin(), had_first_round_.end(), false);
 }
 
 void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
 {
   Ai::start_game(std::move(rules), pos, std::move(hand));
 
+  std::fill(had_first_round_.begin(), had_first_round_.end(), false);
+  called_suit_ = Suit::trumps;
   fates_.clear();
   std::vector<Card> deck;
   Card::make_deck(std::back_inserter(deck));
