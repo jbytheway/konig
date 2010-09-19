@@ -161,6 +161,9 @@ Card TAi::play_card(FateAi const& ai)
           // I am certain to win.  Play big
           return *best_to_get_rid_of;
         }
+
+        // Play small and hope
+        return minimal;
       } else {
         // I am following to a suit trick
         if (hands_yet_to_play.empty()) {
