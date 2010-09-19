@@ -20,7 +20,7 @@ Achievement Feat::result_for(
   switch (value_) {
     case game:
       assert(feat_offensive);
-      return contract->result_for(declarers_cards);
+      return contract->result_for(declarers_cards, tricks);
     case forty_five:
       // Remember to cater for 45 via valat
       return

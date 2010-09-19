@@ -122,7 +122,9 @@ PlayResult Trischaken::play(
 
 Announcednesses Trischaken::initial_announcednesses() const
 {
-  return Announcednesses();
+  Announcednesses result;
+  result.insert(Feat::game, true, Announcedness::announced);
+  return result;
 }
 
 bool Trischaken::valid_first_announcements(
@@ -132,14 +134,52 @@ bool Trischaken::valid_first_announcements(
   return announcements.empty();
 }
 
-int Trischaken::value_of(Feat, Announcedness, Achievement) const
+int Trischaken::value_of(Feat f, Announcedness an, Achievement ac) const
 {
-  KONIG_FATAL("not implemented");
+  assert(f == Feat::game);
+  assert(an == Announcedness::announced);
+  switch (ac) {
+    case Achievement::made:
+      return 1;
+    case Achievement::off:
+      return -2;
+    default:
+      KONIG_FATAL("unexpected achievement");
+  }
 }
 
-Achievement Trischaken::result_for(const Cards& /*declarers_cards*/) const
+Achievement Trischaken::result_for(
+  const Cards& /*declarers_cards*/,
+  const std::vector<Trick>& tricks
+) const
 {
-  KONIG_FATAL("interface does not support this yet");
+  // HACK: Have to stupidly repeat the logic above because Trischaken is so
+  // differently scored from the other contracts...
+  std::array<CardPoints, 4> card_points = {{0, 0, 0, 0}};
+  BOOST_FOREACH(Trick const& t, tricks) {
+    card_points[t.winner()] += Cards(t.cards()).total_card_points();
+  }
+  // Divide by three (round to nearest) to get 'honest' card points
+  BOOST_FOREACH(CardPoints& p, card_points) {
+    p = (p+1)/3;
+  }
+  auto p = boost::minmax_element(card_points.begin(), card_points.end());
+  CardPoints min = *p.first, max = *p.second;
+  if (min == 0) {
+    // Winners are those who took no tricks
+    return Achievement::made;
+  } else {
+    // Everyone took a trick, so winners are those who didn't take the most
+    // except when declarer was the only one to take the most, in which case
+    // everything is inverted (Note we are taking advantage of the fact that
+    // declarer is always forehand for Trischaken)
+    if (card_points[0] == max && card_points[1] < max &&
+        card_points[2]  < max && card_points[3] < max) {
+      return Achievement::off;
+    } else {
+      return Achievement::made;
+    }
+  }
 }
 
 }

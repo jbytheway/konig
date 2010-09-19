@@ -60,7 +60,10 @@ class Contract : public boost::enable_shared_from_this<Contract> {
         const std::vector<Announcement>&
       ) const = 0;
 
-    virtual Achievement result_for(const Cards& declarers_cards) const = 0;
+    virtual Achievement result_for(
+      const Cards& declarers_cards,
+      const std::vector<Trick>& tricks
+    ) const = 0;
 
     virtual int value_of(Feat, Announcedness, Achievement) const = 0;
 

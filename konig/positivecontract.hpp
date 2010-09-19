@@ -58,7 +58,10 @@ class PositiveContract : public Contract {
 
     virtual int value_of(Feat, Announcedness, Achievement) const;
 
-    virtual Achievement result_for(const Cards& declarers_cards) const;
+    virtual Achievement result_for(
+      const Cards& declarers_cards,
+      const std::vector<Trick>& tricks
+    ) const;
   private:
     PositiveContract() = default; // For serialization
 

@@ -106,7 +106,10 @@ int NegativeContract::value_of(Feat f, Announcedness an, Achievement ac) const
   return value;
 }
 
-Achievement NegativeContract::result_for(const Cards& declarers_cards) const
+Achievement NegativeContract::result_for(
+  const Cards& declarers_cards,
+  const std::vector<Trick>& /*tricks*/
+) const
 {
   assert(declarers_cards.size() % 4 == 0);
   uint8_t declarers_tricks = declarers_cards.size() / 4;

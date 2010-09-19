@@ -283,7 +283,10 @@ int PositiveContract::value_of(Feat f, Announcedness an, Achievement ac) const
   return value;
 }
 
-Achievement PositiveContract::result_for(const Cards& declarers_cards) const
+Achievement PositiveContract::result_for(
+  const Cards& declarers_cards,
+  const std::vector<Trick>& /*tricks*/
+) const
 {
   return declarers_cards.total_card_points() >= 36*3-1 ?
     Achievement::made : Achievement::off;
