@@ -86,6 +86,7 @@ class OffenceAi : public PlayAi, private detail::OffenceAiImpl {
 
     virtual void reset(FateAi const&);
     virtual std::vector<Announcement> announce(FateAi const&);
+    virtual void play_start(FateAi const&);
     virtual Card play_card(FateAi const&);
   private:
     uint8_t num_voids_;

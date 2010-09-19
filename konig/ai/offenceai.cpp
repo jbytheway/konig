@@ -6,6 +6,17 @@ namespace konig { namespace ai {
 
 void OffenceAi::reset(FateAi const& ai)
 {
+}
+
+std::vector<Announcement> OffenceAi::announce(FateAi const&)
+{
+  return std::vector<Announcement>();
+}
+
+void OffenceAi::play_start(FateAi const& ai)
+{
+  PlayAi::play_start(ai);
+
   num_voids_ = 0;
   for (Suit s = Suit::min; s<Suit::trumps; ++s) {
     Cards in_suit(ai.hand().equal_range(s));
@@ -37,11 +48,6 @@ void OffenceAi::reset(FateAi const& ai)
   } else {
     lowest_trump_to_lead_ = *boost::next(non_bird_trumps.begin(), num_voids_);
   }
-}
-
-std::vector<Announcement> OffenceAi::announce(FateAi const&)
-{
-  return std::vector<Announcement>();
 }
 
 Card OffenceAi::play_card(FateAi const& ai)
