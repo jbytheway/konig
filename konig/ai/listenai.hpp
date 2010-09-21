@@ -5,7 +5,7 @@
 
 namespace konig { namespace ai {
 
-class ListenAi : public FateAi {
+class KONIG_AI_API ListenAi : public FateAi {
   public:
     virtual Bid bid();
     virtual KingCall call_king();

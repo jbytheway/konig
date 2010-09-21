@@ -13,11 +13,12 @@
 
 #include <konig/message.hpp>
 #include <konig/protocol.hpp>
+#include <konig/client/api.hpp>
 #include <konig/client/clientinterface.hpp>
 
 namespace konig { namespace client {
 
-class ServerInterface {
+class KONIG_CLIENT_API ServerInterface {
   public:
     ServerInterface(asio::io_service&, ClientInterface&);
     ~ServerInterface();

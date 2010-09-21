@@ -9,7 +9,7 @@
 
 namespace konig {
 
-class Dealer {
+class KONIG_API Dealer {
   public:
     typedef boost::shared_ptr<Dealer> Ptr;
 

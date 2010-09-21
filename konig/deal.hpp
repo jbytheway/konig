@@ -10,7 +10,7 @@
 
 namespace konig {
 
-class Deal {
+class KONIG_API Deal {
   public:
     template<typename Range>
     explicit Deal(
@@ -86,7 +86,7 @@ Deal::Deal(Range1 hands, Range2 talon) {
   sanity_check();
 }
 
-std::ostream& operator<<(std::ostream&, const Deal&);
+KONIG_API std::ostream& operator<<(std::ostream&, const Deal&);
 
 }
 

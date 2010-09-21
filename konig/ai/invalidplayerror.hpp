@@ -3,7 +3,7 @@
 
 namespace konig { namespace ai {
 
-class InvalidPlayError : public std::logic_error {
+class KONIG_AI_API InvalidPlayError : public std::logic_error {
   public:
     InvalidPlayError(std::string const& m) :
       std::logic_error(m)

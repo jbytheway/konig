@@ -1,12 +1,13 @@
 #ifndef KONIG__ANNOUNCEMENT_HPP
 #define KONIG__ANNOUNCEMENT_HPP
 
+#include <konig/api.hpp>
 #include <konig/feat.hpp>
 #include <konig/announcedness.hpp>
 
 namespace konig {
 
-struct Announcement {
+struct KONIG_API Announcement {
   friend class boost::serialization::access;
   public:
     Announcement() = default; // For serialization

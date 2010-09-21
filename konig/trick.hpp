@@ -10,7 +10,7 @@ namespace konig {
 
 class ContractAndAnnouncements;
 
-class Trick {
+class KONIG_API Trick {
   public:
     Trick(PlayPosition leader, bool rising_rule, bool hold_pagat) :
       leader_(leader),
@@ -76,7 +76,7 @@ class Trick {
     uint8_t winning_card_;
 };
 
-std::ostream& operator<<(std::ostream&, const Trick&);
+KONIG_API std::ostream& operator<<(std::ostream&, const Trick&);
 
 }
 

@@ -13,7 +13,7 @@
 
 namespace konig {
 
-class Game {
+class KONIG_API Game {
   public:
     template<typename ForwardRange>
     Game(const Ruleset& rules, const ForwardRange& players, Deal deal) :

@@ -4,9 +4,11 @@
 #include <cassert>
 #include <ostream>
 
+#include <konig/api.hpp>
+
 namespace konig {
 
-extern std::ostream& error_stream;
+extern KONIG_API std::ostream& error_stream;
 
 }
 

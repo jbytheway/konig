@@ -6,11 +6,12 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/nvp.hpp>
 
+#include <konig/api.hpp>
 #include <konig/core.hpp>
 
 namespace konig {
 
-class Bid {
+class KONIG_API Bid {
   friend class boost::serialization::access;
   public:
     typedef std::int32_t value_type;

@@ -6,13 +6,14 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/nvp.hpp>
 
+#include <konig/api.hpp>
 #include <konig/suit.hpp>
 #include <konig/trumprank.hpp>
 #include <konig/suitrank.hpp>
 
 namespace konig {
 
-class Card {
+class KONIG_API Card {
   friend class boost::serialization::access;
   public:
     template<typename OutputIterator>

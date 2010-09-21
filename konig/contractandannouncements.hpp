@@ -12,7 +12,7 @@
 
 namespace konig {
 
-class ContractAndAnnouncements {
+class KONIG_API ContractAndAnnouncements {
   public:
     ContractAndAnnouncements(
         Contract::ConstPtr = Contract::ConstPtr(),

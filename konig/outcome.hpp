@@ -3,6 +3,7 @@
 
 #include <map>
 
+#include <konig/api.hpp>
 #include <konig/achievement.hpp>
 #include <konig/feat.hpp>
 #include <konig/announcedness.hpp>
@@ -11,7 +12,7 @@ namespace konig {
 
 class Contract;
 
-class Outcome {
+class KONIG_API Outcome {
   public:
     typedef std::map<
         std::pair<Feat, bool>,
@@ -38,7 +39,7 @@ class Outcome {
     Results results_;
 };
 
-std::ostream& operator<<(std::ostream&, const Outcome&);
+KONIG_API std::ostream& operator<<(std::ostream&, const Outcome&);
 
 }
 

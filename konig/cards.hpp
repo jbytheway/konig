@@ -15,7 +15,7 @@
 
 namespace konig {
 
-class Cards : public std::set<Card> {
+class KONIG_API Cards : public std::set<Card> {
   friend class boost::serialization::access;
   public:
     static Cards from_string(std::string const&);
@@ -193,7 +193,7 @@ class Cards : public std::set<Card> {
     }
 };
 
-std::ostream& operator<<(std::ostream&, const Cards&);
+KONIG_API std::ostream& operator<<(std::ostream&, const Cards&);
 
 // HACK: This should go once boost::serialization supports std::array natively
 template<typename Archive, size_t N>

@@ -8,7 +8,7 @@ namespace konig { namespace ai {
 
 // Wrapper on top of Ai that also keeps track of the possible fates of each
 // card in the deck
-class FateAi : public Ai {
+class KONIG_AI_API FateAi : public Ai {
   public:
     typedef std::map<Card, std::set<CardFate>> Fates;
 

@@ -6,11 +6,12 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/nvp.hpp>
 
+#include <konig/api.hpp>
 #include <konig/core.hpp>
 
 namespace konig {
 
-class KingCall {
+class KONIG_API KingCall {
   friend class boost::serialization::access;
   public:
     enum internal_enum {

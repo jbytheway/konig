@@ -16,7 +16,7 @@ namespace konig {
 
 class Contract;
 
-class Contracts {
+class KONIG_API Contracts {
   friend class boost::serialization::access;
   public:
     Contracts() : reserved_bids_(0) {}

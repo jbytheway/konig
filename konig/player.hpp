@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <konig/api.hpp>
 #include <konig/bid.hpp>
 #include <konig/ruleset.hpp>
 #include <konig/cards.hpp>
@@ -12,7 +13,7 @@
 
 namespace konig {
 
-class Player {
+class KONIG_API Player {
   public:
     typedef boost::shared_ptr<Player> Ptr;
 

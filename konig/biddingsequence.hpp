@@ -8,7 +8,7 @@
 
 namespace konig {
 
-class BiddingSequence {
+class KONIG_API BiddingSequence {
   public:
     BiddingSequence(const Contracts& contracts) :
       contracts_(contracts)

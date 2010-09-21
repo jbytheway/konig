@@ -8,7 +8,7 @@
 
 namespace konig {
 
-class Ruleset {
+class KONIG_API Ruleset {
   friend class boost::serialization::access;
   public:
     Ruleset() {}

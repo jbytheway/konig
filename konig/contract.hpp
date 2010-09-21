@@ -19,7 +19,7 @@ namespace konig {
 class ContractAndAnnouncements;
 class Player;
 
-class Contract : public boost::enable_shared_from_this<Contract> {
+class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
   friend class boost::serialization::access;
   public:
     typedef boost::shared_ptr<Contract> Ptr;
