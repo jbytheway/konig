@@ -86,19 +86,28 @@ BOOST_AUTO_TEST_CASE(contract_names_correct)
         contract->contract_name(1, Announcedness::announced), "t"
       );
     BOOST_CHECK_EQUAL(contract->outcome_name(
-          1, Announcedness::announced, Achievement::made
-        ), "t");
+          1, Announcedness::kontraed, Achievement::off
+        ), "tx");
     BOOST_CHECK_EQUAL(contract->outcome_name(
           1, Announcedness::announced, Achievement::off
+        ), "t");
+    BOOST_CHECK_EQUAL(contract->outcome_name(
+          1, Announcedness::announced, Achievement::made
         ), "t+");
     BOOST_CHECK_EQUAL(contract->outcome_name(
-          2, Announcedness::announced, Achievement::made
+          2, Announcedness::announced, Achievement::off
         ), "t2");
     BOOST_CHECK_EQUAL(contract->outcome_name(
-          3, Announcedness::announced, Achievement::made
+          2, Announcedness::announced, Achievement::made
+        ), "t2+");
+    BOOST_CHECK_EQUAL(contract->outcome_name(
+          3, Announcedness::announced, Achievement::off
         ), "t3");
     BOOST_CHECK_EQUAL(contract->outcome_name(
-          4, Announcedness::announced, Achievement::made
+          3, Announcedness::announced, Achievement::made
+        ), "t3+");
+    BOOST_CHECK_EQUAL(contract->outcome_name(
+          4, Announcedness::announced, Achievement::off
         ), "t4");
   }
 }

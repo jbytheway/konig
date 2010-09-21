@@ -31,31 +31,36 @@ std::string Trischaken::contract_name(
 
 std::string Trischaken::outcome_name(
     uint8_t const num_achievers,
-    Announcedness const /*announcedness*/,
+    Announcedness const announcedness,
     Achievement const achievement
   ) const
 {
   std::string result = bid_name();
-  if (achievement == Achievement::off) {
-    result += "+";
+  std::string suffix;
+  if (announcedness == Announcedness::kontraed) {
+    suffix = "x";
+  } else if (achievement == Achievement::made) {
+    suffix = "+";
   } else {
-    switch (num_achievers) {
-      case 1:
-        break;
-      case 2:
-        result += "2";
-        break;
-      case 3:
-        result += "3";
-        break;
-      case 4:
-        result += "4";
-        break;
-      default:
-        KONIG_FATAL("invalid num_achievers");
-    }
+    suffix = "";
   }
-  return result;
+
+  switch (num_achievers) {
+    case 1:
+      break;
+    case 2:
+      result += "2";
+      break;
+    case 3:
+      result += "3";
+      break;
+    case 4:
+      result += "4";
+      break;
+    default:
+      KONIG_FATAL("invalid num_achievers");
+  }
+  return result + suffix;
 }
 
 PlayResult Trischaken::play(
@@ -103,14 +108,14 @@ PlayResult Trischaken::play(
       achievers[p] = card_points[p] == 0;
     }
   } else {
-    // Everyone took a trick, so winners are those who didn't take the most
+    // Everyone took a trick, so losers are those who took the most
     for (PlayPosition p = position_forehand; p != position_max; ++p) {
-      achievers[p] = card_points[p] != max;
+      achievers[p] = card_points[p] == max;
     }
-    // except when declarer was the only one to take the most, in which case
-    // everything is inverted
-    if (!achievers[0] && achievers[1] && achievers[2] && achievers[3]) {
-      std::for_each(achievers.begin(), achievers.end(), arg1 = !arg1);
+    // When declarer was the only one to take the most, it counts like a kontra
+    if (achievers[0] && !achievers[1] && !achievers[2] && !achievers[3]) {
+      Announcement an(Feat::game, Announcedness::kontraed, false);
+      whole_contract.add(std::vector<Announcement>(1, an));
     }
   }
   Outcome outcome =
@@ -136,15 +141,11 @@ bool Trischaken::valid_first_announcements(
 int Trischaken::value_of(Feat f, Announcedness an, Achievement ac) const
 {
   assert(f == Feat::game);
-  assert(an == Announcedness::announced);
-  switch (ac) {
-    case Achievement::made:
-      return 1;
-    case Achievement::off:
-      return -2;
-    default:
-      KONIG_FATAL("unexpected achievement");
-  }
+  assert(ac != Achievement::neutral);
+  assert(an <= Announcedness::kontraed);
+  int value = an.multiplier();
+  if (ac == Achievement::off) value *= -1;
+  return value;
 }
 
 Achievement Trischaken::result_for(
@@ -162,22 +163,13 @@ Achievement Trischaken::result_for(
   BOOST_FOREACH(CardPoints& p, card_points) {
     p = (p+1)/3;
   }
-  auto p = boost::minmax_element(card_points.begin(), card_points.end());
-  CardPoints min = *p.first, max = *p.second;
+  CardPoints min  = *std::min_element(card_points.begin(), card_points.end());
   if (min == 0) {
     // Winners are those who took no tricks
     return Achievement::made;
   } else {
-    // Everyone took a trick, so winners are those who didn't take the most
-    // except when declarer was the only one to take the most, in which case
-    // everything is inverted (Note we are taking advantage of the fact that
-    // declarer is always forehand for Trischaken)
-    if (card_points[0] == max && card_points[1] < max &&
-        card_points[2]  < max && card_points[3] < max) {
-      return Achievement::off;
-    } else {
-      return Achievement::made;
-    }
+    // Everyone took a trick, so losers are those who took the most
+    return Achievement::off;
   }
 }
 
