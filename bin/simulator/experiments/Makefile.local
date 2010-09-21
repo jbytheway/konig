@@ -49,7 +49,8 @@ $$($(1)_RESULTS_NUMS): $(1)/results.%: $(this_srcdir)$(1).exp hands/% \
 		' >> $$@
 	echo >> $$@
 
-$$($(1)_FULL_NUMS): $(1).full.%: $(this_srcdir)$(1).exp hands/% Makefile.local
+$$($(1)_FULL_NUMS): $(1).full.%: \
+		$(this_srcdir)$(1).exp hands/% $(this_srcdir)Makefile.local
 	$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" \
 		-n $(NUM_TRIALS) -s "$$*" -f -g -t- -# > $$@
 
