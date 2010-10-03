@@ -37,62 +37,33 @@ struct PlayCard : SpecificPlayAi::PlayRule {
   }
 };
 
-SpecificPlayAi::SpecificPlayAi(const std::string& play_sequence) :
-  next_bid_(bids_.begin())
+SpecificPlayAi::SpecificPlayAi(const std::string& play_sequence)
 {
   init_play_rules(play_sequence);
 }
 
-SpecificPlayAi::SpecificPlayAi(
-    std::vector<Bid> bids,
-    const std::string& play_sequence
-  ) :
-  bids_(std::move(bids)),
-  next_bid_(bids_.begin())
+SpecificPlayAi::SpecificPlayAi(const std::vector<Card>& play_sequence)
 {
   init_play_rules(play_sequence);
 }
 
-SpecificPlayAi::SpecificPlayAi(
-    std::vector<Bid> bids,
-    const std::vector<Card>& play_sequence
-  ) :
-  bids_(std::move(bids)),
-  next_bid_(bids_.begin())
+void SpecificPlayAi::reset(FateAi const&)
 {
-  init_play_rules(play_sequence);
 }
 
-Bid SpecificPlayAi::bid() {
-  if (next_bid_ == bids_.end()) return Bid::pass;
-  Bid b = *next_bid_;
-  ++next_bid_;
-  return b;
-}
-
-KingCall SpecificPlayAi::call_king() {
-  throw std::logic_error("not implemented");
-}
-
-uint8_t SpecificPlayAi::choose_talon_half() {
-  throw std::logic_error("not implemented");
-}
-
-Cards SpecificPlayAi::discard() {
-  throw std::logic_error("not implemented");
-}
-
-std::vector<Announcement> SpecificPlayAi::announce() {
+std::vector<Announcement> SpecificPlayAi::announce(FateAi const&)
+{
   return std::vector<Announcement>();
 }
 
-Card SpecificPlayAi::play_card() {
-  size_t current_trick = tricks().size() - 1;
+Card SpecificPlayAi::play_card(FateAi const& ai)
+{
+  size_t current_trick = ai.tricks().size() - 1;
   assert(current_trick < 12);
-  Cards legal_plays = this->legal_plays();
+  Cards legal_plays = ai.legal_plays();
   BOOST_FOREACH(const PlayRule::Ptr& p, play_rules_[current_trick]) {
     Card c;
-    if (p->apply(tricks()[current_trick], legal_plays, c)) {
+    if (p->apply(ai.tricks()[current_trick], legal_plays, c)) {
       return c;
     }
   }

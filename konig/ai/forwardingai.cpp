@@ -37,6 +37,14 @@ ForwardingAi::ForwardingAi(std::string const& args) :
   }
 }
 
+ForwardingAi::ForwardingAi(BidAi::Ptr bidder, PlayAi::Ptr player) :
+  debug_(false),
+  auto_play_(false),
+  bidder_(std::move(bidder)),
+  player_(std::move(player))
+{
+}
+
 void ForwardingAi::notify_call_king(KingCall call)
 {
   FateAi::notify_call_king(call);

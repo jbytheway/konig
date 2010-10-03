@@ -23,8 +23,6 @@ Ai::Ptr Ai::create(const std::string& description)
   Ai::Ptr p;
   if (ai_name == "") {
     p.reset(new NoddyAi());
-  } else if (ai_name == "play") {
-    p.reset(new SpecificPlayAi(ai_args));
   } else if (ai_name == "forward") {
     p.reset(new ForwardingAi(ai_args));
   } else {

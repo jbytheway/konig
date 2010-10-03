@@ -8,7 +8,7 @@ namespace konig { namespace ai {
 class BidAi {
   public:
     typedef boost::shared_ptr<BidAi> Ptr;
-    
+
     static Ptr create(std::string const& description);
 
     virtual ~BidAi() = 0;

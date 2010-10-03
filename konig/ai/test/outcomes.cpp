@@ -1,7 +1,9 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <konig/ai/specificbidsai.hpp>
 #include <konig/ai/specificplayai.hpp>
+#include <konig/ai/forwardingai.hpp>
 #include <konig/game.hpp>
 
 #define BOOST_TEST_DYN_LINK
@@ -39,9 +41,9 @@ namespace {
     }
     std::vector<Player::Ptr> players;
     for (size_t i=0; i<4; ++i) {
-      players.push_back(Player::Ptr(
-          new ai::SpecificPlayAi(std::move(bids[i]), std::move(play_seqs[i]))
-      ));
+      BidAi::Ptr bidder(new ai::SpecificBidsAi(std::move(bids[i])));
+      PlayAi::Ptr player(new ai::SpecificPlayAi(std::move(play_seqs[i])));
+      players.push_back(Player::Ptr(new ForwardingAi(bidder, player)));
     }
     Deal deal(hands, talon);
     Game game(rules, players, deal);

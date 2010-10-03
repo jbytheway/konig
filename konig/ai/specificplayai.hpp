@@ -4,22 +4,18 @@
 #include <list>
 #include <random>
 
-#include <konig/ai/ai.hpp>
+#include <konig/ai/playai.hpp>
 
 namespace konig { namespace ai {
 
-class KONIG_AI_API SpecificPlayAi : public Ai {
+class KONIG_AI_API SpecificPlayAi : public PlayAi {
   public:
     SpecificPlayAi(const std::string& play_sequence = "");
-    SpecificPlayAi(std::vector<Bid>, const std::string& play_sequence = "");
-    SpecificPlayAi(std::vector<Bid>, const std::vector<Card>& play_sequence);
+    SpecificPlayAi(const std::vector<Card>& play_sequence);
 
-    virtual Bid bid();
-    virtual KingCall call_king();
-    virtual uint8_t choose_talon_half();
-    virtual Cards discard();
-    virtual std::vector<Announcement> announce();
-    virtual Card play_card();
+    virtual void reset(FateAi const&);
+    virtual std::vector<Announcement> announce(FateAi const&);
+    virtual Card play_card(FateAi const&);
 
     struct PlayRule {
       typedef boost::shared_ptr<PlayRule> Ptr;
@@ -31,8 +27,6 @@ class KONIG_AI_API SpecificPlayAi : public Ai {
     void init_play_rules(const std::string& play_sequence);
 
     std::mt19937 random_engine_;
-    std::vector<Bid> bids_;
-    std::vector<Bid>::iterator next_bid_;
     std::vector<std::list<PlayRule::Ptr> > play_rules_;
 };
 

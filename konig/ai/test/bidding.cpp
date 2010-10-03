@@ -1,13 +1,16 @@
 #include <boost/assign/list_of.hpp>
 
 #include <konig/biddingsequence.hpp>
+#include <konig/ai/specificbidsai.hpp>
 #include <konig/ai/specificplayai.hpp>
+#include <konig/ai/forwardingai.hpp>
 #include <konig/ai/invalidplayerror.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
-using namespace konig;
+namespace konig { namespace ai {
+
 using boost::assign::list_of;
 
 namespace {
@@ -22,7 +25,9 @@ namespace {
     }
     std::vector<Player::Ptr> players;
     BOOST_FOREACH(auto& bid, bids) {
-      players.push_back(Player::Ptr(new ai::SpecificPlayAi(std::move(bid))));
+      BidAi::Ptr bidder(new SpecificBidsAi(std::move(bid)));
+      PlayAi::Ptr player(new SpecificPlayAi());
+      players.push_back(Player::Ptr(new ai::ForwardingAi(bidder, player)));
     }
     // Fake the game start
     Cards fake_hand = Cards::from_string("C:789tJNQK D:789t");
@@ -67,4 +72,6 @@ BOOST_AUTO_TEST_CASE(bidding_results)
                                              ("s")));
   BOOST_CHECK_EQUAL("sd", do_bid_test(list_of("sd")("")("")("")));
 }
+
+}}
 

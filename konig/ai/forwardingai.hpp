@@ -10,6 +10,7 @@ namespace konig { namespace ai {
 class ForwardingAi : public FateAi {
   public:
     ForwardingAi(std::string const& args);
+    ForwardingAi(BidAi::Ptr, PlayAi::Ptr);
 
     virtual void notify_call_king(KingCall);
 
