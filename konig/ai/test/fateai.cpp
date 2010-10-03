@@ -66,10 +66,10 @@ namespace {
     }
   }
 
-  static PlayPosition const p0(PlayPosition(0));
-  static PlayPosition const p1(PlayPosition(1));
-  static PlayPosition const p2(PlayPosition(2));
-  static PlayPosition const p3(PlayPosition(3));
+  PlayPosition const p0(PlayPosition(0));
+  PlayPosition const p1(PlayPosition(1));
+  PlayPosition const p2(PlayPosition(2));
+  PlayPosition const p3(PlayPosition(3));
 
 }
 
