@@ -7,7 +7,6 @@ namespace konig { namespace ai {
 
 class RDefenceAi : public DefenceAi {
   public:
-    virtual std::vector<Announcement> announce(FateAi const&);
   private:
 };
 

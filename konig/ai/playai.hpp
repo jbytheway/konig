@@ -14,11 +14,6 @@ class PlayAi {
     virtual ~PlayAi() = 0;
 
     virtual void reset(FateAi const&) = 0;
-    virtual KingCall call_king(FateAi const&);
-    virtual uint8_t choose_talon_half(FateAi const&);
-    virtual Cards discard(FateAi const&);
-    virtual std::vector<Announcement> announce(FateAi const&) = 0;
-    virtual void play_start(FateAi const&) {}
     virtual Card play_card(FateAi const&) = 0;
   protected:
     PlayAi() = default;

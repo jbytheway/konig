@@ -51,11 +51,6 @@ void SpecificPlayAi::reset(FateAi const&)
 {
 }
 
-std::vector<Announcement> SpecificPlayAi::announce(FateAi const&)
-{
-  return std::vector<Announcement>();
-}
-
 Card SpecificPlayAi::play_card(FateAi const& ai)
 {
   size_t current_trick = ai.tricks().size() - 1;

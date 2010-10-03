@@ -10,11 +10,6 @@ void TAi::reset(FateAi const&)
 {
 }
 
-std::vector<Announcement> TAi::announce(FateAi const&)
-{
-  return std::vector<Announcement>();
-}
-
 Card TAi::play_card(FateAi const& ai)
 {
   Trick const& trick = ai.tricks().back();

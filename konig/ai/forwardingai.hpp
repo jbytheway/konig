@@ -3,6 +3,7 @@
 
 #include <konig/ai/ai.hpp>
 #include <konig/ai/bidai.hpp>
+#include <konig/ai/announcementai.hpp>
 #include <konig/ai/playai.hpp>
 
 namespace konig { namespace ai {
@@ -10,7 +11,7 @@ namespace konig { namespace ai {
 class ForwardingAi : public FateAi {
   public:
     ForwardingAi(std::string const& args);
-    ForwardingAi(BidAi::Ptr, PlayAi::Ptr);
+    ForwardingAi(BidAi::Ptr, AnnouncementAi::Ptr, PlayAi::Ptr);
 
     virtual void notify_call_king(KingCall);
 
@@ -30,6 +31,7 @@ class ForwardingAi : public FateAi {
     bool debug_;
     bool auto_play_;
     BidAi::Ptr bidder_;
+    AnnouncementAi::Ptr announcer_;
     PlayAi::Ptr player_;
 };
 

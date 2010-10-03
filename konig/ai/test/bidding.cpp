@@ -2,6 +2,7 @@
 
 #include <konig/biddingsequence.hpp>
 #include <konig/ai/specificbidsai.hpp>
+#include <konig/ai/specificannouncementsai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/forwardingai.hpp>
 #include <konig/ai/invalidplayerror.hpp>
@@ -26,8 +27,11 @@ namespace {
     std::vector<Player::Ptr> players;
     BOOST_FOREACH(auto& bid, bids) {
       BidAi::Ptr bidder(new SpecificBidsAi(std::move(bid)));
+      AnnouncementAi::Ptr announcer(new SpecificAnnouncementsAi());
       PlayAi::Ptr player(new SpecificPlayAi());
-      players.push_back(Player::Ptr(new ai::ForwardingAi(bidder, player)));
+      players.push_back(Player::Ptr(
+          new ForwardingAi(bidder, announcer, player)
+      ));
     }
     // Fake the game start
     Cards fake_hand = Cards::from_string("C:789tJNQK D:789t");

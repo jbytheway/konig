@@ -4,10 +4,5 @@
 
 namespace konig { namespace ai {
 
-std::vector<Announcement> RDefenceAi::announce(FateAi const&)
-{
-  return std::vector<Announcement>();
-}
-
 }}
 

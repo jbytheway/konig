@@ -14,7 +14,6 @@ class KONIG_AI_API SpecificPlayAi : public PlayAi {
     SpecificPlayAi(const std::vector<Card>& play_sequence);
 
     virtual void reset(FateAi const&);
-    virtual std::vector<Announcement> announce(FateAi const&);
     virtual Card play_card(FateAi const&);
 
     struct PlayRule {

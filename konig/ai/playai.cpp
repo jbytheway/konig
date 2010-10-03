@@ -33,21 +33,6 @@ PlayAi::Ptr PlayAi::create(std::string const& description)
   return p;
 }
 
-KingCall PlayAi::call_king(FateAi const&)
-{
-  KONIG_FATAL("not implemented in " << typeid(*this).name());
-}
-
-uint8_t PlayAi::choose_talon_half(FateAi const&)
-{
-  KONIG_FATAL("not implemented in " << typeid(*this).name());
-}
-
-Cards PlayAi::discard(FateAi const&)
-{
-  KONIG_FATAL("not implemented in " << typeid(*this).name());
-}
-
 PlayAi::~PlayAi() = default;
 
 }}

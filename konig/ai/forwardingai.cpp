@@ -20,9 +20,11 @@ ForwardingAi::ForwardingAi(std::string const& args) :
   auto_play_(false)
 {
   std::string bid_spec;
+  std::string announce_spec;
   std::string play_spec;
   optimal::OptionsParser parser(' ');
   parser.addOption("bid", '\0', &bid_spec);
+  parser.addOption("announce", '\0', &announce_spec);
   parser.addOption("play", '\0', &play_spec);
   parser.addOption("debug", '\0', &debug_);
   std::istringstream is(args);
@@ -30,6 +32,7 @@ ForwardingAi::ForwardingAi(std::string const& args) :
     throw AiError(boost::algorithm::join(parser.getErrors(), "\n"));
   }
   bidder_ = BidAi::create(bid_spec);
+  announcer_ = AnnouncementAi::create(announce_spec);
   if (play_spec == "auto") {
     auto_play_ = true;
   } else {
@@ -37,10 +40,15 @@ ForwardingAi::ForwardingAi(std::string const& args) :
   }
 }
 
-ForwardingAi::ForwardingAi(BidAi::Ptr bidder, PlayAi::Ptr player) :
+ForwardingAi::ForwardingAi(
+  BidAi::Ptr bidder,
+  AnnouncementAi::Ptr announcer,
+  PlayAi::Ptr player
+) :
   debug_(false),
   auto_play_(false),
   bidder_(std::move(bidder)),
+  announcer_(std::move(announcer)),
   player_(std::move(player))
 {
 }
@@ -49,13 +57,10 @@ void ForwardingAi::notify_call_king(KingCall call)
 {
   FateAi::notify_call_king(call);
 
-  // Now the partnerships are known, so non-declarers can have their PlayAis
-  // set
+  // Now the partnerships are known, so non-declarers can have their
+  // AnnouncementAis reset
   if (position() != declarer()) {
-    if (auto_play_) {
-      player_ = pick_auto_ai();
-    }
-    player_->reset(*this);
+    announcer_->reset(*this);
   }
 }
 
@@ -66,22 +71,22 @@ Bid ForwardingAi::bid()
 
 KingCall ForwardingAi::call_king()
 {
-  return player_->call_king(*this);
+  return announcer_->call_king(*this);
 }
 
 uint8_t ForwardingAi::choose_talon_half()
 {
-  return player_->choose_talon_half(*this);
+  return announcer_->choose_talon_half(*this);
 }
 
 Cards ForwardingAi::discard()
 {
-  return player_->discard(*this);
+  return announcer_->discard(*this);
 }
 
 std::vector<Announcement> ForwardingAi::announce()
 {
-  return player_->announce(*this);
+  return announcer_->announce(*this);
 }
 
 Card ForwardingAi::play_card()
@@ -93,13 +98,10 @@ void ForwardingAi::contract_established_hook()
 {
   FateAi::contract_established_hook();
 
-  // If we were asked for an automatic play AI then we need to fill it in here
-  // for declarer, and (in non-partnership contracts) for everyone else
+  // Prepare announcer for declarer, and (in non-partnership contracts) for
+  // everyone else
   if (position() == declarer() || !contract().contract()->is_partnership()) {
-    if (auto_play_) {
-      player_ = pick_auto_ai();
-    }
-    player_->reset(*this);
+    announcer_->reset(*this);
   }
 }
 
@@ -107,7 +109,10 @@ void ForwardingAi::play_start_hook()
 {
   FateAi::play_start_hook();
 
-  player_->play_start(*this);
+  if (auto_play_) {
+    player_ = pick_auto_ai();
+  }
+  player_->reset(*this);
 }
 
 void ForwardingAi::trick_complete_hook()

@@ -2,6 +2,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <konig/ai/specificbidsai.hpp>
+#include <konig/ai/specificannouncementsai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/forwardingai.hpp>
 #include <konig/game.hpp>
@@ -42,8 +43,11 @@ namespace {
     std::vector<Player::Ptr> players;
     for (size_t i=0; i<4; ++i) {
       BidAi::Ptr bidder(new ai::SpecificBidsAi(std::move(bids[i])));
+      AnnouncementAi::Ptr announcer(new SpecificAnnouncementsAi());
       PlayAi::Ptr player(new ai::SpecificPlayAi(std::move(play_seqs[i])));
-      players.push_back(Player::Ptr(new ForwardingAi(bidder, player)));
+      players.push_back(Player::Ptr(
+          new ForwardingAi(bidder, announcer, player)
+      ));
     }
     Deal deal(hands, talon);
     Game game(rules, players, deal);
