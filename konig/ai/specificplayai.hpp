@@ -12,6 +12,7 @@ class KONIG_AI_API SpecificPlayAi : public Ai {
   public:
     SpecificPlayAi(const std::string& play_sequence = "");
     SpecificPlayAi(std::vector<Bid>, const std::string& play_sequence = "");
+    SpecificPlayAi(std::vector<Bid>, const std::vector<Card>& play_sequence);
 
     virtual Bid bid();
     virtual KingCall call_king();
@@ -26,6 +27,7 @@ class KONIG_AI_API SpecificPlayAi : public Ai {
       virtual bool apply(const Trick&, const Cards& legal, Card& play) = 0;
     };
   private:
+    void init_play_rules(const std::vector<Card>& play_sequence);
     void init_play_rules(const std::string& play_sequence);
 
     std::mt19937 random_engine_;

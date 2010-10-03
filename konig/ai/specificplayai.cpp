@@ -53,6 +53,16 @@ SpecificPlayAi::SpecificPlayAi(
   init_play_rules(play_sequence);
 }
 
+SpecificPlayAi::SpecificPlayAi(
+    std::vector<Bid> bids,
+    const std::vector<Card>& play_sequence
+  ) :
+  bids_(std::move(bids)),
+  next_bid_(bids_.begin())
+{
+  init_play_rules(play_sequence);
+}
+
 Bid SpecificPlayAi::bid() {
   if (next_bid_ == bids_.end()) return Bid::pass;
   Bid b = *next_bid_;
@@ -92,6 +102,15 @@ Card SpecificPlayAi::play_card() {
   Cards::iterator i = legal_plays.begin();
   std::advance(i, which);
   return *i;
+}
+
+void SpecificPlayAi::init_play_rules(std::vector<Card> const& play_sequence)
+{
+  assert(play_sequence.size() == 12);
+  BOOST_FOREACH(Card const& card, play_sequence) {
+    PlayRule::Ptr p(new PlayCard(card));
+    play_rules_.push_back(std::list<PlayRule::Ptr>{p});
+  }
 }
 
 void SpecificPlayAi::init_play_rules(std::string const& play_sequence)
