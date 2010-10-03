@@ -80,8 +80,8 @@ Deal::Deal(Range1 hands, Range2 talon) {
   if (boost::size(talon) != 2) {
     throw std::logic_error("wrong number talon-halves");
   }
-  std::copy(boost::begin(hands), boost::end(hands), hands_);
-  std::copy(boost::begin(talon), boost::end(talon), talon_);
+  std::copy(boost::begin(hands), boost::end(hands), hands_.begin());
+  std::copy(boost::begin(talon), boost::end(talon), talon_.begin());
 
   sanity_check();
 }
