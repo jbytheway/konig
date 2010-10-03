@@ -17,7 +17,7 @@ AnnouncementAi::Ptr AnnouncementAi::create(std::string const& description)
   }
   AnnouncementAi::Ptr p;
   if (ai_name == "specific") {
-    p.reset(new SpecificAnnouncementsAi());
+    p.reset(new SpecificAnnouncementsAi(ai_args));
   } else if (ai_name == "") {
     p.reset(new MinimalAnnouncementAi());
   } else {
