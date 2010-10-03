@@ -58,6 +58,7 @@ namespace {
     }
     ai.notify_announcements_done();
     for (size_t i=0; i<plays.size(); ++i) {
+      assert(i < 4); // Need more logic if not on first trick
       Card card;
       if (!Card::from_string(card, plays[i])) {
         KONIG_FATAL("couldn't parse card");
