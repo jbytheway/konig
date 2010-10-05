@@ -31,7 +31,7 @@ bool KingCall::from_string(KingCall& call, std::string const& s)
   return false;
 }
 
-std::string KingCall::to_string() const
+std::string KingCall::string() const
 {
   switch (value_) {
     case clubs:
@@ -51,7 +51,7 @@ std::string KingCall::to_string() const
 
 std::ostream& operator<<(std::ostream& o, KingCall const c)
 {
-  return o << c.to_string();
+  return o << c.string();
 }
 
 }

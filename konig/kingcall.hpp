@@ -31,7 +31,7 @@ class KONIG_API KingCall {
     KingCall() = default; // For serialization
     KingCall(internal_enum v) : value_(v) {}
 
-    std::string to_string() const;
+    std::string string() const;
     operator internal_enum() const { return value_; }
   private:
     template<typename Archive>
