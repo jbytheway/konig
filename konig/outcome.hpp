@@ -27,6 +27,7 @@ class KONIG_API Outcome {
     }
     uint8_t num_game_achievers() const { return num_game_achievers_; }
     const Results& results() const { return results_; }
+    std::string string() const;
 
     void add(bool offence, Feat, Announcedness, Achievement);
 

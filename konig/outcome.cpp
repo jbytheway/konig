@@ -2,6 +2,8 @@
 
 #include <numeric>
 
+#include <boost/lexical_cast.hpp>
+
 #include <konig/contract.hpp>
 
 namespace konig {
@@ -11,6 +13,11 @@ Outcome::Outcome(Contract::ConstPtr contract, uint8_t num_game_achievers) :
   num_game_achievers_(num_game_achievers),
   achiever_score_{0}
 {}
+
+std::string Outcome::string() const {
+  // Maybe too slow...
+  return boost::lexical_cast<std::string>(*this);
+}
 
 void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
 {
