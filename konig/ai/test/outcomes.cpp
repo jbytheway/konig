@@ -15,7 +15,7 @@ using boost::assign::list_of;
 namespace konig { namespace ai {
 
 namespace {
-  std::string do_outcome_test(
+  PlayResult do_outcome_test(
     std::vector<std::string> const& talon_string,
     std::vector<std::string> const& bid_names,
     std::vector<std::string> const& plays
@@ -51,72 +51,14 @@ namespace {
     }
     Deal deal(hands, talon);
     Game game(rules, players, deal);
-    auto result = game.play();
-    return boost::lexical_cast<std::string>(result.outcome);
+    return game.play();
   }
-#if 0
-  void rig_test(
-    FateAi& ai,
-    PlayPosition const ai_pos,
-    std::string const& hand_s,
-    std::vector<std::string> const& bid_names,
-    KingCall const king_call,
-    char const* const talon0,
-    char const* const talon1,
-    boost::optional<uint8_t> const& talon_choice,
-    char const* const discard,
-    std::vector<std::string> const& announcements,
-    std::vector<std::string> const& plays
-  )
-  {
-    Ruleset rules = Ruleset::cheltenham();
-    Contracts const& contracts = rules.contracts();
-    Cards hand = Cards::from_string(hand_s);
-    ai.start_game(rules, ai_pos, hand);
-    Bid last_bid = Bid::pass;
-    for (size_t i=0; i<bid_names.size(); ++i) {
-      auto bid = contracts.index_by_bid_name(bid_names[i]);
-      if (!bid.is_pass()) last_bid = bid;
-      ai.notify_bid(PlayPosition(i%4), bid);
-    }
-    ai.notify_contract_established(last_bid);
-    if (king_call != KingCall::invalid) ai.notify_call_king(king_call);
-    if (talon0) {
-      assert(talon1);
-      std::array<Cards, 2> talon{{
-        Cards::from_string(talon0), Cards::from_string(talon1)
-      }};
-      ai.notify_talon(talon);
-    }
-    if (talon_choice) ai.notify_talon_choice(*talon_choice);
-    if (discard) {
-      Cards const cards = Cards::from_string(discard);
-      ai.notify_discard(cards);
-    }
-    for (size_t i=0; i<announcements.size(); ++i) {
-      std::vector<Announcement> ans;
-      if (!Announcement::many_from_string(ans, announcements[i])) {
-        KONIG_FATAL("couldn't parse announcements");
-      }
-      ai.notify_announcements(ans);
-    }
-    ai.notify_announcements_done();
-    for (size_t i=0; i<plays.size(); ++i) {
-      Card card;
-      if (!Card::from_string(card, plays[i])) {
-        KONIG_FATAL("couldn't parse card");
-      }
-      ai.notify_play_card(PlayPosition(i%4), card);
-    }
-  }
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(outcomes_possible)
 {
-  BOOST_CHECK_EQUAL(
-    "t4",
-    do_outcome_test(
+  {
+    auto result = do_outcome_test(
       list_of("7 4 H:8")("2 D:9 H:J"),
       list_of("r")("")("")("")("t"),
       list_of
@@ -132,11 +74,12 @@ BOOST_AUTO_TEST_CASE(outcomes_possible)
         ("Ht")("H7")(" 1")("HN")
         ("C8")("S9")("C7")("Ct")
         ("D8")("S7")("D7")("SQ")
-    )
-  );
-  BOOST_CHECK_EQUAL(
-    "tx",
-    do_outcome_test(
+    );
+    BOOST_CHECK(result.scores == list_of(0)(0)(0)(0));
+    BOOST_CHECK_EQUAL(result.outcome.string(), "t4");
+  }
+  {
+    auto result = do_outcome_test(
       list_of("21 15 7")("12 5 C:8"),
       list_of("r")("")("")("")("t"),
       list_of
@@ -152,11 +95,12 @@ BOOST_AUTO_TEST_CASE(outcomes_possible)
         ("CQ")("SN")("HJ")("SJ")
         ("CN")("St")("S9")("D7")
         (" 1")("S8")("H7")("S7")
-    )
-  );
-  BOOST_CHECK_EQUAL(
-    "t3+",
-    do_outcome_test(
+    );
+    BOOST_CHECK(result.scores == list_of(-6)(2)(2)(2));
+    BOOST_CHECK_EQUAL(result.outcome.string(), "tx");
+  }
+  {
+    auto result = do_outcome_test(
       list_of("Sk 9 C:Q")("20 8 D:J"),
       list_of("r")("")("")("")("t"),
       list_of
@@ -172,8 +116,10 @@ BOOST_AUTO_TEST_CASE(outcomes_possible)
         ("Dt")("CN")("S8")("S9")
         ("D9")("C9")("C8")("S7")
         ("C7")("D8")("D7")(" 3")
-    )
-  );
+    );
+    BOOST_CHECK(result.scores == list_of(1)(1)(1)(-3));
+    BOOST_CHECK_EQUAL(result.outcome.string(), "t3+");
+  }
 }
 
 }}
