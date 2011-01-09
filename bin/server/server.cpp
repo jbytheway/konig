@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include <signal.h>
+
 #include <settingstree/make.hpp>
 
 #include <konig/fatal.hpp>
