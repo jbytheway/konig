@@ -6,8 +6,9 @@
 namespace konig { namespace ai {
 
 class BOffenceAi : public PlayAi {
-  virtual void reset(FateAi const&);
-  virtual Card play_card(FateAi const&);
+  public:
+    virtual void reset(FateAi const&);
+    virtual Card play_card(FateAi const&);
 };
 
 }}
