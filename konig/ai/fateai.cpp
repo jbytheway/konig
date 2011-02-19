@@ -1,6 +1,7 @@
 #include <konig/ai/fateai.hpp>
 
 #include <boost/assign/list_of.hpp>
+#include <boost/range/algorithm/fill.hpp>
 
 #include <konig/fatal.hpp>
 #include <konig/utility/intersects.hpp>
@@ -17,7 +18,8 @@ void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
 {
   Ai::start_game(std::move(rules), pos, std::move(hand));
 
-  std::fill(had_first_round_.begin(), had_first_round_.end(), false);
+  boost::fill(had_first_round_, false);
+  boost::fill(num_tricks_taken_by_, 0);
   called_suit_ = Suit::trumps;
   fates_.clear();
   std::vector<Card> deck;
@@ -145,7 +147,9 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
 
 void FateAi::trick_complete_hook()
 {
-  had_first_round_[tricks().back().suit()] = true;
+  auto const& trick = tricks().back();
+  had_first_round_[trick.suit()] = true;
+  num_tricks_taken_by_[trick.winner()]++;
 }
 
 Suit FateAi::called_suit() const
@@ -193,6 +197,11 @@ bool FateAi::guess_is_on_my_side(PlayPosition const pos) const
   }
 }
 
+int FateAi::seats_after_declarer() const
+{
+  return (position()-declarer()+4)%4;
+}
+
 bool FateAi::had_first_round(Suit const s) const
 {
   assert(s < Suit::max);
@@ -208,6 +217,15 @@ std::set<CardFate> FateAi::fates_of(Card const& card) const
 std::set<CardFate> FateAi::fates_of(TrumpRank const rank) const
 {
   return fates_of(Card(rank));
+}
+
+std::set<CardFate> FateAi::other_players_hands() const
+{
+  std::set<CardFate> hands =
+      boost::assign::list_of
+        (CardFate::hand0)(CardFate::hand1)(CardFate::hand2)(CardFate::hand3);
+  hands.erase(CardFate::held_by(position()));
+  return hands;
 }
 
 std::pair<FateAi::Fates::iterator, FateAi::Fates::iterator>
@@ -250,10 +268,7 @@ Cards FateAi::trumps_in(std::set<CardFate> const& places) const
 
 Cards FateAi::trumps_out() const
 {
-  std::set<CardFate> hands =
-      boost::assign::list_of
-        (CardFate::hand0)(CardFate::hand1)(CardFate::hand2)(CardFate::hand3);
-  hands.erase(CardFate::held_by(position()));
+  auto hands = other_players_hands();
   return trumps_in(hands);
 }
 
@@ -318,6 +333,37 @@ bool FateAi::guaranteed_to_win_against(
   std::set<CardFate> in_pos_hand =
     boost::assign::list_of(CardFate::held_by(pos));
   return guaranteed_to_win_against(card, in_pos_hand);
+}
+
+size_t FateAi::num_tricks_taken_by(PlayPosition const pos) const
+{
+  return num_tricks_taken_by_[pos];
+}
+
+bool FateAi::cards_are_equivalent(Cards const& cards) const
+{
+  if (cards.size() <= 1) return true;
+
+  Suit const suit = cards.begin()->suit();
+  auto const last_it = boost::prior(cards.end());
+
+  if (last_it->suit() != suit) {
+    return false;
+  }
+
+  auto fates_range = std::make_pair(
+    fates_.upper_bound(*cards.begin()), fates_.lower_bound(*last_it)
+  );
+
+  auto other_hands = other_players_hands();
+
+  BOOST_FOREACH(auto const& fates, fates_range) {
+    if (utility::intersects(fates.second, other_hands)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 }}

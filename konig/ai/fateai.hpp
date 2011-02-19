@@ -24,24 +24,29 @@ class KONIG_AI_API FateAi : public Ai {
     virtual void trick_complete_hook();
 
     Suit called_suit() const;
-    bool is_called_suit(Suit const) const;
-    bool guess_is_partner(PlayPosition const) const;
-    bool guess_is_on_my_side(PlayPosition const) const;
-    bool had_first_round(Suit const s) const;
+    bool is_called_suit(Suit) const;
+    bool guess_is_partner(PlayPosition) const;
+    bool guess_is_on_my_side(PlayPosition) const;
+    int seats_after_declarer() const;
+    bool had_first_round(Suit) const;
     std::set<CardFate> fates_of(Card const&) const;
-    std::set<CardFate> fates_of(TrumpRank const) const;
+    std::set<CardFate> fates_of(TrumpRank) const;
+    std::set<CardFate> other_players_hands() const;
     std::pair<Fates::iterator, Fates::iterator> fates_of(Suit const);
     std::pair<Fates::const_iterator, Fates::const_iterator>
-      fates_of(Suit const) const;
+      fates_of(Suit) const;
     Cards trumps_in(std::set<CardFate> const&) const;
     Cards trumps_out() const;
     bool trumps_known_exhausted() const;
     size_t num_players_known_out_of_trumps() const;
     bool
       guaranteed_to_win_against(Card const&, std::set<CardFate> const&) const;
-    bool guaranteed_to_win_against(Card const&, PlayPosition const) const;
+    bool guaranteed_to_win_against(Card const&, PlayPosition) const;
+    size_t num_tricks_taken_by(PlayPosition) const;
+    bool cards_are_equivalent(Cards const&) const;
   private:
     std::array<bool, Suit::max> had_first_round_;
+    std::array<size_t, position_max> num_tricks_taken_by_;
     Suit called_suit_;
     Fates fates_;
 };

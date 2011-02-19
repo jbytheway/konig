@@ -12,6 +12,8 @@
 #include <konig/ai/rpartnerai.hpp>
 #include <konig/ai/rdefenceai.hpp>
 #include <konig/ai/tai.hpp>
+#include <konig/ai/boffenceai.hpp>
+#include <konig/ai/bdefenceai.hpp>
 
 namespace konig { namespace ai {
 
@@ -141,6 +143,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new ROffenceAi());
       } else if (contract_name == "t") {
         return PlayAi::Ptr(new TAi());
+      } else if (contract_name == "b") {
+        return PlayAi::Ptr(new BOffenceAi());
       }
       break;
     case partner:
@@ -153,6 +157,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new RDefenceAi());
       } else if (contract_name == "t") {
         return PlayAi::Ptr(new TAi());
+      } else if (contract_name == "b") {
+        return PlayAi::Ptr(new BDefenceAi());
       }
     default:
       break;
