@@ -35,11 +35,14 @@ class KONIG_API Player {
     virtual void notify_play_card(PlayPosition, Card) = 0;
     virtual void notify_invalid_play(std::string) = 0;
   protected:
-    Player() = default;
-    Player(Player const&) = default;
-    Player& operator=(Player const&) = default;
+    Player() {};
+    Player(Player const&);
+    Player& operator=(Player const&);
     virtual ~Player() = 0;
 };
+
+inline Player::Player(Player const&) = default;
+inline Player& Player::operator=(Player const&) = default;
 
 }
 

@@ -10,11 +10,15 @@ class MessageSink {
     virtual void set_prompt(std::string const&) = 0;
     virtual void interrupt() = 0;
   protected:
-    MessageSink() = default;
-    MessageSink(MessageSink const&) = default;
-    MessageSink& operator=(MessageSink const&) = default;
-    ~MessageSink() = default;
+    MessageSink() {}
+    MessageSink(MessageSink const&);
+    MessageSink& operator=(MessageSink const&);
+    ~MessageSink();
 };
+
+inline MessageSink::MessageSink(MessageSink const&) = default;
+inline MessageSink& MessageSink::operator=(MessageSink const&) = default;
+inline MessageSink::~MessageSink() = default;
 
 }}
 

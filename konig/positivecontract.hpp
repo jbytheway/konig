@@ -65,7 +65,7 @@ class PositiveContract : public Contract {
       const std::vector<Trick>& tricks
     ) const;
   private:
-    PositiveContract() = default; // For serialization
+    PositiveContract() {} // For serialization
 
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int) {

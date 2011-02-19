@@ -16,10 +16,13 @@ class PlayAi {
     virtual void reset(FateAi const&) = 0;
     virtual Card play_card(FateAi const&) = 0;
   protected:
-    PlayAi() = default;
-    PlayAi(PlayAi const&) = default;
-    PlayAi& operator=(PlayAi const&) = default;
+    PlayAi() {}
+    PlayAi(PlayAi const&);
+    PlayAi& operator=(PlayAi const&);
 };
+
+inline PlayAi::PlayAi(PlayAi const&) = default;
+inline PlayAi& PlayAi::operator=(PlayAi const&) = default;
 
 }}
 

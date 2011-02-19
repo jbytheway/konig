@@ -94,7 +94,7 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
     static Ptr bettel_ouvert();
     static Ptr solodreier();
   protected:
-    Contract() = default; // For serialization
+    Contract() {} // For serialization
     Contract(std::string short_name, std::string name) :
       short_name_(std::move(short_name)),
       name_(std::move(name)) {}

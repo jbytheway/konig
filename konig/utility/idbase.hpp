@@ -94,11 +94,18 @@ class IdBase {
   protected:
     /** \brief Default constructor always produces the same, valid id */
     IdBase() : val_(0) {}
-    IdBase(IdBase const&) = default;
-    IdBase& operator=(IdBase const&) = default;
+    IdBase(IdBase const&);
+    IdBase& operator=(IdBase const&);
   private:
     TInteger val_;
 };
+
+template<typename TInteger, typename TDerived>
+inline IdBase<TInteger, TDerived>::IdBase(IdBase const&) = default;
+
+template<typename TInteger, typename TDerived>
+inline IdBase<TInteger, TDerived>&
+IdBase<TInteger, TDerived>::operator=(IdBase const&) = default;
 
 /* The name hash_value for this function is required for it to work with
  * boost::hash */

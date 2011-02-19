@@ -15,10 +15,13 @@ class BidAi {
 
     virtual Bid bid(Ai const&) = 0;
   protected:
-    BidAi() = default;
-    BidAi(BidAi const&) = default;
-    BidAi& operator=(BidAi const&) = default;
+    BidAi() {}
+    BidAi(BidAi const&);
+    BidAi& operator=(BidAi const&);
 };
+
+inline BidAi::BidAi(BidAi const&) = default;
+inline BidAi& BidAi::operator=(BidAi const&) = default;
 
 }}
 

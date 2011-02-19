@@ -63,7 +63,7 @@ Card SpecificPlayAi::play_card(FateAi const& ai)
     }
   }
   // All instructions failed; play randomly
-  std::uniform_int<size_t> card_chooser(0, legal_plays.size()-1);
+  std::uniform_int_distribution<size_t> card_chooser(0, legal_plays.size()-1);
   size_t which = card_chooser(random_engine_);
   Cards::iterator i = legal_plays.begin();
   std::advance(i, which);

@@ -28,7 +28,7 @@ std::vector<Announcement> NoddyAi::announce() {
 Card NoddyAi::play_card() {
   Cards legal = legal_plays();
   assert(!legal.empty());
-  std::uniform_int<size_t> card_chooser(0, legal.size()-1);
+  std::uniform_int_distribution<size_t> card_chooser(0, legal.size()-1);
   size_t which = card_chooser(random_engine_);
   Cards::iterator i = legal.begin();
   std::advance(i, which);

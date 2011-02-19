@@ -61,7 +61,7 @@ class NegativeContract : public Contract {
       const std::vector<Trick>& tricks
     ) const;
   private:
-    NegativeContract() = default; // For serialization
+    NegativeContract() {} // For serialization
 
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int) {

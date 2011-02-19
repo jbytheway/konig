@@ -1,5 +1,6 @@
 #include <konig/dealer.hpp>
 
+#include <konig/utility/seed_mersenne_twister.hpp>
 #include <konig/completedealer.hpp>
 #include <konig/partialdealer.hpp>
 
@@ -34,8 +35,7 @@ Dealer::Ptr Dealer::create(
 
 Dealer::Dealer()
 {
-  std::random_device device("/dev/urandom");
-  random_engine_.seed(device);
+  utility::seed_mersenne_twister(random_engine_);
 }
 
 Dealer::Dealer(unsigned long seed)

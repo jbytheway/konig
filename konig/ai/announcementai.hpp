@@ -21,10 +21,14 @@ class AnnouncementAi {
     virtual Cards discard(FateAi const&);
     virtual std::vector<Announcement> announce(FateAi const&);
   protected:
-    AnnouncementAi() = default;
-    AnnouncementAi(AnnouncementAi const&) = default;
-    AnnouncementAi& operator=(AnnouncementAi const&) = default;
+    AnnouncementAi() {}
+    AnnouncementAi(AnnouncementAi const&);
+    AnnouncementAi& operator=(AnnouncementAi const&);
 };
+
+inline AnnouncementAi::AnnouncementAi(AnnouncementAi const&) = default;
+inline AnnouncementAi&
+AnnouncementAi::operator=(AnnouncementAi const&) = default;
 
 }}
 
