@@ -47,14 +47,14 @@ Process::Process(
   std::fill(argv, argv+argc+1, static_cast<char*>(NULL)); // nothrow
   try {
     // Program name
-    argv[0] = new_c_str(exe.filename());
+    argv[0] = new_c_str(exe.filename().string());
     // Args
     for (int i=1; i<argc; ++i) {
       argv[i] = new_c_str(args[i-1]);
     }
-    execv(exe.file_string().c_str(), argv);
+    execv(exe.c_str(), argv);
     // execv failed if it returns
-    std::perror(("execv: "+exe.file_string()).c_str());
+    std::perror(("execv: "+exe.string()).c_str());
     std::exit(1);
   } catch (...) {
     // Extreme badness!

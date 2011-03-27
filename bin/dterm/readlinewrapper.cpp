@@ -41,7 +41,7 @@ ReadlineWrapper::ReadlineWrapper(
   rl_callback_handler_install("> ", line_callback_handler);
   if (boost::filesystem::exists(history_file_)) {
     if (!boost::filesystem::is_directory(history_file_)) {
-      if (0 == read_history(history_file_.native_file_string().c_str())) {
+      if (0 == read_history(history_file_.c_str())) {
         if (0 == history_set_pos(history_length)) {
           std::cerr << "error setting history position\n";
         }
@@ -64,9 +64,9 @@ ReadlineWrapper::~ReadlineWrapper()
 {
   assert(wrapper == this);
   boost::filesystem::create_directories(history_file_.parent_path());
-  if (0 == write_history(history_file_.native_file_string().c_str())) {
+  if (0 == write_history(history_file_.c_str())) {
     if (0 != history_truncate_file(
-          history_file_.native_file_string().c_str(), history_length
+          history_file_.c_str(), history_length
         )) {
       std::cerr << "error truncating history\n";
     }
