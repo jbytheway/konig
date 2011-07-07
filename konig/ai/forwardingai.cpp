@@ -11,6 +11,8 @@
 #include <konig/ai/roffenceai.hpp>
 #include <konig/ai/rpartnerai.hpp>
 #include <konig/ai/rdefenceai.hpp>
+#include <konig/ai/sedoffenceai.hpp>
+#include <konig/ai/seddefenceai.hpp>
 #include <konig/ai/tai.hpp>
 #include <konig/ai/poffenceai.hpp>
 #include <konig/ai/pdefenceai.hpp>
@@ -145,6 +147,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new ROffenceAi());
       } else if (contract_name == "t") {
         return PlayAi::Ptr(new TAi());
+      } else if (contract_name == "6d") {
+        return PlayAi::Ptr(new SedOffenceAi());
       } else if (contract_name == "p") {
         return PlayAi::Ptr(new POffenceAi());
       } else if (contract_name == "b") {
@@ -161,6 +165,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new RDefenceAi());
       } else if (contract_name == "t") {
         return PlayAi::Ptr(new TAi());
+      } else if (contract_name == "6d") {
+        return PlayAi::Ptr(new SedDefenceAi());
       } else if (contract_name == "p") {
         return PlayAi::Ptr(new PDefenceAi());
       } else if (contract_name == "b") {
