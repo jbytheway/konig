@@ -66,10 +66,12 @@ Cards MinimalAnnouncementAi::discard(FateAi const& ai)
     accepted.begin(), accepted.end(),
     std::inserter(hand, hand.end())
   );
-  assert(hand.size() == 15);
+  assert(hand.size() == 15 || hand.size() == 18);
+  size_t const num_to_discard = hand.size() - 12;
+
   Cards promising_cards(hand);
   promising_cards.erase(Suit::trumps);
-  // Probably don't want to discard from a suit in which we hold the king, of
+  // Probably don't want to discard from a suit in which we hold the king, or
   // which we called
   for (Suit s = Suit::min; s < Suit::trumps; ++s) {
     if (s == ai.called_suit() ||
@@ -87,13 +89,14 @@ Cards MinimalAnnouncementAi::discard(FateAi const& ai)
   std::vector<size_t> cumulative(profiles.size());
   std::partial_sum(sizes.begin(), sizes.end(), cumulative.begin());
   assert(cumulative.empty() || cumulative[0] > 0);
-  auto finish = std::find_if(cumulative.begin(), cumulative.end(), arg1 > 3);
+  auto finish = std::find_if(
+    cumulative.begin(), cumulative.end(), arg1 > num_to_discard);
   Cards discard;
   for (size_t i=0; i<size_t(finish-cumulative.begin()); ++i) {
     discard.insert(promising_cards.equal_range(profiles[i].suit));
   }
-  assert(discard.size() <= 3);
-  if (discard.size() == 3) return discard;
+  assert(discard.size() <= num_to_discard);
+  if (discard.size() == num_to_discard) return discard;
   // We've added as many voids as possible, but still need to discard more
   // cards.  So we'll discard the most valuable cards we're allowed to
   {
@@ -107,13 +110,13 @@ Cards MinimalAnnouncementAi::discard(FateAi const& ai)
       best_options.begin(), best_options.end(),
       Card::CompareRanksReversePips()
     );
-    while (discard.size() < 3 && !best_options.empty()) {
+    while (discard.size() < num_to_discard && !best_options.empty()) {
       discard.insert(best_options.back());
       best_options.pop_back();
     }
   }
-  assert (discard.size() <= 3);
-  if (discard.size() < 3) {
+  assert (discard.size() <= num_to_discard);
+  if (discard.size() < num_to_discard) {
     // We must discard some trumps
     Cards available = hand;
     available.erase(discard);
@@ -122,10 +125,10 @@ Cards MinimalAnnouncementAi::discard(FateAi const& ai)
     available.erase(TrumpRank::skus);
     available.erase(SuitRank::king);
 
-    while (discard.size() < 3) {
+    while (discard.size() < num_to_discard) {
       auto best = available.upper_bound(Card(TrumpRank::kakadu));
       if (best == available.end()) {
-        // We are force to discard a bird; prefer uhu
+        // We are forced to discard a bird; prefer uhu
         // (this is actually impossible, but whatever...)
         best = available.begin();
       }
