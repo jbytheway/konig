@@ -74,7 +74,7 @@ Cards MinimalAnnouncementAi::discard(FateAi const& ai)
   // Probably don't want to discard from a suit in which we hold the king, or
   // which we called
   for (Suit s = Suit::min; s < Suit::trumps; ++s) {
-    if (s == ai.called_suit() ||
+    if (s == ai.called_suit(Suit::trumps/*fallback for non-partnership*/) ||
         promising_cards.count(Card(s, SuitRank::king))) {
       promising_cards.erase(s);
     }

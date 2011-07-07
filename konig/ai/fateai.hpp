@@ -23,7 +23,7 @@ class KONIG_AI_API FateAi : public Ai {
 
     virtual void trick_complete_hook();
 
-    Suit called_suit() const;
+    Suit called_suit(int fallback = Suit::max) const;
     bool is_called_suit(Suit) const;
     bool guess_is_partner(PlayPosition) const;
     bool guess_is_on_my_side(PlayPosition) const;

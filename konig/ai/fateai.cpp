@@ -152,10 +152,13 @@ void FateAi::trick_complete_hook()
   num_tricks_taken_by_[trick.winner()]++;
 }
 
-Suit FateAi::called_suit() const
+Suit FateAi::called_suit(int const fallback) const
 {
   if (called_suit_ == Suit::trumps) {
-    KONIG_FATAL("don't know called suit yet");
+    if (fallback == Suit::max) {
+      KONIG_FATAL("don't know called suit yet");
+    }
+    return Suit(fallback);
   }
 
   return called_suit_;
