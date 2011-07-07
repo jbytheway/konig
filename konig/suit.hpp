@@ -30,6 +30,7 @@ class Suit {
     static Suit from_char(char c) { return Suit(std::string(1, c)); }
     Suit() : value_(min) {}
     Suit(const internal_enum v) : value_(v) { assert(valid()); }
+    explicit Suit(const int v) : value_(v) { assert(valid()); }
 
     explicit Suit(const std::string&);
 
