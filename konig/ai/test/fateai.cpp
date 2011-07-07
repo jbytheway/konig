@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(guess_partner)
     ai,
     position_forehand,
     "H:789tJNQK D:tJNQ",
-    list_of("r")("")("")("")("r"),
+    { "r", "", "", "", "r"},
     KingCall::diamonds,
     "1 2 3", "4 5 6",
     choose0,
