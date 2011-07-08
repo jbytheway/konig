@@ -24,6 +24,8 @@
 #include <konig/ai/brdefenceai.hpp>
 #include <konig/ai/boffenceai.hpp>
 #include <konig/ai/bdefenceai.hpp>
+#include <konig/ai/doffenceai.hpp>
+#include <konig/ai/ddefenceai.hpp>
 #include <konig/ai/sdoffenceai.hpp>
 #include <konig/ai/sddefenceai.hpp>
 
@@ -165,6 +167,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new BrOffenceAi());
       } else if (contract_name == "b") {
         return PlayAi::Ptr(new BOffenceAi());
+      } else if (contract_name == "d") {
+        return PlayAi::Ptr(new DOffenceAi());
       } else if (contract_name == "sd") {
         return PlayAi::Ptr(new SdOffenceAi());
       }
@@ -193,6 +197,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new BrDefenceAi());
       } else if (contract_name == "b") {
         return PlayAi::Ptr(new BDefenceAi());
+      } else if (contract_name == "d") {
+        return PlayAi::Ptr(new DDefenceAi());
       } else if (contract_name == "sd") {
         return PlayAi::Ptr(new SdDefenceAi());
       }
