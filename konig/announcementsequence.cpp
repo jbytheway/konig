@@ -26,8 +26,14 @@ void AnnouncementSequence::get_announcement(
     boost::range::copy(
       announcements, std::ostream_iterator<Announcement>(os, ", ")
     );
-    os << "' in response to " << whole_contract.string(2) <<
-      " (first=" << first_announcements << ")";
+    os << "' in response to " << whole_contract.string(2);
+    if (first_announcements) {
+      os << " (first)";
+    } else if (offence) {
+      os << " (offence)";
+    } else {
+      os << " (defence)";
+    }
     player.notify_invalid_announcements(os.str());
   }
 
