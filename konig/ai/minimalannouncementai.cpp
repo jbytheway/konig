@@ -11,6 +11,12 @@
 
 namespace konig { namespace ai {
 
+void MinimalAnnouncementAi::reset(FateAi const& ai)
+{
+  AnnouncementAi::reset(ai);
+  first_announcements_ = true;
+}
+
 KingCall MinimalAnnouncementAi::call_king(FateAi const& ai)
 {
   auto const& hand = ai.hand();
@@ -137,6 +143,26 @@ Cards MinimalAnnouncementAi::discard(FateAi const& ai)
     }
   }
   return discard;
+}
+
+std::vector<Announcement> MinimalAnnouncementAi::announce(FateAi const& ai)
+{
+  auto contract_and_announcements = ai.contract();
+  if (first_announcements_) {
+    first_announcements_ = false;
+    if (contract_and_announcements.contract()->must_announce_bird() &&
+      ai.position() == ai.declarer()) {
+      auto const& hand = ai.hand();
+      auto const first_bird = hand.lower_bound(Suit::trumps);
+      Feat feat = Feat::pagat;
+      if (first_bird != hand.end() &&
+        first_bird->trump_rank() <= TrumpRank::kakadu) {
+        feat = Feat(first_bird->trump_rank());
+      }
+      return {{feat, Announcedness::announced, false}};
+    }
+  }
+  return {};
 }
 
 }}

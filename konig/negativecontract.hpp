@@ -48,6 +48,8 @@ class NegativeContract : public Contract {
 
     virtual bool involves_talon() const { return false; }
 
+    virtual bool must_announce_bird() const { return false; }
+
     virtual Announcednesses initial_announcednesses() const;
 
     virtual bool valid_first_announcements(

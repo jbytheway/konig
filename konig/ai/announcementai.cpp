@@ -45,7 +45,7 @@ Cards AnnouncementAi::discard(FateAi const&)
 
 std::vector<Announcement> AnnouncementAi::announce(FateAi const&)
 {
-  return std::vector<Announcement>();
+  KONIG_FATAL("not implemented in " << typeid(*this).name());
 }
 
 }}

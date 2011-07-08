@@ -56,6 +56,8 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
 
     virtual bool involves_talon() const = 0;
 
+    virtual bool must_announce_bird() const = 0;
+
     virtual Announcednesses initial_announcednesses() const = 0;
 
     virtual bool valid_first_announcements(

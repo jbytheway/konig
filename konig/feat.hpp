@@ -29,6 +29,7 @@ class Feat {
 
     Feat() = default; // For serialization
     Feat(internal_enum v) : value_(v) {}
+    Feat(TrumpRank);
 
     operator internal_enum() const { return value_; }
 

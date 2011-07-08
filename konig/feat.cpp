@@ -4,6 +4,23 @@
 
 namespace konig {
 
+Feat::Feat(TrumpRank r)
+{
+  switch (r) {
+    case TrumpRank::pagat:
+      value_ = pagat;
+      break;
+    case TrumpRank::uhu:
+      value_ = uhu;
+      break;
+    case TrumpRank::kakadu:
+      value_ = kakadu;
+      break;
+    default:
+      throw std::logic_error("no feat for this rank");
+  }
+}
+
 Achievement Feat::result_for(
     const boost::shared_ptr<Contract const>& contract,
     Card called_king,
