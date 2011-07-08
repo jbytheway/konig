@@ -14,6 +14,9 @@
 #include <konig/ai/sedoffenceai.hpp>
 #include <konig/ai/seddefenceai.hpp>
 #include <konig/ai/tai.hpp>
+#include <konig/ai/soffenceai.hpp>
+#include <konig/ai/spartnerai.hpp>
+#include <konig/ai/sdefenceai.hpp>
 #include <konig/ai/poffenceai.hpp>
 #include <konig/ai/pdefenceai.hpp>
 #include <konig/ai/boffenceai.hpp>
@@ -151,6 +154,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new TAi());
       } else if (contract_name == "6d") {
         return PlayAi::Ptr(new SedOffenceAi());
+      } else if (contract_name == "s") {
+        return PlayAi::Ptr(new SOffenceAi());
       } else if (contract_name == "p") {
         return PlayAi::Ptr(new POffenceAi());
       } else if (contract_name == "b") {
@@ -162,6 +167,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
     case partner:
       if (contract_name == "r") {
         return PlayAi::Ptr(new RPartnerAi());
+      } else if (contract_name == "s") {
+        return PlayAi::Ptr(new SPartnerAi());
       }
       break;
     case defender:
@@ -171,6 +178,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new TAi());
       } else if (contract_name == "6d") {
         return PlayAi::Ptr(new SedDefenceAi());
+      } else if (contract_name == "s") {
+        return PlayAi::Ptr(new SDefenceAi());
       } else if (contract_name == "p") {
         return PlayAi::Ptr(new PDefenceAi());
       } else if (contract_name == "b") {
