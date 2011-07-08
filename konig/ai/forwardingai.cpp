@@ -18,6 +18,8 @@
 #include <konig/ai/pdefenceai.hpp>
 #include <konig/ai/boffenceai.hpp>
 #include <konig/ai/bdefenceai.hpp>
+#include <konig/ai/sdoffenceai.hpp>
+#include <konig/ai/sddefenceai.hpp>
 
 namespace konig { namespace ai {
 
@@ -153,6 +155,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new POffenceAi());
       } else if (contract_name == "b") {
         return PlayAi::Ptr(new BOffenceAi());
+      } else if (contract_name == "sd") {
+        return PlayAi::Ptr(new SdOffenceAi());
       }
       break;
     case partner:
@@ -171,6 +175,8 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
         return PlayAi::Ptr(new PDefenceAi());
       } else if (contract_name == "b") {
         return PlayAi::Ptr(new BDefenceAi());
+      } else if (contract_name == "sd") {
+        return PlayAi::Ptr(new SdDefenceAi());
       }
     default:
       break;
