@@ -178,6 +178,13 @@ struct MessageData<MessageType::notifyAnnouncements> {
 };
 
 template<>
+struct MessageData<MessageType::notifyInvalidAnnouncements> {
+  typedef fusion::map<
+    fusion::pair<fields::message, std::string>
+  > type;
+};
+
+template<>
 struct MessageData<MessageType::notifyAnnouncementsDone> {
   typedef fusion::map<
   > type;

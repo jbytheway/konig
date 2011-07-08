@@ -5,7 +5,7 @@
 #include <konig/ai/specificannouncementsai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/forwardingai.hpp>
-#include <konig/ai/invalidplayerror.hpp>
+#include <konig/ai/invaliderror.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>

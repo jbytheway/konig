@@ -24,6 +24,7 @@ class RemotePlayer : public Player {
     virtual void notify_discard(Cards);
     virtual std::vector<Announcement> announce();
     virtual void notify_announcements(std::vector<Announcement>);
+    virtual void notify_invalid_announcements(std::string);
     virtual void notify_announcements_done();
     virtual Card play_card();
     virtual void notify_play_card(PlayPosition, Card);

@@ -41,6 +41,8 @@ inline bool operator==(Announcement const& l, Announcement const& r) {
     l.defensive == r.defensive;
 }
 
+std::ostream& operator<<(std::ostream&, Announcement const&);
+
 }
 
 #endif // KONIG__ANNOUNCEMENT_HPP

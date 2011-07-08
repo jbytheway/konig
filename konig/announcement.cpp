@@ -87,5 +87,13 @@ bool Announcement::many_from_string(
   return at == s.end();
 }
 
+std::ostream& operator<<(std::ostream& o, Announcement const& a)
+{
+  o << a.feat;
+  if (a.defensive) o << '!';
+  o << a.announcedness.string(Achievement::neutral);
+  return o;
+}
+
 }
 

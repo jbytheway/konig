@@ -82,6 +82,11 @@ void RemotePlayer::notify_announcements(std::vector<Announcement> announcements)
       ));
 }
 
+void RemotePlayer::notify_invalid_announcements(std::string m)
+{
+  client_.send(Message<MessageType::notifyInvalidAnnouncements>(std::move(m)));
+}
+
 void RemotePlayer::notify_announcements_done()
 {
   client_.send(Message<MessageType::notifyAnnouncementsDone>());

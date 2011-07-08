@@ -1,6 +1,9 @@
 #include <konig/announcementsequence.hpp>
 
+#include <sstream>
+
 #include <boost/bind.hpp>
+#include <boost/range/algorithm/copy.hpp>
 
 namespace konig {
 
@@ -12,10 +15,21 @@ void AnnouncementSequence::get_announcement(
   )
 {
   std::vector<Announcement> announcements;
-  do {
+  while(true) {
     announcements = player.announce();
-  } while (!whole_contract.are_legal(
-        announcements, first_announcements, offence));
+    if (whole_contract.are_legal(
+        announcements, first_announcements, offence)) {
+      break;
+    }
+    std::ostringstream os;
+    os << "invalid announcements '";
+    boost::range::copy(
+      announcements, std::ostream_iterator<Announcement>(os, ", ")
+    );
+    os << "' in response to " << whole_contract.string(2) <<
+      " (first=" << first_announcements << ")";
+    player.notify_invalid_announcements(os.str());
+  }
 
   whole_contract.add(announcements);
 }

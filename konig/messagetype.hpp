@@ -15,7 +15,7 @@ namespace konig {
   (requestTalonChoice)(talonChoice)(notifyTalonChoice)\
   (requestDiscard)(discard)(notifyDiscard)\
   (requestAnnouncements)(announcements)(notifyAnnouncements)\
-  (notifyAnnouncementsDone)\
+  (notifyInvalidAnnouncements)(notifyAnnouncementsDone)\
   (requestPlayCard)(playCard)(notifyPlayCard)\
   (notifyInvalidPlay)
 

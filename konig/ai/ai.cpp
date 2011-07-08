@@ -7,7 +7,7 @@
 #include <konig/ai/noddyai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/forwardingai.hpp>
-#include <konig/ai/invalidplayerror.hpp>
+#include <konig/ai/invaliderror.hpp>
 
 namespace konig { namespace ai {
 
@@ -149,6 +149,11 @@ void Ai::notify_announcements(std::vector<Announcement> announcements)
   if (contract_.is_done()) {
     play_start_hook();
   }
+}
+
+void Ai::notify_invalid_announcements(std::string m)
+{
+  throw InvalidAnnouncementsError(std::move(m));
 }
 
 void Ai::notify_play_card(PlayPosition p, Card c)
