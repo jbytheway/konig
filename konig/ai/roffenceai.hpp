@@ -8,7 +8,6 @@ namespace konig { namespace ai {
 class ROffenceAi : public OffenceAi {
   public:
     ROffenceAi();
-  private:
 };
 
 }}
