@@ -37,17 +37,7 @@ $$($(1)_RESULTS_NUMS): $(1)/results.%: $(this_srcdir)$(1).exp hands/% \
 		cat hands/$$* >> $$@
 	set -o pipefail && \
 		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s "$$*" \
-		-d- -t- -# | \
-		awk ' \
-			/^[-a-z/+!6123]*$$$$/ { outcomes[$$$$0]++ } \
-			/^[-0-9 ]*$$$$/ { total_score += $$$$1; num_hands++ } \
-			END { \
-				printf("%f", total_score/num_hands); \
-				for (outcome in outcomes) \
-					printf(" %d %s", outcomes[outcome], outcome); \
-			} \
-		' >> $$@
-	echo >> $$@
+		-d- -t- -r- -u >> $$@
 
 $$($(1)_FULL_NUMS): $(1).full.%: \
 		$(this_srcdir)$(1).exp hands/% $(this_srcdir)Makefile.local
