@@ -24,7 +24,7 @@ reestablish: $(ESTABLISHED)
 
 $(HAND_NUMS): hands/%: $(SIM)
 	mkdir -p $(dir $@)
-	$< -p- -m -s $* | cut -d , -f 1 > $@
+	$< -p- -m -s $* | cut -d , -f 1 | sed 's/ $$//' | tr ' \n' '_ ' > $@
 
 define MAKE_RESULTS
 $(1)_RESULTS_NUMS := $(addprefix $(1)/results.,$(NUMS))
@@ -34,7 +34,7 @@ $$($(1)_RESULTS_NUMS): $(1)/results.%: $(this_srcdir)$(1).exp hands/% \
 	mkdir -p $$(dir $$@)
 	printf "%s " "$$*" > $$@
 	set -o pipefail && \
-		cat hands/$$* | sed 's/ $$$$//;s/ /_/g' | tr '\n' ' ' >> $$@
+		cat hands/$$* >> $$@
 	set -o pipefail && \
 		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s "$$*" \
 		-d- -t- -# | \
