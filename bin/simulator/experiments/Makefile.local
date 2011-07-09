@@ -63,23 +63,7 @@ $(foreach base,$(BASES),$(eval $(call MAKE_RESULTS,$(base))))
 $(ESTABLISHED): $(this_srcdir)%.established: %.results
 	cp $< $@
 
-$(COMPARES): %.compare: %.results
-	awk ' \
-		{ \
-			if (FILENAME == "$<") { new[$$1]=$$0; newval[$$1]=$$3 } \
-			else { old[$$1]=$$0; oldval[$$1]=$$3 } \
-		} \
-		END { \
-			for (ind in old) { \
-				oldline=old[ind]; newline=new[ind]; \
-				if (oldline == newline) continue; \
-				if (newval[ind] > oldval[ind]) change="++"; \
-				else if (newval[ind] == oldval[ind]) change="=="; \
-				else change="--"; \
-				print change, oldline; \
-				print change, newline; \
-				print ""; \
-			} \
-		} \
-		' $< $(this_srcdir)$*.established > $@
+$(COMPARES): %.compare: %.results $(this_srcdir)compare.awk
+	awk -v results=$< -f $(this_srcdir)compare.awk \
+		$< $(this_srcdir)$*.established > $@
 
