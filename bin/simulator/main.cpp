@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <boost/foreach.hpp>
+#include <boost/format.hpp>
 #include <boost/algorithm/string/join.hpp>
 
 #include <optimal/optionsparser.hpp>
@@ -16,27 +17,31 @@ namespace konig { namespace simulator {
 struct Options {
   Options() :
     show_scores(false),
+    show_deal(true),
+    on_fly(false),
     gaps(false),
     help(false),
     machine(false),
     num_deals(1),
     play(true),
-    on_fly(false),
-    show_deal(true),
-    show_tricks(true)
+    show_results(true),
+    show_tricks(true),
+    summary(false)
   {}
   bool show_scores;
-  bool gaps;
-  bool help;
   std::vector<std::string> ais;
   std::vector<std::string> chunks;
+  bool show_deal;
+  bool on_fly;
+  bool gaps;
+  bool help;
   bool machine;
   unsigned long num_deals;
-  boost::optional<unsigned long> seed;
   bool play;
-  bool on_fly;
-  bool show_deal;
+  bool show_results;
+  boost::optional<unsigned long> seed;
   bool show_tricks;
+  bool summary;
 };
 
 void usage(std::ostream& o)
@@ -61,9 +66,13 @@ void usage(std::ostream& o)
 "                Make N random deals in total (default 1).\n"
 "  -p-, --no-play\n"
 "                Don't play, just deal.\n"
+"  -r-, --no-show-results\n"
+"                Don't show the results.\n"
 "  -s, --seed N  Seed dealer with N (default seeds from /dev/urandom).\n"
 "  -t-, --no-show-tricks\n"
 "                Don't show the tricks.\n"
+"  -u, --summary Show a one-line summary of the games with average score and\n"
+"                frequency of each outcome.\n"
   << std::flush;
 }
 
@@ -72,18 +81,20 @@ void usage(std::ostream& o)
 int main(int argc, char const* const* const argv) {
   konig::simulator::Options options;
   optimal::OptionsParser parser;
-  parser.addOption("scores",      '#', &options.show_scores);
-  parser.addOption("ais",         'a', &options.ais,    ",");
-  parser.addOption("chunks",      'c', &options.chunks, ",");
-  parser.addOption("show-deal",   'd', &options.show_deal);
-  parser.addOption("on-fly",      'f', &options.on_fly);
-  parser.addOption("gaps",        'g', &options.gaps);
-  parser.addOption("help",        'h', &options.help);
-  parser.addOption("machine",     'm', &options.machine);
-  parser.addOption("num-deals",   'n', &options.num_deals);
-  parser.addOption("play",        'p', &options.play);
-  parser.addOption("seed",        's', &options.seed);
-  parser.addOption("show-tricks", 't', &options.show_tricks);
+  parser.addOption("scores",       '#', &options.show_scores);
+  parser.addOption("ais",          'a', &options.ais,    ",");
+  parser.addOption("chunks",       'c', &options.chunks, ",");
+  parser.addOption("show-deal",    'd', &options.show_deal);
+  parser.addOption("on-fly",       'f', &options.on_fly);
+  parser.addOption("gaps",         'g', &options.gaps);
+  parser.addOption("help",         'h', &options.help);
+  parser.addOption("machine",      'm', &options.machine);
+  parser.addOption("num-deals",    'n', &options.num_deals);
+  parser.addOption("play",         'p', &options.play);
+  parser.addOption("show-results", 'r', &options.show_results);
+  parser.addOption("seed",         's', &options.seed);
+  parser.addOption("show-tricks",  't', &options.show_tricks);
+  parser.addOption("summary",      'u', &options.summary);
 
   boost::filesystem::path options_file(std::getenv("HOME"));
   options_file /= ".konig";
@@ -126,6 +137,9 @@ int main(int argc, char const* const* const argv) {
   konig::Dealer::Ptr dealer = options.seed ?
     konig::Dealer::create(options.chunks, *options.seed) :
     konig::Dealer::create(options.chunks);
+  konig::Score total_score{0};
+  std::map<std::string, unsigned long> outcome_counts;
+
   for (unsigned long i=0; i<options.num_deals; ++i) {
     konig::Deal deal = dealer->deal();
     if (options.show_deal) {
@@ -135,7 +149,13 @@ int main(int argc, char const* const* const argv) {
     if (!options.play) continue;
     konig::Game game(rules, ais, deal);
     auto result = game.play(debug_stream);
-    std::cout << result.outcome << '\n';
+
+    total_score += result.scores[0];
+    outcome_counts.insert({result.outcome.string(), 0}).first->second++;
+
+    if (options.show_results) {
+      std::cout << result.outcome << '\n';
+    }
     if (options.show_scores) {
       std::copy(
         result.scores.begin(), result.scores.end(),
@@ -153,6 +173,14 @@ int main(int argc, char const* const* const argv) {
     if (options.gaps) {
       std::cout << "\n\n";
     }
+  }
+
+  if (options.summary) {
+    std::cout << boost::format("%1.6f") % (total_score/double(options.num_deals));
+    BOOST_FOREACH(auto const& p, outcome_counts) {
+      std::cout << ' ' << p.second << ' ' << p.first;
+    }
+    std::cout << std::endl;
   }
 }
 
