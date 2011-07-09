@@ -23,6 +23,11 @@ class KONIG_API Cards : public std::set<Card> {
     Cards() = default;
     Cards(Cards const&) = default;
 
+    Cards(std::initializer_list<Card> const& list) :
+      std::set<Card>(list)
+    {
+    }
+
     template<typename Range>
     explicit Cards(Range const& r) {
       std::copy(boost::begin(r), boost::end(r), std::inserter(*this, end()));
