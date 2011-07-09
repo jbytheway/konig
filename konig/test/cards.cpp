@@ -20,6 +20,22 @@ BOOST_AUTO_TEST_CASE(cards_parser)
   BOOST_CHECK_EQUAL(
     Cards::from_string("D:3"), (Cards{{Suit::diamonds, SuitRank::three}})
   );
+  BOOST_CHECK_EQUAL(
+    Cards::from_string("Sk 21"),
+    (Cards{Card{TrumpRank::skus}, Card{TrumpRank::mond}})
+  );
+  BOOST_CHECK_EQUAL(
+    Cards::from_string("Sk 21  "),
+    (Cards{Card{TrumpRank::skus}, Card{TrumpRank::mond}})
+  );
+  BOOST_CHECK_EQUAL(
+    Cards::from_string("Sk_21"),
+    (Cards{Card{TrumpRank::skus}, Card{TrumpRank::mond}})
+  );
+  BOOST_CHECK_EQUAL(
+    Cards::from_string("Sk_ 21 _"),
+    (Cards{Card{TrumpRank::skus}, Card{TrumpRank::mond}})
+  );
 }
 
 }

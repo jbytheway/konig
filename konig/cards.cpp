@@ -54,7 +54,7 @@ Cards Cards::from_string(std::string const& description)
             ]
         )
       ),
-      qi::space
+      qi::space | qi::char_('_')
     );
   if (!x || first != last) {
     throw std::logic_error("invalid cards specification");
