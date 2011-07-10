@@ -9,9 +9,13 @@ namespace konig { namespace ai {
 
 SpecificAnnouncementsAi::SpecificAnnouncementsAi(
   std::string const& announcement_sequence,
-  boost::optional<KingCall> king_call
+  boost::optional<KingCall> king_call,
+  int talon_half,
+  Cards discard
 ) :
-  king_call_(king_call)
+  king_call_(king_call),
+  talon_half_(talon_half),
+  discard_(discard)
 {
   if (!announcement_sequence.empty()) {
     std::vector<std::string> chunks;
@@ -41,9 +45,13 @@ SpecificAnnouncementsAi::SpecificAnnouncementsAi(
 
 SpecificAnnouncementsAi::SpecificAnnouncementsAi(
   Script s,
-  boost::optional<KingCall> king_call
+  boost::optional<KingCall> king_call,
+  int talon_half,
+  Cards discard
 ) :
   king_call_(king_call),
+  talon_half_(talon_half),
+  discard_(discard),
   announcements_(std::move(s)),
   next_announcement_(announcements_.begin())
 {}
@@ -52,6 +60,16 @@ KingCall SpecificAnnouncementsAi::call_king(FateAi const&)
 {
   assert(king_call_);
   return *king_call_;
+}
+
+uint8_t SpecificAnnouncementsAi::choose_talon_half(FateAi const&)
+{
+  return talon_half_;
+}
+
+Cards SpecificAnnouncementsAi::discard(FateAi const&)
+{
+  return discard_;
 }
 
 std::vector<Announcement> SpecificAnnouncementsAi::announce(FateAi const&)

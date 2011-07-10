@@ -12,18 +12,26 @@ class SpecificAnnouncementsAi : public AnnouncementAi {
 
     SpecificAnnouncementsAi(
       std::string const& announcement_sequence = "",
-      boost::optional<KingCall> = boost::optional<KingCall>()
+      boost::optional<KingCall> = boost::optional<KingCall>(),
+      int talon_half = -1,
+      Cards discard = Cards()
     );
 
     SpecificAnnouncementsAi(
       Script,
-      boost::optional<KingCall> = boost::optional<KingCall>()
+      boost::optional<KingCall> = boost::optional<KingCall>(),
+      int talon_half = -1,
+      Cards discard = Cards()
     );
 
     virtual KingCall call_king(FateAi const&);
+    virtual uint8_t choose_talon_half(FateAi const&);
+    virtual Cards discard(FateAi const&);
     virtual std::vector<Announcement> announce(FateAi const&);
   private:
     boost::optional<KingCall> king_call_;
+    int talon_half_;
+    Cards discard_;
     Script announcements_;
     Script::iterator next_announcement_;
 };
