@@ -34,7 +34,7 @@ void AnnouncementSequence::get_announcement(
     } else {
       os << " (defence)";
     }
-    player.notify_invalid_announcements(os.str());
+    player.notify_invalid(os.str());
   }
 
   whole_contract.add(announcements);

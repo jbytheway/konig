@@ -15,9 +15,9 @@ namespace konig {
   (requestTalonChoice)(talonChoice)(notifyTalonChoice)\
   (requestDiscard)(discard)(notifyDiscard)\
   (requestAnnouncements)(announcements)(notifyAnnouncements)\
-  (notifyInvalidAnnouncements)(notifyAnnouncementsDone)\
+  (notifyAnnouncementsDone)\
   (requestPlayCard)(playCard)(notifyPlayCard)\
-  (notifyInvalidPlay)
+  (notifyInvalid)
 
 KONIG_UTILITY_ENUM_HEADER(MessageType, KONIG_MESSAGETYPE_VALUES())
 

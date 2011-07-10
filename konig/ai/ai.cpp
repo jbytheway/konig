@@ -151,11 +151,6 @@ void Ai::notify_announcements(std::vector<Announcement> announcements)
   }
 }
 
-void Ai::notify_invalid_announcements(std::string m)
-{
-  throw InvalidAnnouncementsError(std::move(m));
-}
-
 void Ai::notify_play_card(PlayPosition p, Card c)
 {
   assert(!tricks_.empty());
@@ -178,9 +173,9 @@ void Ai::notify_play_card(PlayPosition p, Card c)
   }
 }
 
-void Ai::notify_invalid_play(std::string m)
+void Ai::notify_invalid(std::string m)
 {
-  throw InvalidPlayError(std::move(m));
+  throw InvalidError(std::move(m));
 }
 
 uint8_t Ai::trick_number() const

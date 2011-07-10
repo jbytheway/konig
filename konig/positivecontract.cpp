@@ -125,6 +125,10 @@ PlayResult PositiveContract::play(
         talon_half = declarer->choose_talon_half();
         if (talon_half < 2) {
           break;
+        } else {
+          std::ostringstream os;
+          os << "invalid talon half " << int(talon_half);
+          declarer->notify_invalid(os.str());
         }
       }
 
@@ -158,17 +162,21 @@ PlayResult PositiveContract::play(
           discard.count(TrumpRank::pagat) != 0 ||
           discard.count(TrumpRank::mond) != 0 ||
           discard.count(TrumpRank::skus) != 0 ||
-          !declarers_hand.contains(discard))
-        continue;
-      // This is supposed to check that trumps are discarded only as necessary
-      if (discard.count(Suit::trumps) &&
-          discard.size()-discard.count(Suit::trumps) !=
-            declarers_hand.size()-
-              declarers_hand.count(Suit::trumps)-
-              declarers_hand.count(SuitRank::king))
-        continue;
-      // All conditions OK
-      break;
+          !declarers_hand.contains(discard) ||
+          // This is supposed to check that trumps are discarded only as
+          // necessary
+          (discard.count(Suit::trumps) &&
+            discard.size()-discard.count(Suit::trumps) !=
+              declarers_hand.size()-
+                declarers_hand.count(Suit::trumps)-
+                declarers_hand.count(SuitRank::king))) {
+        std::ostringstream os;
+        os << "invalid discard";
+        declarer->notify_invalid(os.str());
+      } else {
+        // All conditions OK
+        break;
+      }
     }
 
     if (debug_stream) {

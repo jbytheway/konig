@@ -82,11 +82,6 @@ void RemotePlayer::notify_announcements(std::vector<Announcement> announcements)
       ));
 }
 
-void RemotePlayer::notify_invalid_announcements(std::string m)
-{
-  client_.send(Message<MessageType::notifyInvalidAnnouncements>(std::move(m)));
-}
-
 void RemotePlayer::notify_announcements_done()
 {
   client_.send(Message<MessageType::notifyAnnouncementsDone>());
@@ -99,9 +94,9 @@ void RemotePlayer::notify_play_card(PlayPosition pos, Card card)
       ));
 }
 
-void RemotePlayer::notify_invalid_play(std::string m)
+void RemotePlayer::notify_invalid(std::string m)
 {
-  client_.send(Message<MessageType::notifyInvalidPlay>(std::move(m)));
+  client_.send(Message<MessageType::notifyInvalid>(std::move(m)));
 }
 
 }}

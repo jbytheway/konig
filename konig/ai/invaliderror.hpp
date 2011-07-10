@@ -10,20 +10,6 @@ class KONIG_AI_API InvalidError : public std::logic_error {
     {}
 };
 
-class KONIG_AI_API InvalidPlayError : public InvalidError {
-  public:
-    InvalidPlayError(std::string const& m) :
-      InvalidError(m)
-    {}
-};
-
-class KONIG_AI_API InvalidAnnouncementsError : public InvalidError {
-  public:
-    InvalidAnnouncementsError(std::string const& m) :
-      InvalidError(m)
-    {}
-};
-
 }}
 
 #endif // KONIG_AI__INVALIDERROR_HPP

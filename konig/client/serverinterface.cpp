@@ -168,10 +168,7 @@ KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
     notifyAnnouncements, notify_announcements, announcements
   )
 KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
-    notifyInvalidAnnouncements, notify_invalid_announcements, message
-  )
-KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
-    notifyInvalidPlay, notify_invalid_play, message
+    notifyInvalid, notify_invalid, message
   )
 #undef KONIG_CLIENT_SERVERINTERFACE_NOTIFY
 

@@ -53,7 +53,7 @@ std::vector<Trick> Contract::play_tricks(
           std::ostringstream os;
           os << "invalid play " << c << " to trick " << t << " from hand " <<
             hands[playing];
-          players[playing]->notify_invalid_play(os.str());
+          players[playing]->notify_invalid(os.str());
         }
       }
       t.add(c);

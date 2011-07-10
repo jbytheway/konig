@@ -44,22 +44,22 @@ namespace {
 
 BOOST_AUTO_TEST_CASE(bidding_failures)
 {
-  BOOST_CHECK_THROW(do_bid_test(list_of("")), ai::InvalidPlayError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("r")), ai::InvalidPlayError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("t")), ai::InvalidPlayError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("6d")), ai::InvalidPlayError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("")), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("r")), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("t")), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test(list_of("6d")), ai::InvalidError);
   BOOST_CHECK_THROW(do_bid_test(list_of("r")("")("")("")
-                                       ("s")), ai::InvalidPlayError);
+                                       ("s")), ai::InvalidError);
   BOOST_CHECK_THROW(do_bid_test(list_of("r")("s")("")("")
-                                       ("t")), ai::InvalidPlayError);
+                                       ("t")), ai::InvalidError);
   BOOST_CHECK_THROW(do_bid_test(list_of("r")("t")("")("")
-                                       ("t")), ai::InvalidPlayError);
+                                       ("t")), ai::InvalidError);
   BOOST_CHECK_THROW(do_bid_test(list_of("p")("s")("")("")
-                                       ("")), ai::InvalidPlayError);
+                                       ("")), ai::InvalidError);
   BOOST_CHECK_THROW(do_bid_test(list_of("r")("p")("")("")
-                                       ("s")), ai::InvalidPlayError);
+                                       ("s")), ai::InvalidError);
   BOOST_CHECK_THROW(do_bid_test(list_of("r")("r")("")("")
-                                       ("")), ai::InvalidPlayError);
+                                       ("")), ai::InvalidError);
 }
 
 BOOST_AUTO_TEST_CASE(bidding_results)
