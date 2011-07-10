@@ -49,13 +49,20 @@ std::string PositiveContract::contract_name(
 std::string PositiveContract::outcome_name(
     uint8_t const num_achievers,
     Announcedness const announcedness,
-    Achievement const achievement
+    Achievement const achievement,
+    bool conceded
   ) const
 {
   std::string result = bid_name();
   if (partnership_ && num_achievers == 1) result += "t";
   result += announcedness.string(Achievement::neutral);
-  if (achievement == Achievement::off) result += "/";
+  if (achievement == Achievement::off) {
+    if (conceded) {
+      result += "c";
+    } else {
+      result += "/";
+    }
+  }
   return result;
 }
 
@@ -72,6 +79,8 @@ PlayResult PositiveContract::play(
 
   KingCall king(KingCall::invalid);
   Card called_king(TrumpRank::pagat);
+  bool against_three = false;
+
   if (partnership_) {
     while (true) {
       king = declarer->call_king();
@@ -108,6 +117,9 @@ PlayResult PositiveContract::play(
         players.begin(), players.end(),
         boost::bind(&Player::notify_call_king, _1, king)
       );
+
+    against_three =
+      talon[0].count(called_king) || talon[1].count(called_king);
   }
 
   Cards declarers_cards;
@@ -118,6 +130,28 @@ PlayResult PositiveContract::play(
         players.begin(), players.end(),
         boost::bind(&Player::notify_talon, _1, boost::cref(talon))
       );
+
+    // Where appropriate, offer the option to concede
+    if (against_three) {
+      // NB against_three can only be true if it's a partnership contract (see
+      // above) and we also know the talon is revealed, so we know it's a
+      // contract where concession is allowed.
+      bool concession = declarer->choose_concede();
+      if (concession) {
+        std::for_each(
+          players.begin(), players.end(),
+          boost::bind(&Player::notify_concede, _1)
+        );
+
+        AnnouncementSequence announcements(shared_from_this(), called_king);
+        ContractAndAnnouncements whole_contract =
+          announcements.no_announcements();
+
+        Outcome outcome = whole_contract.score_conceded(offence);
+        std::array<int, 4> scores = outcome.compute_scores(offence);
+        return PlayResult{outcome, {}, scores};
+      }
+    }
 
     if (talon_halves_ == 1) {
       uint8_t talon_half;
@@ -201,8 +235,7 @@ PlayResult PositiveContract::play(
     }
   } else {
     // In solo against three, declarer gets the talon
-    if (partnership_ &&
-        talon[0].count(called_king) + talon[1].count(called_king)) {
+    if (partnership_ && against_three) {
       declarers_cards.insert(talon[0]);
       declarers_cards.insert(talon[1]);
     } else {

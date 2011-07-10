@@ -20,12 +20,17 @@ class KONIG_API Outcome {
       > Results;
 
     Outcome() = default;
-    Outcome(boost::shared_ptr<Contract const>, uint8_t num_game_achievers);
+    Outcome(
+      boost::shared_ptr<Contract const>,
+      uint8_t num_game_achievers,
+      bool conceded = false
+    );
 
     const boost::shared_ptr<Contract const>& contract() const {
       return contract_;
     }
     uint8_t num_game_achievers() const { return num_game_achievers_; }
+    bool conceded() const { return conceded_; }
     const Results& results() const { return results_; }
     std::string string() const;
 
@@ -43,6 +48,7 @@ class KONIG_API Outcome {
   private:
     boost::shared_ptr<Contract const> contract_;
     uint8_t num_game_achievers_;
+    bool conceded_;
     int achiever_score_;
     Results results_;
 };

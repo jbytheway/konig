@@ -17,6 +17,12 @@ void MinimalAnnouncementAi::reset(FateAi const& ai)
   first_announcements_ = true;
 }
 
+bool MinimalAnnouncementAi::choose_concede(FateAi const&)
+{
+  // Never give up; never surrender!
+  return false;
+}
+
 KingCall MinimalAnnouncementAi::call_king(FateAi const& ai)
 {
   auto const& hand = ai.hand();

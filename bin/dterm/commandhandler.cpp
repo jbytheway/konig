@@ -72,6 +72,35 @@ class KingChecker : public Checker {
     }
 };
 
+class BoolChecker : public Checker {
+  public:
+    BoolChecker(GameTracker const& t, boost::any& r) :
+      Checker(t, r)
+    {
+      if (bools_.empty()) {
+        bools_ = {
+          {"y", true }, {"yes", true}, {"1", true },
+          {"n", false}, {"no", false}, {"0", false}
+        };
+      }
+    }
+
+    virtual bool command(std::list<std::string> const& tokens) {
+      if (tokens.size() != 1) return false;
+      std::string const& value = tokens.front();
+      auto it = bools_.find(value);
+      if (it == bools_.end()) {
+        return false;
+      }
+      return_ = it->second;
+      return true;
+    }
+  private:
+    static std::unordered_map<std::string, bool> bools_;
+};
+
+std::unordered_map<std::string, bool> BoolChecker::bools_;
+
 class TalonChecker : public Checker {
   public:
     TalonChecker(GameTracker const& t, boost::any& r) :
@@ -534,7 +563,7 @@ void CommandHandler::present_current_trick() const
 
 void CommandHandler::set_mode(UiMode const mode)
 {
-  BOOST_STATIC_ASSERT(int(UiMode::max) == 7);
+  BOOST_STATIC_ASSERT(int(UiMode::max) == 8);
   switch (mode) {
     case UiMode::none:
       parser_->pre_checker().reset();
@@ -547,6 +576,10 @@ void CommandHandler::set_mode(UiMode const mode)
     case UiMode::callKing:
       parser_->pre_checker().reset(new KingChecker(tracker_, return_value_));
       output_->set_prompt("call> ");
+      break;
+    case UiMode::chooseConcession:
+      parser_->pre_checker().reset(new BoolChecker(tracker_, return_value_));
+      output_->set_prompt("concede?> ");
       break;
     case UiMode::chooseTalonHalf:
       parser_->pre_checker().reset(new TalonChecker(tracker_, return_value_));

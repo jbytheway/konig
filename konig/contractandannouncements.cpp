@@ -109,7 +109,7 @@ Outcome ContractAndAnnouncements::score(
   uint8_t const num_game_achievers =
     std::count(game_achievers.begin(), game_achievers.end(), true);
   bool const against_three = (num_game_achievers == 1);
-  Outcome o(contract_, num_game_achievers);
+  Outcome o(contract_, num_game_achievers, false);
   BOOST_FOREACH(const auto& i, announcednesses_) {
     bool offensive = i.first.second;
     Feat feat = i.first.first;
@@ -123,6 +123,21 @@ Outcome ContractAndAnnouncements::score(
       announcednesses_
     );
   }
+  return o;
+}
+
+Outcome ContractAndAnnouncements::score_conceded(
+    std::array<bool, 4> const& game_achievers
+  )
+{
+  uint8_t const num_game_achievers =
+    std::count(game_achievers.begin(), game_achievers.end(), true);
+  bool const against_three = (num_game_achievers == 1);
+  Outcome o(contract_, num_game_achievers, true);
+  o.add(
+    true /*offensive*/, Feat::game, Announcedness::announced, Achievement::off,
+    against_three, announcednesses_
+  );
   return o;
 }
 

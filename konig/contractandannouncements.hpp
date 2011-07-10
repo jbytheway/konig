@@ -63,6 +63,10 @@ class KONIG_API ContractAndAnnouncements {
         std::array<bool, 4> const& game_achievers
       );
 
+    Outcome score_conceded(
+        std::array<bool, 4> const& game_achievers
+      );
+
     std::string string(uint8_t num_offence) const;
   private:
     Contract::ConstPtr contract_;

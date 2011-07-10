@@ -29,6 +29,7 @@ namespace {
     Contracts const& contracts = rules.contracts();
     std::array<std::vector<Bid>, 4> bids;
     boost::optional<KingCall> king_call;
+    bool concession = false;
     int talon_choice = -1;
     Cards discard;
     std::array<std::vector<std::vector<Announcement>>, 4> announcements;
@@ -52,13 +53,17 @@ namespace {
 
     discard = Cards::from_string(discard_names);
 
-    for (size_t i=0; i<announcement_names.size(); ++i) {
-      std::vector<Announcement> these_announcements;
-      bool result = Announcement::many_from_string(
-        these_announcements, announcement_names[i]
-      );
-      BOOST_CHECK(result);
-      announcements[i%4].push_back(these_announcements);
+    if (announcement_names == std::vector<std::string>{"c"}) {
+      concession = true;
+    } else {
+      for (size_t i=0; i<announcement_names.size(); ++i) {
+        std::vector<Announcement> these_announcements;
+        bool result = Announcement::many_from_string(
+          these_announcements, announcement_names[i]
+        );
+        BOOST_CHECK(result);
+        announcements[i%4].push_back(these_announcements);
+      }
     }
 
     for (size_t i=0; i<plays.size(); ++i) {
@@ -88,7 +93,8 @@ namespace {
       BidAi::Ptr bidder(new ai::SpecificBidsAi(std::move(bids[i])));
       AnnouncementAi::Ptr announcer(
         new SpecificAnnouncementsAi(
-          announcements[i], king_call, talon_choice, discard
+          announcements[i], king_call, talon_choice, discard,
+          concession
         )
       );
       PlayAi::Ptr player(new ai::SpecificPlayAi(std::move(play_seqs[i])));
@@ -204,6 +210,31 @@ BOOST_AUTO_TEST_CASE(concession_possible)
     );
     BOOST_CHECK_EQUAL(result.outcome.string(), "rt/f!v!");
     BOOST_CHECK(result.scores == list_of(-15)(5)(5)(5));
+  }
+  {
+    auto result = do_outcome_test(
+      list_of("C:K D:Kt")("4 C:8 D:Q"),
+      list_of("r")("")("")("")("r"),
+      "C",
+      "D:QJ9",
+      {"c"}, // Concession
+      {
+        "C8", "Ct", "CJ", "C9",
+        "CN", " 2", "C7", " 1",
+        "H7", "Ht", "H8", " 5",
+        "SK", "SQ", " 6", "S7",
+        "HJ", "HK", "H9", " 7",
+        " 3", " 9", " 8", "S8",
+        "HQ", "HN", "15", "10",
+        " 4", "D7", "DN", "18",
+        "11", "12", "16", "S9",
+        "13", "21", "17", "St",
+        "14", "D8", "19", "SJ",
+        "CQ", "Sk", "20", "SN"
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "rtc");
+    BOOST_CHECK(result.scores == list_of(-3)(1)(1)(1));
   }
 }
 

@@ -8,9 +8,14 @@
 
 namespace konig {
 
-Outcome::Outcome(Contract::ConstPtr contract, uint8_t num_game_achievers) :
+Outcome::Outcome(
+  Contract::ConstPtr contract,
+  uint8_t num_game_achievers,
+  bool conceded
+) :
   contract_(std::move(contract)),
   num_game_achievers_(num_game_achievers),
+  conceded_(conceded),
   achiever_score_{0}
 {}
 
@@ -89,7 +94,8 @@ std::ostream& operator<<(std::ostream& o, const Outcome& outcome)
     Achievement achievement = i->second.second;
     if (f == Feat::game) {
       o << outcome.contract()->outcome_name(
-          outcome.num_game_achievers(), announcedness, achievement
+          outcome.num_game_achievers(), announcedness, achievement,
+          outcome.conceded()
         );
     } else {
       assert(

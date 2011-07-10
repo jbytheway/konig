@@ -11,9 +11,11 @@ SpecificAnnouncementsAi::SpecificAnnouncementsAi(
   std::string const& announcement_sequence,
   boost::optional<KingCall> king_call,
   int talon_half,
-  Cards discard
+  Cards discard,
+  bool concede
 ) :
   king_call_(king_call),
+  concede_(concede),
   talon_half_(talon_half),
   discard_(discard)
 {
@@ -47,9 +49,11 @@ SpecificAnnouncementsAi::SpecificAnnouncementsAi(
   Script s,
   boost::optional<KingCall> king_call,
   int talon_half,
-  Cards discard
+  Cards discard,
+  bool concede
 ) :
   king_call_(king_call),
+  concede_(concede),
   talon_half_(talon_half),
   discard_(discard),
   announcements_(std::move(s)),
@@ -60,6 +64,11 @@ KingCall SpecificAnnouncementsAi::call_king(FateAi const&)
 {
   assert(king_call_);
   return *king_call_;
+}
+
+bool SpecificAnnouncementsAi::choose_concede(FateAi const&)
+{
+  return concede_;
 }
 
 uint8_t SpecificAnnouncementsAi::choose_talon_half(FateAi const&)

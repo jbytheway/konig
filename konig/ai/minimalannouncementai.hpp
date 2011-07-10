@@ -9,6 +9,7 @@ class MinimalAnnouncementAi : public AnnouncementAi {
   public:
     virtual void reset(FateAi const&);
     virtual KingCall call_king(FateAi const&);
+    virtual bool choose_concede(FateAi const&);
     virtual uint8_t choose_talon_half(FateAi const&);
     virtual Cards discard(FateAi const&);
     virtual std::vector<Announcement> announce(FateAi const&);

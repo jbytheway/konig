@@ -14,6 +14,11 @@ KingCall ListenAi::call_king()
   KONIG_FATAL("not implemented");
 }
 
+bool ListenAi::choose_concede()
+{
+  KONIG_FATAL("not implemented");
+}
+
 uint8_t ListenAi::choose_talon_half()
 {
   KONIG_FATAL("not implemented");

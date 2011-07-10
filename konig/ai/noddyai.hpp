@@ -11,6 +11,7 @@ class NoddyAi : public Ai {
   public:
     virtual Bid bid();
     virtual KingCall call_king();
+    virtual bool choose_concede();
     virtual uint8_t choose_talon_half();
     virtual Cards discard();
     virtual std::vector<Announcement> announce();

@@ -90,6 +90,11 @@ KingCall ForwardingAi::call_king()
   return announcer_->call_king(*this);
 }
 
+bool ForwardingAi::choose_concede()
+{
+  return announcer_->choose_concede(*this);
+}
+
 uint8_t ForwardingAi::choose_talon_half()
 {
   return announcer_->choose_talon_half(*this);

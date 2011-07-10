@@ -24,6 +24,9 @@ Message<MessageType::response>::only_value RemotePlayer::name()              \
 KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(bid, requestBid, bid)
 KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(call_king, requestCallKing, callKing)
 KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(
+  choose_concede, requestConcessionChoice, concessionChoice
+)
+KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(
     choose_talon_half, requestTalonChoice, talonChoice
   )
 KONIG_SERVER_REMOTE_PLAYER_REMOTE_CALL(discard, requestDiscard, discard)
@@ -52,6 +55,11 @@ void RemotePlayer::notify_call_king(KingCall call)
   client_.send(Message<MessageType::notifyCallKing>(
         std::move(call)
       ));
+}
+
+void RemotePlayer::notify_concede()
+{
+  client_.send(Message<MessageType::notifyConcession>());
 }
 
 void RemotePlayer::notify_talon(std::array<Cards, 2> const& talon)

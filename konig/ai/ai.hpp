@@ -24,6 +24,7 @@ class KONIG_AI_API Ai : public Player {
     virtual void notify_contract_established(Bid bid);
     virtual void notify_call_king(KingCall);
     virtual void notify_talon(const std::array<Cards, 2>& talon);
+    virtual void notify_concede();
     virtual void notify_talon_choice(uint8_t);
     virtual void notify_discard(Cards);
     virtual void notify_announcements(std::vector<Announcement>);

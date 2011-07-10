@@ -32,7 +32,8 @@ class PositiveContract : public Contract {
     virtual std::string outcome_name(
         uint8_t const num_achievers,
         Announcedness const,
-        Achievement const
+        Achievement const,
+        bool conceded = false
       ) const;
 
     virtual PlayResult play(

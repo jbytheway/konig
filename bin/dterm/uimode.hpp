@@ -7,6 +7,7 @@ enum class UiMode {
   none,
   bid,
   callKing,
+  chooseConcession,
   chooseTalonHalf,
   discard,
   announce,

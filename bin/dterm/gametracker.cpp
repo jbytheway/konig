@@ -26,6 +26,11 @@ KingCall GameTracker::call_king()
   return handler_.get_from_user<KingCall>(UiMode::callKing);
 }
 
+bool GameTracker::choose_concede()
+{
+  return handler_.get_from_user<bool>(UiMode::chooseConcession);
+}
+
 uint8_t GameTracker::choose_talon_half()
 {
   return handler_.get_from_user<uint8_t>(UiMode::chooseTalonHalf);

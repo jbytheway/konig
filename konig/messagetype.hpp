@@ -12,6 +12,7 @@ namespace konig {
   (notifyContractEstablished)\
   (requestCallKing)(callKing)(notifyCallKing)\
   (notifyTalon)\
+  (requestConcessionChoice)(concessionChoice)(notifyConcession)\
   (requestTalonChoice)(talonChoice)(notifyTalonChoice)\
   (requestDiscard)(discard)(notifyDiscard)\
   (requestAnnouncements)(announcements)(notifyAnnouncements)\

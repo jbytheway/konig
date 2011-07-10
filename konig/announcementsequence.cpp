@@ -85,5 +85,13 @@ AnnouncementSequence::get_announcements(
   return result;
 }
 
+ContractAndAnnouncements
+AnnouncementSequence::no_announcements()
+{
+  announcements_.clear();
+  ContractAndAnnouncements result(contract_, called_king_);
+  return result;
+}
+
 }
 

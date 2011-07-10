@@ -18,6 +18,8 @@ class RemotePlayer : public Player {
     virtual KingCall call_king();
     virtual void notify_call_king(KingCall);
     virtual void notify_talon(std::array<Cards, 2> const& talon);
+    virtual bool choose_concede();
+    virtual void notify_concede();
     virtual uint8_t choose_talon_half();
     virtual void notify_talon_choice(uint8_t);
     virtual Cards discard();

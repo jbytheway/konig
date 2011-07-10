@@ -33,7 +33,8 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
     virtual std::string outcome_name(
         uint8_t const num_achievers,
         Announcedness const,
-        Achievement const
+        Achievement const,
+        bool conceded = false
       ) const = 0;
 
     const std::string& name() const { return name_; }

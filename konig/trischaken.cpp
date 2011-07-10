@@ -32,7 +32,8 @@ std::string Trischaken::contract_name(
 std::string Trischaken::outcome_name(
     uint8_t const num_achievers,
     Announcedness const announcedness,
-    Achievement const achievement
+    Achievement const achievement,
+    bool /*conceded*/
   ) const
 {
   std::string result = bid_name();

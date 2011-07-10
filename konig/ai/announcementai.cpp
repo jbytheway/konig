@@ -33,6 +33,11 @@ KingCall AnnouncementAi::call_king(FateAi const&)
   KONIG_FATAL("not implemented in " << typeid(*this).name());
 }
 
+bool AnnouncementAi::choose_concede(FateAi const&)
+{
+  KONIG_FATAL("not implemented in " << typeid(*this).name());
+}
+
 uint8_t AnnouncementAi::choose_talon_half(FateAi const&)
 {
   KONIG_FATAL("not implemented in " << typeid(*this).name());

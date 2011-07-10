@@ -51,6 +51,7 @@ KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::getSetting)
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::setSetting)
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::bid)
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::callKing)
+KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::concessionChoice)
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::talonChoice)
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::discard)
 KONIG_CLIENT_SERVERINTERFACE_IGNORE(MessageType::announcements)
@@ -144,6 +145,9 @@ void ServerInterface::message(Message<MessageType::request> const&)     \
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestBid, bid, bid)
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestCallKing, callKing, call_king)
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(
+    requestConcessionChoice, concessionChoice, choose_concede
+  )
+KONIG_CLIENT_SERVERINTERFACE_REQUEST(
     requestTalonChoice, talonChoice, choose_talon_half
   )
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestDiscard, discard, discard)
@@ -153,31 +157,37 @@ KONIG_CLIENT_SERVERINTERFACE_REQUEST(
 KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestPlayCard, playCard, play_card)
 #undef KONIG_CLIENT_SERVERINTERFACE_REQUEST
 
-#define KONIG_CLIENT_SERVERINTERFACE_NOTIFY(type, member, field)   \
+#define KONIG_CLIENT_SERVERINTERFACE_NOTIFY_0(type, member)        \
+void ServerInterface::message(Message<MessageType::type> const& m) \
+{                                                                  \
+  client_.player().member();                                       \
+}
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_0(
+  notifyConcession, notify_concede
+)
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_0(
+  notifyAnnouncementsDone, notify_announcements_done
+)
+#undef KONIG_CLIENT_SERVERINTERFACE_NOTIFY_0
+
+#define KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(type, member, field) \
 void ServerInterface::message(Message<MessageType::type> const& m) \
 {                                                                  \
   client_.player().member(m.get<fields::field>());                 \
 }
-KONIG_CLIENT_SERVERINTERFACE_NOTIFY(notifyCallKing, notify_call_king, king)
-KONIG_CLIENT_SERVERINTERFACE_NOTIFY(notifyTalon, notify_talon, talon)
-KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(notifyCallKing, notify_call_king, king)
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(notifyTalon, notify_talon, talon)
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(
     notifyTalonChoice, notify_talon_choice, choice
   )
-KONIG_CLIENT_SERVERINTERFACE_NOTIFY(notifyDiscard, notify_discard, discard)
-KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(notifyDiscard, notify_discard, discard)
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(
     notifyAnnouncements, notify_announcements, announcements
   )
-KONIG_CLIENT_SERVERINTERFACE_NOTIFY(
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(
     notifyInvalid, notify_invalid, message
   )
-#undef KONIG_CLIENT_SERVERINTERFACE_NOTIFY
-
-void ServerInterface::message(
-    Message<MessageType::notifyAnnouncementsDone> const&
-  )
-{
-  client_.player().notify_announcements_done();
-}
+#undef KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1
 
 void ServerInterface::close()
 {

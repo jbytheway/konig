@@ -13,6 +13,10 @@ KingCall NoddyAi::call_king() {
   throw std::logic_error("not implemented");
 }
 
+bool NoddyAi::choose_concede() {
+  throw std::logic_error("not implemented");
+}
+
 uint8_t NoddyAi::choose_talon_half() {
   throw std::logic_error("not implemented");
 }

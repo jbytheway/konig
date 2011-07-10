@@ -118,6 +118,25 @@ struct MessageData<MessageType::notifyTalon> {
 };
 
 template<>
+struct MessageData<MessageType::requestConcessionChoice> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::concessionChoice> {
+  typedef fusion::map<
+    fusion::pair<fields::choice, bool>
+  > type;
+};
+
+template<>
+struct MessageData<MessageType::notifyConcession> {
+  typedef fusion::map<
+  > type;
+};
+
+template<>
 struct MessageData<MessageType::requestTalonChoice> {
   typedef fusion::map<
   > type;

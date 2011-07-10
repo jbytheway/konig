@@ -33,6 +33,9 @@ class AnnouncementSequence {
         std::array<bool, 4> const& offence,
         PlayPosition declarer_position
       );
+
+    ContractAndAnnouncements
+    no_announcements();
   private:
     const boost::shared_ptr<Contract const> contract_;
     const Card called_king_;
