@@ -138,7 +138,13 @@ bool Trischaken::valid_first_announcements(
   return announcements.empty();
 }
 
-int Trischaken::value_of(Feat f, Announcedness an, Achievement ac) const
+int Trischaken::value_of(
+  Feat f,
+  Announcedness an,
+  Achievement ac,
+  bool against_three,
+  Announcednesses const&
+) const
 {
   assert(f == Feat::game);
   assert(ac != Achievement::neutral);

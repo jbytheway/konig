@@ -20,7 +20,8 @@ PositiveContract::PositiveContract(
     const bool partnership,
     const uint8_t talon_halves,
     const bool must_announce_bird,
-    const bool no_initial_announcements
+    const bool no_initial_announcements,
+    const bool cancel_kontra_against_three
   ) :
   Contract(std::move(short_name), std::move(name)),
   value_(value),
@@ -29,7 +30,8 @@ PositiveContract::PositiveContract(
   partnership_(partnership),
   talon_halves_(talon_halves),
   must_announce_bird_(must_announce_bird),
-  no_initial_announcements_(no_initial_announcements)
+  no_initial_announcements_(no_initial_announcements),
+  cancel_kontra_against_three_(cancel_kontra_against_three)
 {
 }
 
@@ -266,10 +268,36 @@ bool PositiveContract::valid_first_announcements(
   return true;
 }
 
-int PositiveContract::value_of(Feat f, Announcedness an, Achievement ac) const
+int PositiveContract::value_of(
+  Feat f,
+  Announcedness an,
+  Achievement ac,
+  bool against_three,
+  Announcednesses const& announcednesses
+) const
 {
   if (f == Feat::game) {
-    int value = value_ * an.multiplier();
+    auto multiplier = an.multiplier();
+    // Nasty special case for Solo kontras
+    if (cancel_kontra_against_three_ &&
+        against_three &&
+        an == Announcedness::kontraed) {
+      // We cancel the kontra *unless* declarer made another announcement
+      bool cancel = true;
+      BOOST_FOREACH(auto const p, announcednesses) {
+        Feat const f = p.first.first;
+        bool const offence = p.first.second;
+        Announcedness a = p.second;
+        if (offence && f != Feat::game && a != Announcedness::unannounced) {
+          cancel = false;
+          break;
+        }
+      }
+      if (cancel) {
+        multiplier = 1;
+      }
+    }
+    int value = value_ * multiplier;
     if (ac == Achievement::off) value *= off_multiplier_;
     return value;
   }

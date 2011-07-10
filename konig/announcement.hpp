@@ -42,6 +42,7 @@ inline bool operator==(Announcement const& l, Announcement const& r) {
 }
 
 std::ostream& operator<<(std::ostream&, Announcement const&);
+std::istream& operator>>(std::istream&, Announcement&);
 
 }
 

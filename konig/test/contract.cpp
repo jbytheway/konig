@@ -114,10 +114,16 @@ BOOST_AUTO_TEST_CASE(contract_names_correct)
 
 BOOST_AUTO_TEST_CASE(contract_feat_scoring_correct)
 {
+  // Technically it's invalid to pass an empty announcednesses to these
+  // functions; it should include all the ones we're scoring, but except for
+  // Solo it doesn't actually matter.
+  Announcednesses announcednesses;
+
   {
     Contract::ConstPtr contract = Contract::solodreier();
     BOOST_CHECK_EQUAL(contract->value_of(
-        Feat::uhu, Announcedness::unannounced, Achievement::off
+        Feat::uhu, Announcedness::unannounced, Achievement::off,
+        true, announcednesses
       ), -2);
   }
 }

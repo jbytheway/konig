@@ -6,7 +6,7 @@
 #include <konig/api.hpp>
 #include <konig/achievement.hpp>
 #include <konig/feat.hpp>
-#include <konig/announcedness.hpp>
+#include <konig/announcednesses.hpp>
 
 namespace konig {
 
@@ -29,7 +29,14 @@ class KONIG_API Outcome {
     const Results& results() const { return results_; }
     std::string string() const;
 
-    void add(bool offence, Feat, Announcedness, Achievement);
+    void add(
+      bool offence,
+      Feat,
+      Announcedness,
+      Achievement,
+      bool against_three,
+      Announcednesses const&
+    );
 
     std::array<int, 4>
     compute_scores(std::array<bool, 4> const& achievers) const;

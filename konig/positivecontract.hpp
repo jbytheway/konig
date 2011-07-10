@@ -15,13 +15,14 @@ class PositiveContract : public Contract {
     PositiveContract(
         std::string short_name,
         std::string name,
-        const int value,
-        const int off_multiplier,
+        int value,
+        int off_multiplier,
         FeatValues feat_values,
-        const bool partnership,
-        const uint8_t talon_halves,
-        const bool must_announce_bird,
-        const bool no_initial_announcements
+        bool partnership,
+        uint8_t talon_halves,
+        bool must_announce_bird,
+        bool no_initial_announcements,
+        bool cancel_kontra_against_three
       );
 
     virtual std::string contract_name(
@@ -60,7 +61,13 @@ class PositiveContract : public Contract {
         const std::vector<Announcement>&
       ) const;
 
-    virtual int value_of(Feat, Announcedness, Achievement) const;
+    virtual int value_of(
+      Feat,
+      Announcedness,
+      Achievement,
+      bool against_three,
+      Announcednesses const&
+    ) const;
 
     virtual Achievement result_for(
       const Cards& declarers_cards,
@@ -80,7 +87,8 @@ class PositiveContract : public Contract {
         BOOST_SERIALIZATION_NVP(partnership_) &
         BOOST_SERIALIZATION_NVP(talon_halves_) &
         BOOST_SERIALIZATION_NVP(must_announce_bird_) &
-        BOOST_SERIALIZATION_NVP(no_initial_announcements_);
+        BOOST_SERIALIZATION_NVP(no_initial_announcements_) &
+        BOOST_SERIALIZATION_NVP(cancel_kontra_against_three_);
     }
 
     int value_;
@@ -90,6 +98,10 @@ class PositiveContract : public Contract {
     uint8_t talon_halves_; // How many halves of the talon declarer gets
     bool must_announce_bird_;
     bool no_initial_announcements_;
+
+    // True if we cancel kontras when the contract is against three without
+    // declarer making other announcements
+    bool cancel_kontra_against_three_;
 };
 
 }

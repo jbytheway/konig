@@ -106,8 +106,9 @@ Outcome ContractAndAnnouncements::score(
     assert(declarers_cards.size() + defenses_cards.size() == 48);
   }
 #endif
-  uint8_t num_game_achievers =
+  uint8_t const num_game_achievers =
     std::count(game_achievers.begin(), game_achievers.end(), true);
+  bool const against_three = (num_game_achievers == 1);
   Outcome o(contract_, num_game_achievers);
   BOOST_FOREACH(const auto& i, announcednesses_) {
     bool offensive = i.first.second;
@@ -117,7 +118,10 @@ Outcome ContractAndAnnouncements::score(
         contract_, called_king_, tricks, declarers_cards, defenses_cards,
         offensive, game_achievers
       );
-    o.add(offensive, feat, announcedness, achievement);
+    o.add(
+      offensive, feat, announcedness, achievement, against_three,
+      announcednesses_
+    );
   }
   return o;
 }

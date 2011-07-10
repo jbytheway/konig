@@ -3,7 +3,7 @@
 
 #include <map>
 
-#include <konig/core.hpp>
+#include <konig/announcedness.hpp>
 
 namespace konig {
 

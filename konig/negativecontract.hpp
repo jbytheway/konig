@@ -56,7 +56,13 @@ class NegativeContract : public Contract {
         const std::vector<Announcement>&
       ) const;
 
-    virtual int value_of(Feat, Announcedness, Achievement) const;
+    virtual int value_of(
+      Feat,
+      Announcedness,
+      Achievement,
+      bool against_three,
+      Announcednesses const&
+    ) const;
 
     virtual Achievement result_for(
       const Cards& declarers_cards,

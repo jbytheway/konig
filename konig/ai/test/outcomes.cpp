@@ -18,12 +18,16 @@ namespace {
   PlayResult do_outcome_test(
     std::vector<std::string> const& talon_string,
     std::vector<std::string> const& bid_names,
+    std::string const& king_call_name,
+    std::vector<std::string> const& announcement_names,
     std::vector<std::string> const& plays
   )
   {
     Ruleset rules = Ruleset::cheltenham();
     Contracts const& contracts = rules.contracts();
     std::array<std::vector<Bid>, 4> bids;
+    boost::optional<KingCall> king_call;
+    std::array<std::vector<std::vector<Announcement>>, 4> announcements;
     std::array<std::vector<Card>, 4> play_seqs;
     std::array<Cards, 4> hands;
     assert(talon_string.size() == 2);
@@ -34,6 +38,19 @@ namespace {
     for (size_t i=0; i<bid_names.size(); ++i) {
       bids[i%4].push_back(contracts.index_by_bid_name(bid_names[i]));
     }
+    if (!king_call_name.empty()) {
+      king_call = KingCall();
+      bool result = KingCall::from_string(*king_call, king_call_name);
+      BOOST_CHECK(result);
+    }
+    for (size_t i=0; i<announcement_names.size(); ++i) {
+      std::vector<Announcement> these_announcements;
+      bool result = Announcement::many_from_string(
+        these_announcements, announcement_names[i]
+      );
+      BOOST_CHECK(result);
+      announcements[i%4].push_back(these_announcements);
+    }
     for (size_t i=0; i<plays.size(); ++i) {
       Card c;
       assert(Card::from_string(c, plays[i]));
@@ -43,7 +60,9 @@ namespace {
     std::vector<Player::Ptr> players;
     for (size_t i=0; i<4; ++i) {
       BidAi::Ptr bidder(new ai::SpecificBidsAi(std::move(bids[i])));
-      AnnouncementAi::Ptr announcer(new SpecificAnnouncementsAi());
+      AnnouncementAi::Ptr announcer(
+        new SpecificAnnouncementsAi(announcements[i], king_call)
+      );
       PlayAi::Ptr player(new ai::SpecificPlayAi(std::move(play_seqs[i])));
       players.push_back(Player::Ptr(
           new ForwardingAi(bidder, announcer, player)
@@ -55,12 +74,14 @@ namespace {
   }
 }
 
-BOOST_AUTO_TEST_CASE(outcomes_possible)
+BOOST_AUTO_TEST_CASE(t_outcomes_possible)
 {
   {
     auto result = do_outcome_test(
       list_of("7 4 H:8")("2 D:9 H:J"),
       list_of("r")("")("")("")("t"),
+      "",
+      {},
       list_of
         ("21")("Sk")("20")("18")
         ("C9")("CQ")("CJ")("CN")
@@ -82,6 +103,8 @@ BOOST_AUTO_TEST_CASE(outcomes_possible)
     auto result = do_outcome_test(
       list_of("21 15 7")("12 5 C:8"),
       list_of("r")("")("")("")("t"),
+      "",
+      {},
       list_of
         ("D9")("DQ")("DN")("Dt")
         ("20")("18")("Sk")("19")
@@ -103,6 +126,8 @@ BOOST_AUTO_TEST_CASE(outcomes_possible)
     auto result = do_outcome_test(
       list_of("Sk 9 C:Q")("20 8 D:J"),
       list_of("r")("")("")("")("t"),
+      "",
+      {},
       list_of
         ("18")("19")(" 7")("21")
         ("14")("15")(" 4")("17")
@@ -119,6 +144,216 @@ BOOST_AUTO_TEST_CASE(outcomes_possible)
     );
     BOOST_CHECK(result.scores == list_of(1)(1)(1)(-3));
     BOOST_CHECK_EQUAL(result.outcome.string(), "t3+");
+  }
+}
+
+BOOST_AUTO_TEST_CASE(s_scoring_rules)
+{
+  // Solo against three
+  {
+    auto result = do_outcome_test(
+      list_of("10 C:Q D:7")("4 D:K9"),
+      list_of("s")("")("")(""),
+      "D",
+      {"", "", "", ""},
+      {
+        "C9", "C7", "C8", "Ct",
+        "SK", "SJ", "St", "S8",
+        "CJ", " 3", " 1", " 9",
+        "S7", " 6", " 5", "S9",
+        " 2", "HJ", "H7", "H8",
+        "CN", " 7", "12", "11",
+        "18", "HN", "H9", "Ht",
+        "CK", " 8", "13", "14",
+        "SQ", "16", "15", "SN",
+        "Sk", "HQ", "HK", "17",
+        "DN", "Dt", "19", "D8",
+        "DQ", "DJ", "20", "21"
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "st/");
+    BOOST_CHECK(result.scores == list_of(-6)(2)(2)(2));
+  }
+  {
+    auto result = do_outcome_test(
+      list_of("10 C:Q D:7")("4 D:K9"),
+      list_of("s")("")("")(""),
+      "D",
+      {"", "x", "", "", ""},
+      {
+        "C9", "C7", "C8", "Ct",
+        "SK", "SJ", "St", "S8",
+        "CJ", " 3", " 1", " 9",
+        "S7", " 6", " 5", "S9",
+        " 2", "HJ", "H7", "H8",
+        "CN", " 7", "12", "11",
+        "18", "HN", "H9", "Ht",
+        "CK", " 8", "13", "14",
+        "SQ", "16", "15", "SN",
+        "Sk", "HQ", "HK", "17",
+        "DN", "Dt", "19", "D8",
+        "DQ", "DJ", "20", "21"
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "stx/");
+    // Kontra is cancelled
+    BOOST_CHECK_EQUAL(result.scores[0], -6);
+    BOOST_CHECK(result.scores == list_of(-6)(2)(2)(2));
+  }
+  {
+    auto result = do_outcome_test(
+      list_of("10 C:Q D:7")("4 D:K9"),
+      list_of("s")("")("")(""),
+      "D",
+      {"k", "x", "", "", ""},
+      {
+        "C9", "C7", "C8", "Ct",
+        "SK", "SJ", "St", "S8",
+        "CJ", " 3", " 1", " 9",
+        "S7", " 6", " 5", "S9",
+        " 2", "HJ", "H7", "H8",
+        "CN", " 7", "12", "11",
+        "18", "HN", "H9", "Ht",
+        "CK", " 8", "13", "14",
+        "SQ", "16", "15", "SN",
+        "Sk", "HQ", "HK", "17",
+        "DN", "Dt", "19", "D8",
+        "DQ", "DJ", "20", "21"
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "stx/k-");
+    // Kontra not cancelled if declarer announced something else
+    BOOST_CHECK(result.scores == list_of(-24)(8)(8)(8));
+  }
+  {
+    auto result = do_outcome_test(
+      list_of("10 C:Q D:7")("4 D:K9"),
+      list_of("s")("")("")(""),
+      "D",
+      {
+        "", "x", "", "",
+        "xx"
+      },
+      {
+        "C9", "C7", "C8", "Ct",
+        "SK", "SJ", "St", "S8",
+        "CJ", " 3", " 1", " 9",
+        "S7", " 6", " 5", "S9",
+        " 2", "HJ", "H7", "H8",
+        "CN", " 7", "12", "11",
+        "18", "HN", "H9", "Ht",
+        "CK", " 8", "13", "14",
+        "SQ", "16", "15", "SN",
+        "Sk", "HQ", "HK", "17",
+        "DN", "Dt", "19", "D8",
+        "DQ", "DJ", "20", "21"
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "stxx/");
+    // Kontra not cancelled if declarer rekontraed
+    BOOST_CHECK(result.scores == list_of(-24)(8)(8)(8));
+  }
+  {
+    auto result = do_outcome_test(
+      list_of("7 C:7 S:K")("19 D:t S:t"),
+      list_of("s")("")("")(""),
+      "S",
+      {"", "x", "", "", ""},
+      {
+        "12", " 6", "14", " 2",
+        " 4", "11", "D8", "D7",
+        "CJ", "C8", "Ct", "C9",
+        "13", "S8", "16", " 5",
+        "Sk", "S9", "D9", "DQ",
+        "CQ", "CK", "CN", "10",
+        "H8", "HK", " 3", "H7",
+        "20", "Ht", "DJ", "17",
+        "HN", "HQ", " 8", "H9",
+        "15", "SN", "DN", "18",
+        "SQ", "SJ", " 9", "S7",
+        " 1", "HJ", "DK", "21",
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "stx/1/f!");
+    // Kontra *is* cancelled if declarer did something else unannounced
+    BOOST_CHECK(result.scores == list_of(-12)(4)(4)(4));
+  }
+  // Solo with a partner
+  {
+    auto result = do_outcome_test(
+      list_of("D:7 S:N8")("21 14 13"),
+      list_of("s")("")("")(""),
+      "D",
+      {"", "", "", ""},
+      {
+        "C9", "CQ", "C7", "C8",
+        "DN", "D8", " 4", "DJ",
+        " 2", "HK", "H8", "HQ",
+        "CJ", " 1", " 7", "Ct",
+        "18", "H7", "Ht", " 3",
+        "CN", "17", "11", " 5",
+        "DQ", "D9", "12", " 6",
+        "Sk", "H9", "HJ", " 8",
+        "CK", "19", "15", " 9",
+        "S7", "Dt", "16", "10",
+        "SQ", "DK", "HN", "SJ",
+        "SK", "S9", "20", "St",
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "s/");
+    BOOST_CHECK(result.scores == list_of(-2)(-2)(2)(2));
+  }
+  {
+    auto result = do_outcome_test(
+      list_of("D:7 S:N8")("21 14 13"),
+      list_of("s")("")("")(""),
+      "D",
+      {"", "", "x", "", ""},
+      {
+        "C9", "CQ", "C7", "C8",
+        "DN", "D8", " 4", "DJ",
+        " 2", "HK", "H8", "HQ",
+        "CJ", " 1", " 7", "Ct",
+        "18", "H7", "Ht", " 3",
+        "CN", "17", "11", " 5",
+        "DQ", "D9", "12", " 6",
+        "Sk", "H9", "HJ", " 8",
+        "CK", "19", "15", " 9",
+        "S7", "Dt", "16", "10",
+        "SQ", "DK", "HN", "SJ",
+        "SK", "S9", "20", "St",
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "sx/");
+    BOOST_CHECK(result.scores == list_of(-4)(-4)(4)(4));
+  }
+}
+
+BOOST_AUTO_TEST_CASE(s_king_off)
+{
+  {
+    auto result = do_outcome_test(
+      list_of("17 10 H:8")("H:Q S:J9"),
+      list_of("s")("")("")(""),
+      "D",
+      {"", "", "", ""},
+      {
+        "C9", "CQ", "C8", "C7",
+        " 2", "Ht", "H9", "H7",
+        "CJ", " 1", "Ct", " 3",
+        "18", "HK", "HN", "HJ",
+        "CN", " 7", " 9", " 4",
+        "DQ", " 8", "D7", "D8",
+        "S7", "S8", "12", "SN",
+        "DN", "11", "D9", " 5",
+        "SQ", "St", "16", " 6",
+        "Sk", "13", "Dt", "14",
+        "CK", "15", "DJ", "19",
+        "SK", "20", "DK", "21",
+      }
+    );
+    BOOST_CHECK_EQUAL(result.outcome.string(), "s/k/");
+    BOOST_CHECK(result.scores == list_of(-4)(4)(-4)(4));
   }
 }
 

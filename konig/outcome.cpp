@@ -19,7 +19,14 @@ std::string Outcome::string() const {
   return boost::lexical_cast<std::string>(*this);
 }
 
-void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
+void Outcome::add(
+  bool offence,
+  Feat f,
+  Announcedness an,
+  Achievement ac,
+  bool against_three,
+  Announcednesses const& announcednesses
+)
 {
   if (an == Announcedness::unannounced && ac == Achievement::neutral)
     return;
@@ -28,7 +35,7 @@ void Outcome::add(bool offence, Feat f, Announcedness an, Achievement ac)
     ac = Achievement::off;
   assert(!results_.count(std::make_pair(f, offence)));
   results_[std::make_pair(f, offence)] = std::make_pair(an, ac);
-  int score = contract_->value_of(f, an, ac);
+  int score = contract_->value_of(f, an, ac, against_three, announcednesses);
   if (offence) {
     achiever_score_ += score;
   } else {

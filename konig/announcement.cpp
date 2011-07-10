@@ -95,5 +95,16 @@ std::ostream& operator<<(std::ostream& o, Announcement const& a)
   return o;
 }
 
+std::istream& operator>>(std::istream& i, Announcement& a)
+{
+  std::string s;
+  if (i >> s) {
+    if (!Announcement::from_string(a, s)) {
+      i.fail();
+    }
+  }
+  return i;
+}
+
 }
 

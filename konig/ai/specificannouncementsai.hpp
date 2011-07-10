@@ -8,11 +8,24 @@ namespace konig { namespace ai {
 
 class SpecificAnnouncementsAi : public AnnouncementAi {
   public:
-    SpecificAnnouncementsAi(std::string const& announcement_sequence = "");
+    typedef std::vector<std::vector<Announcement>> Script;
+
+    SpecificAnnouncementsAi(
+      std::string const& announcement_sequence = "",
+      boost::optional<KingCall> = boost::optional<KingCall>()
+    );
+
+    SpecificAnnouncementsAi(
+      Script,
+      boost::optional<KingCall> = boost::optional<KingCall>()
+    );
+
+    virtual KingCall call_king(FateAi const&);
     virtual std::vector<Announcement> announce(FateAi const&);
   private:
-    std::vector<std::vector<Announcement>> announcements_;
-    std::vector<std::vector<Announcement>>::iterator next_announcement_;
+    boost::optional<KingCall> king_call_;
+    Script announcements_;
+    Script::iterator next_announcement_;
 };
 
 }}

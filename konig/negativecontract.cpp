@@ -95,7 +95,13 @@ bool NegativeContract::valid_first_announcements(
   return announcements.empty();
 }
 
-int NegativeContract::value_of(Feat f, Announcedness an, Achievement ac) const
+int NegativeContract::value_of(
+  Feat f,
+  Announcedness an,
+  Achievement ac,
+  bool against_three,
+  Announcednesses const&
+) const
 {
   if (f != Feat::game) {
     throw std::logic_error("unexpected feat");

@@ -69,7 +69,13 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
       const std::vector<Trick>& tricks
     ) const = 0;
 
-    virtual int value_of(Feat, Announcedness, Achievement) const = 0;
+    virtual int value_of(
+      Feat,
+      Announcedness,
+      Achievement,
+      bool against_three,
+      Announcednesses const&
+    ) const = 0;
 
     std::vector<Trick> play_tricks(
         std::array<Cards, 4> hands,

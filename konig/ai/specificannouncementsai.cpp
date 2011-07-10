@@ -8,8 +8,10 @@
 namespace konig { namespace ai {
 
 SpecificAnnouncementsAi::SpecificAnnouncementsAi(
-  std::string const& announcement_sequence
-)
+  std::string const& announcement_sequence,
+  boost::optional<KingCall> king_call
+) :
+  king_call_(king_call)
 {
   if (!announcement_sequence.empty()) {
     std::vector<std::string> chunks;
@@ -35,6 +37,21 @@ SpecificAnnouncementsAi::SpecificAnnouncementsAi(
     }
   }
   next_announcement_ = announcements_.begin();
+}
+
+SpecificAnnouncementsAi::SpecificAnnouncementsAi(
+  Script s,
+  boost::optional<KingCall> king_call
+) :
+  king_call_(king_call),
+  announcements_(std::move(s)),
+  next_announcement_(announcements_.begin())
+{}
+
+KingCall SpecificAnnouncementsAi::call_king(FateAi const&)
+{
+  assert(king_call_);
+  return *king_call_;
 }
 
 std::vector<Announcement> SpecificAnnouncementsAi::announce(FateAi const&)

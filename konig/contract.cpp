@@ -81,7 +81,8 @@ std::vector<Trick> Contract::play_tricks(
 Contract::Ptr Contract::rufer()
 {
   return Ptr(new PositiveContract(
-      "r", "rufer", 1, -1, FeatValues::cheltenham(), true, 1, false, false
+      "r", "rufer", 1, -1, FeatValues::cheltenham(),
+      true, 1, false, false, false
     ));
 }
 
@@ -93,15 +94,16 @@ Contract::Ptr Contract::trischaken()
 Contract::Ptr Contract::sechserdreier()
 {
   return Ptr(new PositiveContract(
-      "6d", "sechserdreier", 3, -2, FeatValues::cheltenham(), false, 2, false,
-      true
+      "6d", "sechserdreier", 3, -2, FeatValues::cheltenham(),
+      false, 2, false, true, false
     ));
 }
 
 Contract::Ptr Contract::solo()
 {
   return Ptr(new PositiveContract(
-      "s", "solo", 2, -1, FeatValues::cheltenham()*2, true, 0, false, false
+      "s", "solo", 2, -1, FeatValues::cheltenham()*2,
+      true, 0, false, false, true
     ));
 }
 
@@ -113,8 +115,8 @@ Contract::Ptr Contract::piccolo()
 Contract::Ptr Contract::besserrufer()
 {
   return Ptr(new PositiveContract(
-      "br", "besserrufer", 1, -1, FeatValues::cheltenham(), true, 1, true,
-      false
+      "br", "besserrufer", 1, -1, FeatValues::cheltenham(),
+      true, 1, true, false, false
     ));
 }
 
@@ -126,7 +128,8 @@ Contract::Ptr Contract::bettel()
 Contract::Ptr Contract::dreier()
 {
   return Ptr(new PositiveContract(
-      "d", "dreier", 3, -1, FeatValues::cheltenham(), false, 1, false, false
+      "d", "dreier", 3, -1, FeatValues::cheltenham(),
+      false, 1, false, false, false
     ));
 }
 
@@ -138,8 +141,8 @@ Contract::Ptr Contract::piccolo_ouvert()
 Contract::Ptr Contract::besserdreier()
 {
   return Ptr(new PositiveContract(
-      "bd", "besserdreier", 3, -1, FeatValues::cheltenham(), false, 1, true,
-      false
+      "bd", "besserdreier", 3, -1, FeatValues::cheltenham(),
+      false, 1, true, false, false
     ));
 }
 
@@ -151,8 +154,8 @@ Contract::Ptr Contract::bettel_ouvert()
 Contract::Ptr Contract::solodreier()
 {
   return Ptr(new PositiveContract(
-      "sd", "solodreier", 6, -1, FeatValues::cheltenham()*2, false, 0, false,
-      false
+      "sd", "solodreier", 6, -1, FeatValues::cheltenham()*2,
+      false, 0, false, false, false
     ));
 }
 
