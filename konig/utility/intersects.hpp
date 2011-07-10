@@ -1,6 +1,8 @@
 #ifndef KONIG__UTILITY__INTERSECTS_HPP
 #define KONIG__UTILITY__INTERSECTS_HPP
 
+#include <set>
+
 namespace konig { namespace utility {
 
 template<typename T>
