@@ -102,6 +102,11 @@ void RemotePlayer::notify_play_card(PlayPosition pos, Card card)
       ));
 }
 
+void RemotePlayer::notify_ouvert(Cards const& c)
+{
+  client_.send(Message<MessageType::notifyOuvert>(c));
+}
+
 void RemotePlayer::notify_invalid(std::string m)
 {
   client_.send(Message<MessageType::notifyInvalid>(std::move(m)));

@@ -35,6 +35,7 @@ class KONIG_API Player {
     virtual void notify_announcements_done() {}
     virtual Card play_card() = 0;
     virtual void notify_play_card(PlayPosition, Card) = 0;
+    virtual void notify_ouvert(Cards const&) = 0;
     virtual void notify_invalid(std::string) = 0;
   protected:
     Player() {};

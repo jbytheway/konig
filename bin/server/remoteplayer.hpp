@@ -29,6 +29,7 @@ class RemotePlayer : public Player {
     virtual void notify_announcements_done();
     virtual Card play_card();
     virtual void notify_play_card(PlayPosition, Card);
+    virtual void notify_ouvert(Cards const&);
     virtual void notify_invalid(std::string);
   private:
     Client& client_;

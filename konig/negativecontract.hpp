@@ -51,6 +51,8 @@ class NegativeContract : public Contract {
 
     virtual bool must_announce_bird() const { return false; }
 
+    virtual bool ouvert() const { return ouvert_; }
+
     virtual Announcednesses initial_announcednesses() const;
 
     virtual bool valid_first_announcements(

@@ -224,6 +224,13 @@ struct MessageData<MessageType::notifyPlayCard> {
 };
 
 template<>
+struct MessageData<MessageType::notifyOuvert> {
+  typedef fusion::map<
+    fusion::pair<fields::hand, Cards>
+  > type;
+};
+
+template<>
 struct MessageData<MessageType::notifyInvalid> {
   typedef fusion::map<
     fusion::pair<fields::message, std::string>

@@ -73,6 +73,12 @@ std::vector<Trick> Contract::play_tricks(
       *debug_stream << t << std::endl;
     }
     tricks.push_back(std::move(t));
+    if (trick_number == 12 && ouvert()) {
+      std::for_each(
+        players.begin(), players.end(),
+        boost::bind(&Player::notify_ouvert, _1, hands[declarer_position])
+      );
+    }
   }
 
   return tricks;

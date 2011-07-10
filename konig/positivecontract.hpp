@@ -56,6 +56,8 @@ class PositiveContract : public Contract {
 
     virtual bool must_announce_bird() const { return must_announce_bird_; }
 
+    virtual bool ouvert() const { return false; }
+
     virtual Announcednesses initial_announcednesses() const;
 
     virtual bool valid_first_announcements(

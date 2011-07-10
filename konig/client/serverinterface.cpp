@@ -185,6 +185,9 @@ KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(
     notifyAnnouncements, notify_announcements, announcements
   )
 KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(
+    notifyOuvert, notify_ouvert, hand
+  )
+KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1(
     notifyInvalid, notify_invalid, message
   )
 #undef KONIG_CLIENT_SERVERINTERFACE_NOTIFY_1

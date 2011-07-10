@@ -177,6 +177,10 @@ void Ai::notify_play_card(PlayPosition p, Card c)
   }
 }
 
+void Ai::notify_ouvert(Cards const&)
+{
+}
+
 void Ai::notify_invalid(std::string m)
 {
   throw InvalidError(std::move(m));

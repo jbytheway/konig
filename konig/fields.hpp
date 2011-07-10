@@ -24,6 +24,7 @@ class choice;
 class discard;
 class announcements;
 class card;
+class hand;
 class message;
 
 template<typename Archive>
