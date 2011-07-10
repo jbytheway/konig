@@ -77,7 +77,7 @@ PlayResult Trischaken::play(
 
   AnnouncementSequence announcements(shared_from_this());
   ContractAndAnnouncements whole_contract =
-    announcements.get_announcements(players, offence, declarer_position);
+    announcements.no_announcements();
 
   std::for_each(
       players.begin(), players.end(),
