@@ -9,12 +9,15 @@
 #include <boost/spirit/home/phoenix/object/construct.hpp>
 #include <boost/spirit/home/phoenix/stl/container.hpp>
 #include <boost/spirit/home/phoenix/bind.hpp>
+#include <boost/spirit/include/qi_rule.hpp>
 #include <boost/spirit/include/qi_parse.hpp>
 #include <boost/spirit/include/qi_uint.hpp>
 #include <boost/spirit/include/qi_action.hpp>
 #include <boost/spirit/include/qi_lit.hpp>
 #include <boost/spirit/include/qi_char_.hpp>
 #include <boost/spirit/include/qi_operator.hpp>
+#include <boost/spirit/include/qi_omit.hpp>
+#include <boost/spirit/include/qi_grammar.hpp>
 
 namespace konig {
 
@@ -28,49 +31,100 @@ Cards Cards::from_string(std::string const& description)
   }
 }
 
+namespace qi = boost::spirit::qi;
+
+namespace {
+
+struct CardChunk {
+  Suit suit;
+  std::vector<boost::optional<SuitRank>> ranks;
+};
+
+void insert_cards(std::vector<Card>& into, CardChunk from)
+{
+  BOOST_FOREACH(auto const& rank, from.ranks) {
+    into.push_back(Card(from.suit, *rank));
+  }
+}
+
+template<typename Iterator>
+struct CardsGrammar :
+  qi::grammar<Iterator, std::vector<Card>()>
+{
+  CardsGrammar() :
+    CardsGrammar::base_type(start)
+  {
+    suit_parser =
+      (qi::char_('C') | qi::char_('D') | qi::char_('H') | qi::char_('S'))[
+          qi::_val = px::bind(&Suit::from_char, qi::_1)
+        ];
+
+    suit_rank_parser = (
+      qi::char_('K') | qi::char_('Q') | qi::char_('N') | qi::char_('J') |
+      qi::char_('t') | qi::char_('9') | qi::char_('8') | qi::char_('7') |
+      qi::char_('1') | qi::char_('2') | qi::char_('3') | qi::char_('4')
+    )[ qi::_val = px::bind(&SuitRank::from_char, qi::_1) ];
+
+    suit_ranks_parser %= *suit_rank_parser;
+
+    trump_parser =
+      qi::uint_[
+        qi::_val = px::construct<Card>(px::construct<TrumpRank>(qi::_1))
+      ] |
+      qi::lit("Sk")[qi::_val = Card(TrumpRank::skus)];
+
+    chunk_parser = (
+      suit_parser[px::bind(&CardChunk::suit, qi::_val) = qi::_1] >>
+      qi::lit(':') >>
+      suit_ranks_parser[px::bind(&CardChunk::ranks, qi::_val) = qi::_1]
+    ) | (
+      suit_parser[px::bind(&CardChunk::suit, qi::_val) = qi::_1] >>
+      suit_rank_parser[
+        px::push_back(px::bind(&CardChunk::ranks, qi::_val), qi::_1)
+      ]
+    );
+
+    start = *(
+      (
+        trump_parser[px::push_back(qi::_val, qi::_1)] |
+        chunk_parser[px::bind(&insert_cards, qi::_val, qi::_1)]
+      ) >> qi::omit[*(boost::spirit::ascii::space | qi::lit('_'))]
+    );
+  }
+
+  qi::rule<Iterator, Suit()> suit_parser;
+  qi::rule<Iterator, boost::optional<SuitRank>()> suit_rank_parser;
+  qi::rule<Iterator, std::vector<boost::optional<SuitRank>>()>
+    suit_ranks_parser;
+  qi::rule<Iterator, Card()> trump_parser;
+  qi::rule<Iterator, CardChunk()> chunk_parser;
+  qi::rule<Iterator, std::vector<Card>()> start;
+};
+
+}
+
 bool Cards::from_string(Cards& cards, std::string const& description)
 {
-  namespace qi = boost::spirit::qi;
   auto first = description.begin();
   auto const last = description.end();
   Suit temp;
   std::vector<Card> result;
-  bool x = qi::phrase_parse(
+  CardsGrammar<decltype(first)> cards_parser;
+
+  bool x = qi::parse(
       first,
       last,
-      *(
-        qi::uint_[px::push_back(
-            px::ref(result),
-            px::construct<Card>(px::construct<TrumpRank>(qi::_1))
-          )] |
-        qi::lit("Sk")[px::push_back(px::ref(result), Card(TrumpRank::skus))] |
-        (
-          (qi::char_('C') | qi::char_('D') | qi::char_('H') | qi::char_('S'))[
-              px::ref(temp) = px::bind(&Suit::from_char, qi::_1)
-            ] >>
-          qi::lit(':') >>
-          *(
-            qi::char_('K') | qi::char_('Q') | qi::char_('N') | qi::char_('J') |
-            qi::char_('t') | qi::char_('9') | qi::char_('8') | qi::char_('7') |
-            qi::char_('1') | qi::char_('2') | qi::char_('3') | qi::char_('4')
-          )[
-              px::push_back(
-                px::ref(result),
-                px::construct<Card>(
-                  px::ref(temp),
-                  px::bind(&SuitRank::from_char, qi::_1)
-                )
-              )
-            ]
-        )
-      ),
-      qi::space | qi::char_('_')
+      cards_parser,
+      result
     );
   if (!x || first != last) {
     return false;
   }
   std::sort(result.begin(), result.end());
   if (std::adjacent_find(result.begin(), result.end()) != result.end()) {
+    std::ostringstream os;
+    std::ostream_iterator<Card> oi(os, " ");
+    std::copy(result.begin(), result.end(), oi);
     return false;
   }
   cards = Cards(result);
