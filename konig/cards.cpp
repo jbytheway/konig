@@ -55,14 +55,12 @@ struct CardsGrammar :
     CardsGrammar::base_type(start)
   {
     suit_parser =
-      (qi::char_('C') | qi::char_('D') | qi::char_('H') | qi::char_('S'))[
+      (qi::char_("CDHS"))[
           qi::_val = px::bind(&Suit::from_char, qi::_1)
         ];
 
     suit_rank_parser = (
-      qi::char_('K') | qi::char_('Q') | qi::char_('N') | qi::char_('J') |
-      qi::char_('t') | qi::char_('9') | qi::char_('8') | qi::char_('7') |
-      qi::char_('1') | qi::char_('2') | qi::char_('3') | qi::char_('4')
+      qi::char_("KQNJt9871234")
     )[ qi::_val = px::bind(&SuitRank::from_char, qi::_1) ];
 
     suit_ranks_parser %= *suit_rank_parser;
