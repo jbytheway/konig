@@ -130,9 +130,9 @@ class DiscardChecker : public Checker {
     virtual bool command(std::list<std::string> const& tokens) {
       Cards cards;
       BOOST_FOREACH(auto const& token, tokens) {
-        Card card;
-        if (Card::from_string(card, token)) {
-          cards.insert(card);
+        Cards thisCards;
+        if (Cards::from_string(thisCards, token)) {
+          cards.insert(thisCards);
         } else {
           return false;
         }

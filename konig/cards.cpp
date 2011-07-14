@@ -20,6 +20,16 @@ namespace konig {
 
 Cards Cards::from_string(std::string const& description)
 {
+  Cards result;
+  if (from_string(result, description)) {
+    return result;
+  } else {
+    throw std::logic_error("invalid cards specification");
+  }
+}
+
+bool Cards::from_string(Cards& cards, std::string const& description)
+{
   namespace qi = boost::spirit::qi;
   auto first = description.begin();
   auto const last = description.end();
@@ -57,13 +67,14 @@ Cards Cards::from_string(std::string const& description)
       qi::space | qi::char_('_')
     );
   if (!x || first != last) {
-    throw std::logic_error("invalid cards specification");
+    return false;
   }
   std::sort(result.begin(), result.end());
   if (std::adjacent_find(result.begin(), result.end()) != result.end()) {
-    throw std::logic_error("duplicate card specified");
+    return false;
   }
-  return Cards(result);
+  cards = Cards(result);
+  return true;
 }
 
 std::ostream& operator<<(std::ostream& o, const Cards& c)

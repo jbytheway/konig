@@ -19,6 +19,7 @@ class KONIG_API Cards : public std::set<Card> {
   friend class boost::serialization::access;
   public:
     static Cards from_string(std::string const&);
+    static bool from_string(Cards&, std::string const&);
 
     Cards() = default;
     Cards(Cards const&) = default;
