@@ -35,9 +35,10 @@ class CommandHandler : public client::ClientInterface {
     // Functions used by GameTracker
     template<typename ReturnType>
     ReturnType get_from_user(UiMode const);
-    void present_hand() const;
     void present_bidding() const;
     void present_contract() const;
+    void present_talon() const;
+    void present_hand(bool with_accepted=false) const;
     void present_current_trick() const;
   private:
     void set_mode(UiMode const);

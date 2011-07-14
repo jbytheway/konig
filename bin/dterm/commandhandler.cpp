@@ -504,13 +504,6 @@ Player& CommandHandler::player()
   return tracker_;
 }
 
-void CommandHandler::present_hand() const
-{
-  output_->message(
-      "Your hand is:\n"+boost::lexical_cast<std::string>(tracker_.hand())
-    );
-}
-
 void CommandHandler::present_bidding() const
 {
   Contracts const& contracts = tracker_.rules().contracts();
@@ -539,6 +532,25 @@ void CommandHandler::present_contract() const
       "The contract is " +
       tracker_.contract().string(tracker_.guess_num_offence()) +
       " and you are " + side
+    );
+}
+
+void CommandHandler::present_talon() const
+{
+  std::ostringstream os;
+  os << "The talon is:\n0: " <<
+    tracker_.talon()[0] << "\n1: " << tracker_.talon()[1];
+  output_->message(os.str());
+}
+
+void CommandHandler::present_hand(bool with_accepted) const
+{
+  Cards hand(tracker_.hand());
+  if (with_accepted) {
+    hand.insert(tracker_.accepted());
+  }
+  output_->message(
+      "Your hand is:\n"+boost::lexical_cast<std::string>(hand)
     );
 }
 

@@ -10,9 +10,25 @@ GameTracker::GameTracker(CommandHandler& handler) :
   handler_(handler)
 {}
 
+void GameTracker::notify_talon(const std::array<Cards, 2>& talon)
+{
+  Ai::notify_talon(talon);
+  handler_.present_talon();
+}
+
+void GameTracker::notify_invalid(std::string m)
+{
+  handler_.message(std::move(m));
+}
+
 void GameTracker::game_start_hook()
 {
   handler_.present_hand();
+}
+
+void GameTracker::trick_complete_hook()
+{
+  handler_.present_current_trick();
 }
 
 Bid GameTracker::bid()
@@ -38,6 +54,7 @@ uint8_t GameTracker::choose_talon_half()
 
 Cards GameTracker::discard()
 {
+  handler_.present_hand(true);
   return handler_.get_from_user<Cards>(UiMode::discard);
 }
 
@@ -57,11 +74,6 @@ Card GameTracker::play_card()
   handler_.present_hand();
   handler_.present_current_trick();
   return handler_.get_from_user<Card>(UiMode::playCard);
-}
-
-void GameTracker::trick_complete_hook()
-{
-  handler_.present_current_trick();
 }
 
 }}
