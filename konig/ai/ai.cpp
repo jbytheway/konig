@@ -89,6 +89,10 @@ void Ai::notify_bid(PlayPosition p, Bid bid)
 void Ai::notify_contract_established(Bid)
 {
   contract_established_hook();
+  if (contract_.is_done()) {
+    // This happens in Trischaken
+    play_start_hook();
+  }
 }
 
 void Ai::notify_call_king(KingCall call)

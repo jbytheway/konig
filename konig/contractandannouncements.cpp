@@ -43,7 +43,7 @@ bool ContractAndAnnouncements::is_legal(
 
 bool ContractAndAnnouncements::is_done() const
 {
-  return num_passes_ == 3;
+  return contract_->has_no_announcements() || num_passes_ == 3;
 }
 
 void ContractAndAnnouncements::add(std::vector<Announcement> announcements)

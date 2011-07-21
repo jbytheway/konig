@@ -32,6 +32,8 @@ class Trischaken : public Contract {
         std::ostream* debug_stream
       ) const;
 
+    virtual bool has_no_announcements() const { return true; }
+
     virtual bool is_partnership() const { return false; }
 
     virtual bool grants_lead() const { return false; }
