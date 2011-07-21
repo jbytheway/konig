@@ -33,10 +33,8 @@ $$($(1)_RESULTS_NUMS): $(1)/results.%: $(this_srcdir)$(1).exp hands/% \
 		$(this_srcdir)Makefile.local
 	mkdir -p $$(dir $$@)
 	printf "%s " "$$*" > $$@
-	set -o pipefail && \
-		cat hands/$$* >> $$@
-	set -o pipefail && \
-		$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s "$$*" \
+	cat hands/$$* >> $$@
+	$(SIM) -a "`cat $$<`" -c "`cat hands/$$*`" -n $(NUM_TRIALS) -s "$$*" \
 		-d- -t- -r- -u >> $$@
 
 $$($(1)_FULL_NUMS): $(1).full.%: \
