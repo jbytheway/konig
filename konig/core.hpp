@@ -12,7 +12,7 @@ namespace konig {
   namespace asio = boost::asio;
   namespace fusion = boost::fusion;
   namespace px = boost::phoenix;
-  
+
   using px::arg_names::arg1;
   using px::arg_names::arg2;
   using px::arg_names::arg3;
