@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 
-#include <boost/assign/list_of.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/spirit/home/phoenix/core/reference.hpp>
 #include <boost/spirit/home/phoenix/object/construct.hpp>
@@ -213,37 +212,36 @@ class CommandHandler::CommandParser {
     CommandParser(CommandHandler& handler) :
       handler_(handler)
     {
-      using boost::assign::list_of;
       add_command(Command(
-            list_of("h")("help"), &CommandParser::help, "Get help",
-            "help [COMMAND]  Display general help, or specific help on COMMAND"
-          ));
+          { "h", "help" }, &CommandParser::help, "Get help",
+          "help [COMMAND]  Display general help, or specific help on COMMAND"
+      ));
       add_command(Command(
-            list_of("q")("quit"), &CommandParser::quit, "Quit client",
-            "quit  Disconnect from server and close client"
-          ));
+          { "q", "quit" }, &CommandParser::quit, "Quit client",
+          "quit  Disconnect from server and close client"
+      ));
       add_command(Command(
-            list_of("g")("get"), &CommandParser::get_setting,
-            "Request the value of a setting",
-            "get SETTING  Request the value of setting SETTING"
-          ));
+          { "g", "get" }, &CommandParser::get_setting,
+          "Request the value of a setting",
+          "get SETTING  Request the value of setting SETTING"
+      ));
       add_command(Command(
-            list_of("s")("set"), &CommandParser::set_setting,
-            "Request that server changes a setting",
-            "set SETTING VALUE  Request that setting SETTING be set to VALUE"
-          ));
+          { "s", "set" }, &CommandParser::set_setting,
+          "Request that server changes a setting",
+          "set SETTING VALUE  Request that setting SETTING be set to VALUE"
+      ));
       add_command(Command(
-            list_of("cs")("clientset"), &CommandParser::client_set_setting,
-            "Request that server changes a setting within your client branch",
-            "set SETTING VALUE  Request that setting clients:X:SETTING be set "
-            "to VALUE, where X is your client id"
-          ));
+          { "cs", "clientset" }, &CommandParser::client_set_setting,
+          "Request that server changes a setting within your client branch",
+          "set SETTING VALUE  Request that setting clients:X:SETTING be set "
+          "to VALUE, where X is your client id"
+      ));
       add_command(Command(
-            list_of("pid"), &CommandParser::show_pid,
-            "Print the process id of the client",
-            "pid  Print the process id of the client, to facilitate attaching "
-            "a debugger"
-          ));
+          { "pid" }, &CommandParser::show_pid,
+          "Print the process id of the client",
+          "pid  Print the process id of the client, to facilitate attaching "
+          "a debugger"
+      ));
     }
 
     boost::scoped_ptr<Checker>& pre_checker() { return pre_checker_; }
