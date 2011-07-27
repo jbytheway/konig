@@ -1,7 +1,9 @@
-#ifndef KONIG_DTERM__MESSAGESINK_HPP
-#define KONIG_DTERM__MESSAGESINK_HPP
+#ifndef KONIG_TERMINAL_MESSAGESINK_HPP
+#define KONIG_TERMINAL_MESSAGESINK_HPP
 
-namespace konig { namespace dterm {
+#include <string>
+
+namespace konig { namespace terminal {
 
 /* Abstract base class for sending messages to user and interrupting the UI */
 class MessageSink {
@@ -22,5 +24,5 @@ inline MessageSink::~MessageSink() = default;
 
 }}
 
-#endif // KONIG_DTERM__MESSAGESINK_HPP
+#endif // KONIG_TERMINAL_MESSAGESINK_HPP
 

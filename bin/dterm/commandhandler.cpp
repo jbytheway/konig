@@ -383,7 +383,7 @@ CommandHandler::CommandHandler(boost::asio::io_service& io) :
 
 CommandHandler::~CommandHandler() = default;
 
-void CommandHandler::set_output(MessageSink& o)
+void CommandHandler::set_output(terminal::MessageSink& o)
 {
   output_ = &o;
 }

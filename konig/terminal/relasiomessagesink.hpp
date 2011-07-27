@@ -1,11 +1,11 @@
-#ifndef KONIG_DTERM_RELASIOMESSAGESINK_HPP
-#define KONIG_DTERM_RELASIOMESSAGESINK_HPP
+#ifndef KONIG_TERMINAL_RELASIOMESSAGESINK_HPP
+#define KONIG_TERMINAL_RELASIOMESSAGESINK_HPP
 
 #include <relasio/readline.hpp>
 
-#include "messagesink.hpp"
+#include <konig/terminal/messagesink.hpp>
 
-namespace konig { namespace dterm {
+namespace konig { namespace terminal {
 
 class RelasioMessageSink : public MessageSink {
   public:
@@ -20,5 +20,5 @@ class RelasioMessageSink : public MessageSink {
 
 }}
 
-#endif // KONIG_DTERM_RELASIOMESSAGESINK_HPP
+#endif // KONIG_TERMINAL_RELASIOMESSAGESINK_HPP
 

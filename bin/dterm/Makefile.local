@@ -1,3 +1,2 @@
 BIN = konig-dterm
-LIB_DEP_NAMES = konig-ai konig-client konig
-LIBS = -lboost_filesystem-mt -lboost_system-mt -lrelasio
+LIB_DEP_NAMES = konig-ai konig-client konig-terminal konig

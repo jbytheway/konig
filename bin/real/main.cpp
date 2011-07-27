@@ -1,20 +1,16 @@
-#include <konig/client/serverinterface.hpp>
 #include <konig/terminal/relasiomessagesink.hpp>
 
 #include "commandhandler.hpp"
 
 int main()
 {
-  if (NULL == setlocale(LC_CTYPE, "")) {
-    throw std::runtime_error("error setting locale");
-  }
   boost::filesystem::path home(getenv("HOME"));
 
   boost::asio::io_service io;
-  using konig::dterm::CommandHandler;
+  using konig::real::CommandHandler;
   using std::placeholders::_1;
   using std::placeholders::_2;
-  CommandHandler ch(io);
+  CommandHandler ch;
   relasio::readline rw(
     io,
     relasio::_command_handler=std::bind(&CommandHandler::command, &ch, _1),
@@ -24,10 +20,7 @@ int main()
   );
   konig::terminal::RelasioMessageSink messageSink(rw);
   ch.set_output(messageSink);
-  konig::client::ServerInterface si(io, ch);
-  ch.set_server_interface(si);
   io.run();
-  ch.unset_server_interface();
   ch.unset_output();
 }
 

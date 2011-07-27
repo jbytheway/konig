@@ -6,8 +6,8 @@
 #include <konig/fatal.hpp>
 #include <konig/client/serverinterface.hpp>
 #include <konig/client/asynccallerror.hpp>
+#include <konig/terminal/messagesink.hpp>
 
-#include "messagesink.hpp"
 #include "gametracker.hpp"
 #include "uimode.hpp"
 
@@ -17,7 +17,7 @@ class CommandHandler : public client::ClientInterface {
   public:
     CommandHandler(boost::asio::io_service&);
     ~CommandHandler();
-    void set_output(MessageSink&);
+    void set_output(terminal::MessageSink&);
     void unset_output();
     void set_server_interface(konig::client::ServerInterface&);
     void unset_server_interface();
@@ -45,7 +45,7 @@ class CommandHandler : public client::ClientInterface {
 
     boost::asio::io_service& io_;
     konig::client::ServerInterface* server_interface_;
-    MessageSink* output_;
+    terminal::MessageSink* output_;
     GameTracker tracker_;
     bool aborting_;
     UiMode mode_;

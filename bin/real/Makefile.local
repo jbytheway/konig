@@ -1,0 +1,3 @@
+BIN := konig-real
+LIB_DEP_NAMES := konig-ai konig-terminal
+

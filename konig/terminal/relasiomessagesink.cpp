@@ -1,6 +1,6 @@
-#include "relasiomessagesink.hpp"
+#include <konig/terminal/relasiomessagesink.hpp>
 
-namespace konig { namespace dterm {
+namespace konig { namespace terminal {
 
 RelasioMessageSink::RelasioMessageSink(relasio::readline& rl) :
   rl_(rl)
