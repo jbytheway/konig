@@ -1,12 +1,8 @@
-#include <boost/assign/list_of.hpp>
-
 #include <konig/fatal.hpp>
 #include <konig/ai/listenai.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
-
-using boost::assign::list_of;
 
 namespace konig { namespace ai {
 
@@ -89,7 +85,7 @@ BOOST_AUTO_TEST_CASE(guess_partner)
     choose0,
     "H:789",
     std::vector<std::string>(),
-    list_of("DQ")
+    {"DQ"}
   );
   BOOST_CHECK(!ai.guess_is_partner(p0));
   BOOST_CHECK(!ai.guess_is_partner(p1));
@@ -105,13 +101,13 @@ BOOST_AUTO_TEST_CASE(guess_partner)
     ai,
     position_forehand,
     "D:789tJ H:89tJNQK",
-    list_of("r")("")("")("")("r"),
+    {"r", "", "", "", "r"},
     KingCall::diamonds,
     "1 2 3", "4 5 6",
     choose0,
     "H:89t",
     std::vector<std::string>(),
-    list_of("DJ")("7")("8")
+    {"DJ", "7", "8"}
   );
   BOOST_CHECK(!ai.guess_is_partner(p0));
   BOOST_CHECK(!ai.guess_is_partner(p1));
@@ -127,13 +123,13 @@ BOOST_AUTO_TEST_CASE(guess_partner)
     ai,
     position_forehand,
     "H:789tJNQK D:tJNQ",
-    list_of("r")("")("")("")("r"),
+    {"r", "", "", "", "r"},
     KingCall::diamonds,
     "1 2 3", "4 5 6",
     choose0,
     "H:789",
     std::vector<std::string>(),
-    list_of("DQ")("DK")
+    {"DQ", "DK"}
   );
   BOOST_CHECK(!ai.guess_is_partner(p0));
   BOOST_CHECK(ai.guess_is_partner(p1));
@@ -156,13 +152,13 @@ BOOST_AUTO_TEST_CASE(card_tracking)
     ai,
     position_forehand,
     "21 C:789tJNQK D:789",
-    list_of("sd")("")("")(""),
+    {"sd", "", "", ""},
     KingCall::invalid,
     NULL, NULL,
     boost::optional<uint8_t>(),
     NULL,
     std::vector<std::string>(),
-    list_of("21")("20")
+    {"21", "20"}
   );
   BOOST_CHECK(ai.fates_of(skus).count(CardFate::held_by(p1)));
 
@@ -171,13 +167,13 @@ BOOST_AUTO_TEST_CASE(card_tracking)
     ai,
     position_forehand,
     "21 C:789tJNQK D:789",
-    list_of("r")("")("")("")("t"),
+    {"r", "", "", "", "t"},
     KingCall::invalid,
     NULL, NULL,
     boost::optional<uint8_t>(),
     NULL,
     std::vector<std::string>(),
-    list_of("21")("20")
+    {"21", "20"}
   );
   BOOST_CHECK(!ai.fates_of(skus).count(CardFate::held_by(p1)));
 
@@ -186,13 +182,13 @@ BOOST_AUTO_TEST_CASE(card_tracking)
     ai,
     position_forehand,
     "21 C:789tJNQK D:789",
-    list_of("r")("")("")("")("t"),
+    {"r", "", "", "", "t"},
     KingCall::invalid,
     NULL, NULL,
     boost::optional<uint8_t>(),
     NULL,
     std::vector<std::string>(),
-    list_of("21")("2")
+    {"21", "2"}
   );
   BOOST_CHECK(ai.fates_of(kakadu).count(CardFate::held_by(p1)));
 
@@ -201,13 +197,13 @@ BOOST_AUTO_TEST_CASE(card_tracking)
     ai,
     position_forehand,
     "21 C:789tJNQK D:789",
-    list_of("r")("")("")("")("t"),
+    {"r", "", "", "", "t"},
     KingCall::invalid,
     NULL, NULL,
     boost::optional<uint8_t>(),
     NULL,
     std::vector<std::string>(),
-    list_of("21")("1")
+    {"21", "1"}
   );
   BOOST_CHECK(!ai.fates_of(uhu).count(CardFate::held_by(p1)));
 
@@ -216,13 +212,13 @@ BOOST_AUTO_TEST_CASE(card_tracking)
     ai,
     position_forehand,
     "21 C:789tJNQK D:9tJ",
-    list_of("r")("")("")("")("t"),
+    {"r", "", "", "", "t"},
     KingCall::invalid,
     NULL, NULL,
     boost::optional<uint8_t>(),
     NULL,
     std::vector<std::string>(),
-    list_of("D9")("DN")("D7")
+    {"D9", "DN", "D7"}
   );
   BOOST_CHECK(!ai.fates_of(Card(Suit::diamond, SuitRank::queen)).
       count(CardFate::held_by(p2)));
@@ -232,13 +228,13 @@ BOOST_AUTO_TEST_CASE(card_tracking)
     ai,
     position_forehand,
     "21 C:789tJNQK D:9tJ",
-    list_of("r")("")("")("")("t"),
+    {"r", "", "", "", "t"},
     KingCall::invalid,
     NULL, NULL,
     boost::optional<uint8_t>(),
     NULL,
     std::vector<std::string>(),
-    list_of("D9")("1")("D7")
+    {"D9", "1", "D7"}
   );
   BOOST_CHECK(ai.fates_of(Card(Suit::diamond, SuitRank::queen)).
       count(CardFate::held_by(p2)));

@@ -1,5 +1,3 @@
-#include <boost/assign/list_of.hpp>
-
 #include <konig/biddingsequence.hpp>
 #include <konig/ai/specificbidsai.hpp>
 #include <konig/ai/specificannouncementsai.hpp>
@@ -11,8 +9,6 @@
 #include <boost/test/unit_test.hpp>
 
 namespace konig { namespace ai {
-
-using boost::assign::list_of;
 
 namespace {
   std::string do_bid_test(std::vector<std::string> const& bid_names)
@@ -44,37 +40,37 @@ namespace {
 
 BOOST_AUTO_TEST_CASE(bidding_failures)
 {
-  BOOST_CHECK_THROW(do_bid_test(list_of("")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("r")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("t")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("6d")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("r")("")("")("")
-                                       ("s")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("r")("s")("")("")
-                                       ("t")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("r")("t")("")("")
-                                       ("t")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("p")("s")("")("")
-                                       ("")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("r")("p")("")("")
-                                       ("s")), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test(list_of("r")("r")("")("")
-                                       ("")), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({""}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"r"}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"t"}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"6d"}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"r", "", "", "",
+                                 "s"}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"r", "s", "", "",
+                                 "t"}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"r", "t", "", "",
+                                 "t"}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"p", "s", "", "",
+                                 ""}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"r", "p", "", "",
+                                 "s"}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"r", "r", "", "",
+                                 ""}), ai::InvalidError);
 }
 
 BOOST_AUTO_TEST_CASE(bidding_results)
 {
-  BOOST_CHECK_EQUAL("r",  do_bid_test(list_of("r")("")("")("")
-                                             ("r")));
-  BOOST_CHECK_EQUAL("t",  do_bid_test(list_of("r")("")("")("")
-                                             ("t")));
-  BOOST_CHECK_EQUAL("6d", do_bid_test(list_of("r")("")("")("")
-                                             ("6d")));
-  BOOST_CHECK_EQUAL("s",  do_bid_test(list_of("r")("s")("")("")
-                                             ("")));
-  BOOST_CHECK_EQUAL("s",  do_bid_test(list_of("r")("s")("")("")
-                                             ("s")));
-  BOOST_CHECK_EQUAL("sd", do_bid_test(list_of("sd")("")("")("")));
+  BOOST_CHECK_EQUAL("r",  do_bid_test({"r", "", "", "",
+                                       "r"}));
+  BOOST_CHECK_EQUAL("t",  do_bid_test({"r", "", "", "",
+                                       "t"}));
+  BOOST_CHECK_EQUAL("6d", do_bid_test({"r", "", "", "",
+                                       "6d"}));
+  BOOST_CHECK_EQUAL("s",  do_bid_test({"r", "s", "", "",
+                                       ""}));
+  BOOST_CHECK_EQUAL("s",  do_bid_test({"r", "s", "", "",
+                                       "s"}));
+  BOOST_CHECK_EQUAL("sd", do_bid_test({"sd", "", "", ""}));
 }
 
 }}

@@ -1,5 +1,5 @@
-#include <boost/assign/list_of.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/assign/list_of.hpp>
 
 #include <konig/utility/intersects.hpp>
 #include <konig/ai/specificbidsai.hpp>
@@ -112,72 +112,75 @@ BOOST_AUTO_TEST_CASE(t_outcomes_possible)
 {
   {
     auto result = do_outcome_test(
-      list_of("7 4 H:8")("2 D:9 H:J"),
-      list_of("r")("")("")("")("t"),
+      {"7 4 H:8", "2 D:9 H:J"},
+      {"r", "", "", "", "t"},
       "",
       "",
       {},
-      list_of
-        ("21")("Sk")("20")("18")
-        ("C9")("CQ")("CJ")("CN")
-        ("12")("16")("19")("17")
-        ("10")("14")("13")("15")
-        (" 8")("CK")(" 9")("11")
-        ("SJ")("St")("S8")("SN")
-        ("HK")("H9")(" 5")("HQ")
-        (" 6")("DN")(" 3")("DK")
-        ("DQ")("DJ")("Dt")("SK")
-        ("Ht")("H7")(" 1")("HN")
-        ("C8")("S9")("C7")("Ct")
-        ("D8")("S7")("D7")("SQ")
+      {
+        "21", "Sk", "20", "18",
+        "C9", "CQ", "CJ", "CN",
+        "12", "16", "19", "17",
+        "10", "14", "13", "15",
+        " 8", "CK", " 9", "11",
+        "SJ", "St", "S8", "SN",
+        "HK", "H9", " 5", "HQ",
+        " 6", "DN", " 3", "DK",
+        "DQ", "DJ", "Dt", "SK",
+        "Ht", "H7", " 1", "HN",
+        "C8", "S9", "C7", "Ct",
+        "D8", "S7", "D7", "SQ"
+      }
     );
     BOOST_CHECK_EQUAL(result.outcome.string(), "t4");
     BOOST_CHECK(result.scores == list_of(0)(0)(0)(0));
   }
   {
     auto result = do_outcome_test(
-      list_of("21 15 7")("12 5 C:8"),
-      list_of("r")("")("")("")("t"),
+      {"21 15 7", "12 5 C:8"},
+      {"r", "", "", "", "t"},
       "",
       "",
       {},
-      list_of
-        ("D9")("DQ")("DN")("Dt")
-        ("20")("18")("Sk")("19")
-        ("HQ")("Ht")("HN")("H9")
-        ("14")("16")("11")("17")
-        ("C9")("CJ")("Ct")("C7")
-        ("13")(" 8")("10")(" 9")
-        (" 4")(" 3")(" 6")(" 2")
-        ("H8")("SK")("HK")("CK")
-        ("DK")("SQ")("DJ")("D8")
-        ("CQ")("SN")("HJ")("SJ")
-        ("CN")("St")("S9")("D7")
-        (" 1")("S8")("H7")("S7")
+      {
+        "D9", "DQ", "DN", "Dt",
+        "20", "18", "Sk", "19",
+        "HQ", "Ht", "HN", "H9",
+        "14", "16", "11", "17",
+        "C9", "CJ", "Ct", "C7",
+        "13", " 8", "10", " 9",
+        " 4", " 3", " 6", " 2",
+        "H8", "SK", "HK", "CK",
+        "DK", "SQ", "DJ", "D8",
+        "CQ", "SN", "HJ", "SJ",
+        "CN", "St", "S9", "D7",
+        " 1", "S8", "H7", "S7"
+      }
     );
     BOOST_CHECK_EQUAL(result.outcome.string(), "tx");
     BOOST_CHECK(result.scores == list_of(-6)(2)(2)(2));
   }
   {
     auto result = do_outcome_test(
-      list_of("Sk 9 C:Q")("20 8 D:J"),
-      list_of("r")("")("")("")("t"),
+      {"Sk 9 C:Q", "20 8 D:J"},
+      {"r", "", "", "", "t"},
       "",
       "",
       {},
-      list_of
-        ("18")("19")(" 7")("21")
-        ("14")("15")(" 4")("17")
-        ("10")("11")("DK")("16")
-        (" 2")(" 6")("DQ")("13")
-        (" 1")(" 5")("SQ")("12")
-        ("H8")("H9")("HJ")("HN")
-        ("H7")("CK")("Ht")("HK")
-        ("CJ")("SK")("DN")("HQ")
-        ("Ct")("SJ")("St")("SN")
-        ("Dt")("CN")("S8")("S9")
-        ("D9")("C9")("C8")("S7")
-        ("C7")("D8")("D7")(" 3")
+      {
+        "18", "19", " 7", "21",
+        "14", "15", " 4", "17",
+        "10", "11", "DK", "16",
+        " 2", " 6", "DQ", "13",
+        " 1", " 5", "SQ", "12",
+        "H8", "H9", "HJ", "HN",
+        "H7", "CK", "Ht", "HK",
+        "CJ", "SK", "DN", "HQ",
+        "Ct", "SJ", "St", "SN",
+        "Dt", "CN", "S8", "S9",
+        "D9", "C9", "C8", "S7",
+        "C7", "D8", "D7", " 3"
+      }
     );
     BOOST_CHECK_EQUAL(result.outcome.string(), "t3+");
     BOOST_CHECK(result.scores == list_of(1)(1)(1)(-3));
@@ -188,8 +191,8 @@ BOOST_AUTO_TEST_CASE(concession_possible)
 {
   {
     auto result = do_outcome_test(
-      list_of("C:K D:Kt")("4 C:8 D:Q"),
-      list_of("r")("")("")("")("r"),
+      {"C:K D:Kt", "4 C:8 D:Q"},
+      {"r", "", "", "", "r"},
       "C",
       "D:QJ9",
       {},
@@ -213,8 +216,8 @@ BOOST_AUTO_TEST_CASE(concession_possible)
   }
   {
     auto result = do_outcome_test(
-      list_of("C:K D:Kt")("4 C:8 D:Q"),
-      list_of("r")("")("")("")("r"),
+      {"C:K D:Kt", "4 C:8 D:Q"},
+      {"r", "", "", "", "r"},
       "C",
       "D:QJ9",
       {"c"}, // Concession
@@ -243,8 +246,8 @@ BOOST_AUTO_TEST_CASE(s_scoring_rules)
   // Solo against three
   {
     auto result = do_outcome_test(
-      list_of("10 C:Q D:7")("4 D:K9"),
-      list_of("s")("")("")(""),
+      {"10 C:Q D:7", "4 D:K9"},
+      {"s", "", "", ""},
       "D",
       "",
       {"", "", "", ""},
@@ -268,8 +271,8 @@ BOOST_AUTO_TEST_CASE(s_scoring_rules)
   }
   {
     auto result = do_outcome_test(
-      list_of("10 C:Q D:7")("4 D:K9"),
-      list_of("s")("")("")(""),
+      {"10 C:Q D:7", "4 D:K9"},
+      {"s", "", "", ""},
       "D",
       {},
       {"", "x", "", "", ""},
@@ -295,8 +298,8 @@ BOOST_AUTO_TEST_CASE(s_scoring_rules)
   }
   {
     auto result = do_outcome_test(
-      list_of("10 C:Q D:7")("4 D:K9"),
-      list_of("s")("")("")(""),
+      {"10 C:Q D:7", "4 D:K9"},
+      {"s", "", "", ""},
       "D",
       {},
       {"k", "x", "", "", ""},
@@ -321,8 +324,8 @@ BOOST_AUTO_TEST_CASE(s_scoring_rules)
   }
   {
     auto result = do_outcome_test(
-      list_of("10 C:Q D:7")("4 D:K9"),
-      list_of("s")("")("")(""),
+      {"10 C:Q D:7", "4 D:K9"},
+      {"s", "", "", ""},
       "D",
       {},
       {
@@ -350,8 +353,8 @@ BOOST_AUTO_TEST_CASE(s_scoring_rules)
   }
   {
     auto result = do_outcome_test(
-      list_of("7 C:7 S:K")("19 D:t S:t"),
-      list_of("s")("")("")(""),
+      {"7 C:7 S:K", "19 D:t S:t"},
+      {"s", "", "", ""},
       "S",
       {},
       {"", "x", "", "", ""},
@@ -377,8 +380,8 @@ BOOST_AUTO_TEST_CASE(s_scoring_rules)
   // Solo with a partner
   {
     auto result = do_outcome_test(
-      list_of("D:7 S:N8")("21 14 13"),
-      list_of("s")("")("")(""),
+      {"D:7 S:N8", "21 14 13"},
+      {"s", "", "", ""},
       "D",
       {},
       {"", "", "", ""},
@@ -402,8 +405,8 @@ BOOST_AUTO_TEST_CASE(s_scoring_rules)
   }
   {
     auto result = do_outcome_test(
-      list_of("D:7 S:N8")("21 14 13"),
-      list_of("s")("")("")(""),
+      {"D:7 S:N8", "21 14 13"},
+      {"s", "", "", ""},
       "D",
       {},
       {"", "", "x", "", ""},
@@ -431,8 +434,8 @@ BOOST_AUTO_TEST_CASE(s_king_off)
 {
   {
     auto result = do_outcome_test(
-      list_of("17 10 H:8")("H:Q S:J9"),
-      list_of("s")("")("")(""),
+      {"17 10 H:8", "H:Q S:J9"},
+      {"s", "", "", ""},
       "D",
       {},
       {"", "", "", ""},
