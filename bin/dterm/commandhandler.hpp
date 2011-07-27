@@ -6,25 +6,26 @@
 #include <konig/fatal.hpp>
 #include <konig/client/serverinterface.hpp>
 #include <konig/client/asynccallerror.hpp>
-#include <konig/terminal/messagesink.hpp>
+#include <konig/terminal/commandhandler.hpp>
 
 #include "gametracker.hpp"
 #include "uimode.hpp"
 
 namespace konig { namespace dterm {
 
-class CommandHandler : public client::ClientInterface {
+class CommandHandler :
+  public client::ClientInterface,
+  public terminal::CommandHandler
+{
   public:
     CommandHandler(boost::asio::io_service&);
     ~CommandHandler();
-    void set_output(terminal::MessageSink&);
-    void unset_output();
     void set_server_interface(konig::client::ServerInterface&);
     void unset_server_interface();
 
     // Functions used by UI side
-    void command(std::string const&);
-    void end();
+    virtual void command(std::string const&);
+    virtual void end();
 
     // Functions used by ServerInterface side
     virtual void message(std::string const&);
@@ -45,7 +46,6 @@ class CommandHandler : public client::ClientInterface {
 
     boost::asio::io_service& io_;
     konig::client::ServerInterface* server_interface_;
-    terminal::MessageSink* output_;
     GameTracker tracker_;
     bool aborting_;
     UiMode mode_;

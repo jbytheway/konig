@@ -374,7 +374,6 @@ class CommandHandler::CommandParser {
 CommandHandler::CommandHandler(boost::asio::io_service& io) :
   io_(io),
   server_interface_(NULL),
-  output_(NULL),
   tracker_(*this),
   aborting_(false),
   mode_(UiMode::none),
@@ -382,16 +381,6 @@ CommandHandler::CommandHandler(boost::asio::io_service& io) :
 {}
 
 CommandHandler::~CommandHandler() = default;
-
-void CommandHandler::set_output(terminal::MessageSink& o)
-{
-  output_ = &o;
-}
-
-void CommandHandler::unset_output()
-{
-  output_ = NULL;
-}
 
 void CommandHandler::set_server_interface(konig::client::ServerInterface& si)
 {
@@ -470,11 +459,9 @@ void CommandHandler::command(std::string const& c)
 void CommandHandler::end()
 {
   assert(server_interface_);
-  assert(output_);
   aborting_ = true;
   server_interface_->close();
-  output_->message("Exit");
-  output_->interrupt();
+  terminal::CommandHandler::end();
 }
 
 void CommandHandler::message(std::string const& s)
@@ -494,7 +481,6 @@ void CommandHandler::abort()
   // Cannot assume server_interface_ is set in this function, because it may be
   // called from its constructor
   assert(output_);
-  aborting_ = true;
   output_->message("Network instigated abort");
   output_->interrupt();
 }

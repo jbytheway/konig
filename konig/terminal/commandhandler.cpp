@@ -2,9 +2,12 @@
 
 #include <konig/fatal.hpp>
 
-namespace konig { namespace real {
+namespace konig { namespace terminal {
 
-CommandHandler::CommandHandler() = default;
+CommandHandler::CommandHandler() :
+  output_(NULL)
+{}
+
 CommandHandler::~CommandHandler() = default;
 
 void CommandHandler::set_output(terminal::MessageSink& output)
