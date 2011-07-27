@@ -1,7 +1,5 @@
 #include <konig/ai/ai.hpp>
 
-#include <boost/assign/list_of.hpp>
-
 #include <konig/fatal.hpp>
 #include <konig/ai/nosuchai.hpp>
 #include <konig/ai/noddyai.hpp>

@@ -4,7 +4,6 @@
 #include <boost/spirit/home/phoenix/operator/comparison.hpp>
 #include <boost/parameter/name.hpp>
 #include <boost/parameter/preprocessor.hpp>
-#include <boost/assign/list_of.hpp>
 
 #include <konig/ai/playai.hpp>
 
@@ -33,10 +32,10 @@ struct OffenceAiImpl {
     // FIXME: It would be nice to have the vectors initialized above, but I
     // can't make that work; it should be possible with brace-initializers, I
     // think...
-    std::vector<Count> const def1 = boost::assign::list_of(5)(5)(6);
+    std::vector<Count> const def1{5, 5, 6};
     trumps_for_unannounced_bird_ =
       args[_trumps_for_unannounced_bird | def1];
-    std::vector<Count> const def2 = boost::assign::list_of(4)(6)(10);
+    std::vector<Count> const def2{4, 6, 10};
     trumps_out_to_abort_bird_ =
       args[_trumps_out_to_abort_bird | def2];
     assert(trumps_for_unannounced_bird_.size() == 3);

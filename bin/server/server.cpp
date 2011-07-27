@@ -200,7 +200,7 @@ void Server::reset_ai(TablePosition pos, std::string args)
   std::string spos = boost::lexical_cast<std::string>(pos);
   ai_[pos].reset(
       ai_exe_,
-      boost::assign::list_of(std::string("-p"))(spos)("-a")(std::move(args))
+      { std::string("-p"), spos, "-a", std::move(args) }
     );
 }
 

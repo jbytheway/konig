@@ -1,7 +1,5 @@
 #include <konig/ai/tai.hpp>
 
-#include <boost/assign/list_of.hpp>
-
 #include <konig/utility/intersects.hpp>
 #include <konig/ai/get_dangerous_suit_candidates.hpp>
 
@@ -32,8 +30,9 @@ Card TAi::play_card(FateAi const& ai)
     }
   }
 
-  std::set<CardFate> other_hands = boost::assign::list_of
-    (CardFate::hand0)(CardFate::hand1)(CardFate::hand2)(CardFate::hand3);
+  std::set<CardFate> other_hands{
+    CardFate::hand0, CardFate::hand1, CardFate::hand2, CardFate::hand3
+  };
   other_hands.erase(CardFate::held_by(ai.position()));
 
   bool const skus_may_be_out =
