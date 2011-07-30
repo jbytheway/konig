@@ -1,5 +1,5 @@
-#ifndef KONIG_SERVER__SERVER_HPP
-#define KONIG_SERVER__SERVER_HPP
+#ifndef KONIG_SERVER_SERVER_HPP
+#define KONIG_SERVER_SERVER_HPP
 
 #include <array>
 #include <set>
@@ -87,5 +87,5 @@ class Server {
 
 }}
 
-#endif // KONIG_SERVER__SERVER_HPP
+#endif // KONIG_SERVER_SERVER_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG__TRUMPRANK_HPP
-#define KONIG__TRUMPRANK_HPP
+#ifndef KONIG_TRUMPRANK_HPP
+#define KONIG_TRUMPRANK_HPP
 
 #include <konig/fatal.hpp>
 #include <konig/core.hpp>
@@ -45,5 +45,5 @@ inline std::ostream& operator<<(std::ostream& o, const TrumpRank r) {
 
 }
 
-#endif // KONIG__TRUMPRANK_HPP
+#endif // KONIG_TRUMPRANK_HPP
 

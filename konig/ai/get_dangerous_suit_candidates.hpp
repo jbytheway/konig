@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__GET_DANGEROUS_SUIT_CANDIDATES_HPP
-#define KONIG_AI__GET_DANGEROUS_SUIT_CANDIDATES_HPP
+#ifndef KONIG_AI_GET_DANGEROUS_SUIT_CANDIDATES_HPP
+#define KONIG_AI_GET_DANGEROUS_SUIT_CANDIDATES_HPP
 
 #include <konig/ai/fateai.hpp>
 
@@ -9,5 +9,5 @@ std::vector<std::pair<int, Card>> get_dangerous_suit_candidates(FateAi const&);
 
 }}
 
-#endif // KONIG_AI__GET_DANGEROUS_SUIT_CANDIDATES_HPP
+#endif // KONIG_AI_GET_DANGEROUS_SUIT_CANDIDATES_HPP
 

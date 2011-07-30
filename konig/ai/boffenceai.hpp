@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__BOFFENCEAI_HPP
-#define KONIG_AI__BOFFENCEAI_HPP
+#ifndef KONIG_AI_BOFFENCEAI_HPP
+#define KONIG_AI_BOFFENCEAI_HPP
 
 #include <konig/ai/playai.hpp>
 
@@ -13,5 +13,5 @@ class BOffenceAi : public PlayAi {
 
 }}
 
-#endif // KONIG_AI__BOFFENCEAI_HPP
+#endif // KONIG_AI_BOFFENCEAI_HPP
 

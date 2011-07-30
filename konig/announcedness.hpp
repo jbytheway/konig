@@ -1,5 +1,5 @@
-#ifndef KONIG__ANNOUNCEDNESS_HPP
-#define KONIG__ANNOUNCEDNESS_HPP
+#ifndef KONIG_ANNOUNCEDNESS_HPP
+#define KONIG_ANNOUNCEDNESS_HPP
 
 #include <string>
 
@@ -52,5 +52,5 @@ class Announcedness {
 
 }
 
-#endif // KONIG__ANNOUNCEDNESS_HPP
+#endif // KONIG_ANNOUNCEDNESS_HPP
 

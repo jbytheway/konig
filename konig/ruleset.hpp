@@ -1,5 +1,5 @@
-#ifndef KONIG__RULESET_HPP
-#define KONIG__RULESET_HPP
+#ifndef KONIG_RULESET_HPP
+#define KONIG_RULESET_HPP
 
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/nvp.hpp>
@@ -31,5 +31,5 @@ class KONIG_API Ruleset {
 
 }
 
-#endif // KONIG__RULESET_HPP
+#endif // KONIG_RULESET_HPP
 

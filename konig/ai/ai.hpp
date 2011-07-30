@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__AI_HPP
-#define KONIG_AI__AI_HPP
+#ifndef KONIG_AI_AI_HPP
+#define KONIG_AI_AI_HPP
 
 #include <boost/array.hpp>
 #include <boost/optional.hpp>
@@ -74,5 +74,5 @@ class KONIG_AI_API Ai : public Player {
 
 }}
 
-#endif // KONIG_AI__AI_HPP
+#endif // KONIG_AI_AI_HPP
 

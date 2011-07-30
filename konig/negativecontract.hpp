@@ -1,5 +1,5 @@
-#ifndef KONIG__NEGATIVECONTRACT_HPP
-#define KONIG__NEGATIVECONTRACT_HPP
+#ifndef KONIG_NEGATIVECONTRACT_HPP
+#define KONIG_NEGATIVECONTRACT_HPP
 
 #include <vector>
 
@@ -96,5 +96,5 @@ class NegativeContract : public Contract {
 
 }
 
-#endif // KONIG__NEGATIVECONTRACT_HPP
+#endif // KONIG_NEGATIVECONTRACT_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG__PLAYPOSITION_HPP
-#define KONIG__PLAYPOSITION_HPP
+#ifndef KONIG_PLAYPOSITION_HPP
+#define KONIG_PLAYPOSITION_HPP
 
 #include <konig/core.hpp>
 
@@ -37,5 +37,5 @@ inline PlayPosition& operator%=(PlayPosition& p, int const v) {
 
 }
 
-#endif // KONIG__PLAYPOSITION_HPP
+#endif // KONIG_PLAYPOSITION_HPP
 

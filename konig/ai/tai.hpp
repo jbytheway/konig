@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__TAI_HPP
-#define KONIG_AI__TAI_HPP
+#ifndef KONIG_AI_TAI_HPP
+#define KONIG_AI_TAI_HPP
 
 #include <konig/ai/playai.hpp>
 
@@ -13,5 +13,5 @@ class TAi : public PlayAi {
 
 }}
 
-#endif // KONIG_AI__TAI_HPP
+#endif // KONIG_AI_TAI_HPP
 

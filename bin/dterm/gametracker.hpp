@@ -1,5 +1,5 @@
-#ifndef KONIG_DTERM__GAMETRACKER_HPP
-#define KONIG_DTERM__GAMETRACKER_HPP
+#ifndef KONIG_DTERM_GAMETRACKER_HPP
+#define KONIG_DTERM_GAMETRACKER_HPP
 
 #include <konig/ai/ai.hpp>
 
@@ -31,5 +31,5 @@ class GameTracker : public ai::Ai {
 
 }}
 
-#endif // KONIG_DTERM__GAMETRACKER_HPP
+#endif // KONIG_DTERM_GAMETRACKER_HPP
 

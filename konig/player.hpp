@@ -1,5 +1,5 @@
-#ifndef KONIG__PLAYER_HPP
-#define KONIG__PLAYER_HPP
+#ifndef KONIG_PLAYER_HPP
+#define KONIG_PLAYER_HPP
 
 #include <boost/shared_ptr.hpp>
 
@@ -49,5 +49,5 @@ inline Player& Player::operator=(Player const&) = default;
 
 }
 
-#endif // KONIG__PLAYER_HPP
+#endif // KONIG_PLAYER_HPP
 

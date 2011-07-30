@@ -1,5 +1,5 @@
-#ifndef KONIG__PROTOCOL_HPP
-#define KONIG__PROTOCOL_HPP
+#ifndef KONIG_PROTOCOL_HPP
+#define KONIG_PROTOCOL_HPP
 
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
@@ -23,5 +23,5 @@ struct Protocol {
 
 }
 
-#endif // KONIG__PROTOCOL_HPP
+#endif // KONIG_PROTOCOL_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG_UTILITY__UNION_INTO_HPP
-#define KONIG_UTILITY__UNION_INTO_HPP
+#ifndef KONIG_UTILITY_UNION_INTO_HPP
+#define KONIG_UTILITY_UNION_INTO_HPP
 
 namespace konig { namespace utility {
 
@@ -19,5 +19,5 @@ void union_into(
 
 }}
 
-#endif // KONIG_UTILITY__UNION_INTO_HPP
+#endif // KONIG_UTILITY_UNION_INTO_HPP
 

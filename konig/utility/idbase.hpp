@@ -1,5 +1,5 @@
-#ifndef KONIG__UTILITY__IDBASE_HPP
-#define KONIG__UTILITY__IDBASE_HPP
+#ifndef KONIG_UTILITY_IDBASE_HPP
+#define KONIG_UTILITY_IDBASE_HPP
 
 #include <boost/mpl/if.hpp>
 #include <boost/functional/hash.hpp>
@@ -118,5 +118,5 @@ inline size_t hash_value(const IdBase<TInteger, TDerived>& id)
 
 }}
 
-#endif // KONIG__UTILITY__IDBASE_HPP
+#endif // KONIG_UTILITY_IDBASE_HPP
 

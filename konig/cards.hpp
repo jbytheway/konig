@@ -1,5 +1,5 @@
-#ifndef KONIG__CARDS_HPP
-#define KONIG__CARDS_HPP
+#ifndef KONIG_CARDS_HPP
+#define KONIG_CARDS_HPP
 
 #include <set>
 #include <algorithm>
@@ -212,5 +212,5 @@ void serialize(Archive& ar, std::array<Cards, N>& cards, const unsigned int)
 
 }
 
-#endif // KONIG__CARDS_HPP
+#endif // KONIG_CARDS_HPP
 

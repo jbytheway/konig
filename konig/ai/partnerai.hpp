@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__PARTNERAI_HPP
-#define KONIG_AI__PARTNERAI_HPP
+#ifndef KONIG_AI_PARTNERAI_HPP
+#define KONIG_AI_PARTNERAI_HPP
 
 #include <konig/ai/offenceai.hpp>
 
@@ -12,5 +12,5 @@ class PartnerAi : public OffenceAi {
 
 }}
 
-#endif // KONIG_AI__PARTNERAI_HPP
+#endif // KONIG_AI_PARTNERAI_HPP
 

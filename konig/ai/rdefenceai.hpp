@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__RDEFENCEAI_HPP
-#define KONIG_AI__RDEFENCEAI_HPP
+#ifndef KONIG_AI_RDEFENCEAI_HPP
+#define KONIG_AI_RDEFENCEAI_HPP
 
 #include <konig/ai/defenceai.hpp>
 
@@ -12,5 +12,5 @@ class RDefenceAi : public DefenceAi {
 
 }}
 
-#endif // KONIG_AI__RDEFENCEAI_HPP
+#endif // KONIG_AI_RDEFENCEAI_HPP
 

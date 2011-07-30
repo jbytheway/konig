@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__SUITPROFILE_HPP
-#define KONIG_AI__SUITPROFILE_HPP
+#ifndef KONIG_AI_SUITPROFILE_HPP
+#define KONIG_AI_SUITPROFILE_HPP
 
 #include <vector>
 
@@ -23,5 +23,5 @@ struct SuitProfile {
 
 }}
 
-#endif // KONIG_AI__SUITPROFILE_HPP
+#endif // KONIG_AI_SUITPROFILE_HPP
 

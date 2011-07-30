@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__BDEFENCEAI_HPP
-#define KONIG_AI__BDEFENCEAI_HPP
+#ifndef KONIG_AI_BDEFENCEAI_HPP
+#define KONIG_AI_BDEFENCEAI_HPP
 
 #include <konig/ai/playai.hpp>
 
@@ -15,5 +15,5 @@ class BDefenceAi : public PlayAi {
 
 }}
 
-#endif // KONIG_AI__BDEFENCEAI_HPP
+#endif // KONIG_AI_BDEFENCEAI_HPP
 

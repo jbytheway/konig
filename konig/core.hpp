@@ -1,5 +1,5 @@
-#ifndef KONIG__CORE_HPP
-#define KONIG__CORE_HPP
+#ifndef KONIG_CORE_HPP
+#define KONIG_CORE_HPP
 
 #include <boost/spirit/home/phoenix/core/argument.hpp>
 
@@ -18,5 +18,5 @@ namespace konig {
   using px::arg_names::arg3;
 }
 
-#endif // KONIG__CORE_HPP
+#endif // KONIG_CORE_HPP
 

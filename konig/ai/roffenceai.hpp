@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__ROFFENCEAI_HPP
-#define KONIG_AI__ROFFENCEAI_HPP
+#ifndef KONIG_AI_ROFFENCEAI_HPP
+#define KONIG_AI_ROFFENCEAI_HPP
 
 #include <konig/ai/offenceai.hpp>
 
@@ -12,5 +12,5 @@ class ROffenceAi : public OffenceAi {
 
 }}
 
-#endif // KONIG_AI__ROFFENCEAI_HPP
+#endif // KONIG_AI_ROFFENCEAI_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG_DTERM__UIMODE_HPP
-#define KONIG_DTERM__UIMODE_HPP
+#ifndef KONIG_DTERM_UIMODE_HPP
+#define KONIG_DTERM_UIMODE_HPP
 
 namespace konig { namespace dterm {
 
@@ -17,5 +17,5 @@ enum class UiMode {
 
 }}
 
-#endif // KONIG_DTERM__UIMODE_HPP
+#endif // KONIG_DTERM_UIMODE_HPP
 

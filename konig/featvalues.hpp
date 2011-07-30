@@ -1,5 +1,5 @@
-#ifndef KONIG__FEATVALUES_HPP
-#define KONIG__FEATVALUES_HPP
+#ifndef KONIG_FEATVALUES_HPP
+#define KONIG_FEATVALUES_HPP
 
 #include <map>
 
@@ -35,5 +35,5 @@ class FeatValues {
 
 }
 
-#endif // KONIG__FEATVALUES_HPP
+#endif // KONIG_FEATVALUES_HPP
 

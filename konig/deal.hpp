@@ -1,5 +1,5 @@
-#ifndef KONIG__DEAL_HPP
-#define KONIG__DEAL_HPP
+#ifndef KONIG_DEAL_HPP
+#define KONIG_DEAL_HPP
 
 #include <boost/foreach.hpp>
 #include <boost/array.hpp>
@@ -90,5 +90,5 @@ KONIG_API std::ostream& operator<<(std::ostream&, const Deal&);
 
 }
 
-#endif // KONIG__DEAL_HPP
+#endif // KONIG_DEAL_HPP
 

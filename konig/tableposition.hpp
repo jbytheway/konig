@@ -1,5 +1,5 @@
-#ifndef KONIG__TABLEPOSITION_HPP
-#define KONIG__TABLEPOSITION_HPP
+#ifndef KONIG_TABLEPOSITION_HPP
+#define KONIG_TABLEPOSITION_HPP
 
 #include <cstdint>
 #include <cassert>
@@ -38,5 +38,5 @@ inline std::istream& operator>>(std::istream& i, TablePosition& p) {
 
 }
 
-#endif // KONIG__TABLEPOSITION_HPP
+#endif // KONIG_TABLEPOSITION_HPP
 

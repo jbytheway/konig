@@ -1,5 +1,5 @@
-#ifndef KONIG__SUITRANK_HPP
-#define KONIG__SUITRANK_HPP
+#ifndef KONIG_SUITRANK_HPP
+#define KONIG_SUITRANK_HPP
 
 #include <konig/core.hpp>
 
@@ -127,5 +127,5 @@ inline std::ostream& operator<<(std::ostream& o, const SuitRank r) {
 
 }
 
-#endif // KONIG__SUITRANK_HPP
+#endif // KONIG_SUITRANK_HPP
 

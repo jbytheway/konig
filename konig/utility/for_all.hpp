@@ -1,5 +1,5 @@
-#ifndef KONIG__UTILITY__FOR_ALL_HPP
-#define KONIG__UTILITY__FOR_ALL_HPP
+#ifndef KONIG_UTILITY_FOR_ALL_HPP
+#define KONIG_UTILITY_FOR_ALL_HPP
 
 #include <boost/range/iterator.hpp>
 #include <boost/range/begin.hpp>
@@ -22,5 +22,5 @@ inline bool for_all(const Range& r, const Predicate& p) {
 
 }}
 
-#endif // KONIG__UTILITY__FOR_ALL_HPP
+#endif // KONIG_UTILITY_FOR_ALL_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG_SERVER__CLIENT_HPP
-#define KONIG_SERVER__CLIENT_HPP
+#ifndef KONIG_SERVER_CLIENT_HPP
+#define KONIG_SERVER_CLIENT_HPP
 
 #include <typeinfo>
 
@@ -140,5 +140,5 @@ typename Message<response>::only_value Client::remote_call()
 
 }}
 
-#endif // KONIG_SERVER__CLIENT_HPP
+#endif // KONIG_SERVER_CLIENT_HPP
 

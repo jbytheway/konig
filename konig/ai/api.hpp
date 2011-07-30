@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__API_HPP
-#define KONIG_AI__API_HPP
+#ifndef KONIG_AI_API_HPP
+#define KONIG_AI_API_HPP
 
 #if defined(_MSC_VER)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
@@ -17,5 +17,5 @@
   #endif
 #endif
 
-#endif // KONIG_AI__API_HPP
+#endif // KONIG_AI_API_HPP
 

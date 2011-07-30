@@ -1,5 +1,5 @@
-#ifndef KONIG__FEAT_HPP
-#define KONIG__FEAT_HPP
+#ifndef KONIG_FEAT_HPP
+#define KONIG_FEAT_HPP
 
 #include <vector>
 #include <array>
@@ -126,5 +126,5 @@ inline std::ostream& operator<<(std::ostream& o, const Feat f) {
 
 }
 
-#endif // KONIG__FEAT_HPP
+#endif // KONIG_FEAT_HPP
 

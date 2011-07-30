@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__CARDFATE_HPP
-#define KONIG_AI__CARDFATE_HPP
+#ifndef KONIG_AI_CARDFATE_HPP
+#define KONIG_AI_CARDFATE_HPP
 
 #include <konig/utility/enum.hpp>
 
@@ -43,5 +43,5 @@ class CardFate {
 
 }}
 
-#endif // KONIG_AI__CARDFATE_HPP
+#endif // KONIG_AI_CARDFATE_HPP
 

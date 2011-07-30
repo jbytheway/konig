@@ -1,5 +1,5 @@
-#ifndef KONIG_AI_CLIENT__AICLIENT_HPP
-#define KONIG_AI_CLIENT__AICLIENT_HPP
+#ifndef KONIG_AI_CLIENT_AICLIENT_HPP
+#define KONIG_AI_CLIENT_AICLIENT_HPP
 
 #include <boost/noncopyable.hpp>
 
@@ -29,5 +29,5 @@ class AiClient : public client::ClientInterface, boost::noncopyable {
 
 }}
 
-#endif // KONIG_AI_CLIENT__AICLIENT_HPP
+#endif // KONIG_AI_CLIENT_AICLIENT_HPP
 

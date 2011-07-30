@@ -1,5 +1,5 @@
-#ifndef KONIG__TRICK_HPP
-#define KONIG__TRICK_HPP
+#ifndef KONIG_TRICK_HPP
+#define KONIG_TRICK_HPP
 
 #include <boost/array.hpp>
 
@@ -80,5 +80,5 @@ KONIG_API std::ostream& operator<<(std::ostream&, const Trick&);
 
 }
 
-#endif // KONIG__TRICK_HPP
+#endif // KONIG_TRICK_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__FORWARDINGAI_HPP
-#define KONIG_AI__FORWARDINGAI_HPP
+#ifndef KONIG_AI_FORWARDINGAI_HPP
+#define KONIG_AI_FORWARDINGAI_HPP
 
 #include <konig/ai/ai.hpp>
 #include <konig/ai/bidai.hpp>
@@ -38,5 +38,5 @@ class ForwardingAi : public FateAi {
 
 }}
 
-#endif // KONIG_AI__FORWARDINGAI_HPP
+#endif // KONIG_AI_FORWARDINGAI_HPP
 

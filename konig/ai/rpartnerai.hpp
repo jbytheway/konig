@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__RPARTNERAI_HPP
-#define KONIG_AI__RPARTNERAI_HPP
+#ifndef KONIG_AI_RPARTNERAI_HPP
+#define KONIG_AI_RPARTNERAI_HPP
 
 #include <konig/ai/partnerai.hpp>
 
@@ -12,5 +12,5 @@ class RPartnerAi : public PartnerAi {
 
 }}
 
-#endif // KONIG_AI__RPARTNERAI_HPP
+#endif // KONIG_AI_RPARTNERAI_HPP
 

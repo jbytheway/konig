@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__OFFENCEAI_HPP
-#define KONIG_AI__OFFENCEAI_HPP
+#ifndef KONIG_AI_OFFENCEAI_HPP
+#define KONIG_AI_OFFENCEAI_HPP
 
 #include <boost/spirit/home/phoenix/operator/comparison.hpp>
 #include <boost/parameter/name.hpp>
@@ -95,5 +95,5 @@ class OffenceAi : public PlayAi, private detail::OffenceAiImpl {
 
 }}
 
-#endif // KONIG_AI__OFFENCEAI_HPP
+#endif // KONIG_AI_OFFENCEAI_HPP
 

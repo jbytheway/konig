@@ -1,5 +1,5 @@
-#ifndef KONIG__FIELDS_HPP
-#define KONIG__FIELDS_HPP
+#ifndef KONIG_FIELDS_HPP
+#define KONIG_FIELDS_HPP
 
 #include <boost/preprocessor/iteration/local.hpp>
 #include <boost/fusion/include/map.hpp>
@@ -55,5 +55,5 @@ void serialize(                                                       \
 
 }}
 
-#endif // KONIG__FIELDS_HPP
+#endif // KONIG_FIELDS_HPP
 

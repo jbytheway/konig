@@ -1,5 +1,5 @@
-#ifndef KONIG_SERVER__REMOTE_PLAYER_HPP
-#define KONIG_SERVER__REMOTE_PLAYER_HPP
+#ifndef KONIG_SERVER_REMOTE_PLAYER_HPP
+#define KONIG_SERVER_REMOTE_PLAYER_HPP
 
 #include <konig/player.hpp>
 
@@ -37,5 +37,5 @@ class RemotePlayer : public Player {
 
 }}
 
-#endif // KONIG_SERVER__REMOTE_PLAYER_HPP
+#endif // KONIG_SERVER_REMOTE_PLAYER_HPP
 

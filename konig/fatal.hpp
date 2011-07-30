@@ -1,5 +1,5 @@
-#ifndef KONIG__FATAL_HPP
-#define KONIG__FATAL_HPP
+#ifndef KONIG_FATAL_HPP
+#define KONIG_FATAL_HPP
 
 #include <cassert>
 #include <ostream>
@@ -19,5 +19,5 @@ extern KONIG_API std::ostream& error_stream;
     abort(); \
   } while(false)
 
-#endif // KONIG__FATAL_HPP
+#endif // KONIG_FATAL_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG__PARTIALDEALER_HPP
-#define KONIG__PARTIALDEALER_HPP
+#ifndef KONIG_PARTIALDEALER_HPP
+#define KONIG_PARTIALDEALER_HPP
 
 #include <konig/dealer.hpp>
 #include <konig/partialcards.hpp>
@@ -21,5 +21,5 @@ class PartialDealer : public Dealer {
 
 }
 
-#endif // KONIG__PARTIALDEALER_HPP
+#endif // KONIG_PARTIALDEALER_HPP
 

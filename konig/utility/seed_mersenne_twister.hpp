@@ -1,5 +1,5 @@
-#ifndef KONIG_UTILITY__SEED_MERSENNE_TWISTER_HPP
-#define KONIG_UTILITY__SEED_MERSENNE_TWISTER_HPP
+#ifndef KONIG_UTILITY_SEED_MERSENNE_TWISTER_HPP
+#define KONIG_UTILITY_SEED_MERSENNE_TWISTER_HPP
 
 namespace konig { namespace utility {
 
@@ -22,5 +22,5 @@ void seed_mersenne_twister(MersenneTwister& mt)
 
 }}
 
-#endif // KONIG_UTILITY__SEED_MERSENNE_TWISTER_HPP
+#endif // KONIG_UTILITY_SEED_MERSENNE_TWISTER_HPP
 

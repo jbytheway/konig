@@ -1,5 +1,5 @@
-#ifndef KONIG_DTERM__COMMANDHANDLER_HPP
-#define KONIG_DTERM__COMMANDHANDLER_HPP
+#ifndef KONIG_DTERM_COMMANDHANDLER_HPP
+#define KONIG_DTERM_COMMANDHANDLER_HPP
 
 #include <boost/any.hpp>
 
@@ -77,5 +77,5 @@ ReturnType CommandHandler::get_from_user(UiMode const mode)
 
 }}
 
-#endif // KONIG_DTERM__COMMAND_HANDLER_HPP
+#endif // KONIG_DTERM_COMMAND_HANDLER_HPP
 

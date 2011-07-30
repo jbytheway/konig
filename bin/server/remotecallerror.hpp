@@ -1,5 +1,5 @@
-#ifndef KONIG_SERVER__REMOTECALLERROR_HPP
-#define KONIG_SERVER__REMOTECALLERROR_HPP
+#ifndef KONIG_SERVER_REMOTECALLERROR_HPP
+#define KONIG_SERVER_REMOTECALLERROR_HPP
 
 #include <stdexcept>
 
@@ -14,5 +14,5 @@ class RemoteCallError : public std::runtime_error {
 
 }}
 
-#endif // KONIG_SERVER__REMOTECALLERROR_HPP
+#endif // KONIG_SERVER_REMOTECALLERROR_HPP
 

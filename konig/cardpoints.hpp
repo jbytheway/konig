@@ -1,5 +1,5 @@
-#ifndef KONIG__CARDPOINTS_HPP
-#define KONIG__CARDPOINTS_HPP
+#ifndef KONIG_CARDPOINTS_HPP
+#define KONIG_CARDPOINTS_HPP
 
 namespace konig {
 
@@ -8,5 +8,5 @@ typedef uint16_t CardPoints;
 
 }
 
-#endif // KONIG__CARDPOINTS_HPP
+#endif // KONIG_CARDPOINTS_HPP
 

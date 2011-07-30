@@ -1,5 +1,5 @@
-#ifndef KONIG__MESSAGE_HPP
-#define KONIG__MESSAGE_HPP
+#ifndef KONIG_MESSAGE_HPP
+#define KONIG_MESSAGE_HPP
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
@@ -110,5 +110,5 @@ class Message {
 
 }
 
-#endif // KONIG__MESSAGE_HPP
+#endif // KONIG_MESSAGE_HPP
 

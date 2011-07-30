@@ -1,5 +1,5 @@
-#ifndef KONIG__ANNOUNCEDNESSES_HPP
-#define KONIG__ANNOUNCEDNESSES_HPP
+#ifndef KONIG_ANNOUNCEDNESSES_HPP
+#define KONIG_ANNOUNCEDNESSES_HPP
 
 #include <map>
 
@@ -22,5 +22,5 @@ class Announcednesses : public std::map<std::pair<Feat, bool>, Announcedness> {
 
 }
 
-#endif // KONIG__ANNOUNCEDNESSES_HPP
+#endif // KONIG_ANNOUNCEDNESSES_HPP
 

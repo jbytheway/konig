@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__FATEAI_HPP
-#define KONIG_AI__FATEAI_HPP
+#ifndef KONIG_AI_FATEAI_HPP
+#define KONIG_AI_FATEAI_HPP
 
 #include <konig/ai/ai.hpp>
 #include <konig/ai/cardfate.hpp>
@@ -53,5 +53,5 @@ class KONIG_AI_API FateAi : public Ai {
 
 }}
 
-#endif // KONIG_AI__FATEAI_HPP
+#endif // KONIG_AI_FATEAI_HPP
 

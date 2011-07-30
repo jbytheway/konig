@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__SDDEFENCEAI_HPP
-#define KONIG_AI__SDDEFENCEAI_HPP
+#ifndef KONIG_AI_SDDEFENCEAI_HPP
+#define KONIG_AI_SDDEFENCEAI_HPP
 
 #include <konig/ai/defenceai.hpp>
 #include <konig/ai/suitprofile.hpp>
@@ -13,5 +13,5 @@ class SdDefenceAi : public DefenceAi {
 
 }}
 
-#endif // KONIG_AI__SDDEFENCEAI_HPP
+#endif // KONIG_AI_SDDEFENCEAI_HPP
 

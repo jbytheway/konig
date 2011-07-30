@@ -1,5 +1,5 @@
-#ifndef KONIG__GAME_HPP
-#define KONIG__GAME_HPP
+#ifndef KONIG_GAME_HPP
+#define KONIG_GAME_HPP
 
 #include <vector>
 
@@ -42,5 +42,5 @@ class KONIG_API Game {
 
 }
 
-#endif // KONIG__GAME_HPP
+#endif // KONIG_GAME_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__BIDAI_HPP
-#define KONIG_AI__BIDAI_HPP
+#ifndef KONIG_AI_BIDAI_HPP
+#define KONIG_AI_BIDAI_HPP
 
 #include <konig/ai/ai.hpp>
 
@@ -25,5 +25,5 @@ inline BidAi& BidAi::operator=(BidAi const&) = default;
 
 }}
 
-#endif // KONIG_AI__BIDAI_HPP
+#endif // KONIG_AI_BIDAI_HPP
 

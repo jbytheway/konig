@@ -1,5 +1,5 @@
-#ifndef KONIG__TRISCHAKEN_HPP
-#define KONIG__TRISCHAKEN_HPP
+#ifndef KONIG_TRISCHAKEN_HPP
+#define KONIG_TRISCHAKEN_HPP
 
 #include <vector>
 
@@ -77,5 +77,5 @@ class Trischaken : public Contract {
 
 }
 
-#endif // KONIG__TRISCHAKEN_HPP
+#endif // KONIG_TRISCHAKEN_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG__UTILITY__ENUM_HPP
-#define KONIG__UTILITY__ENUM_HPP
+#ifndef KONIG_UTILITY_ENUM_HPP
+#define KONIG_UTILITY_ENUM_HPP
 
 #include <stdexcept>
 #include <istream>
@@ -66,6 +66,6 @@ inline std::ostream& operator<<(std::ostream& os, const name v) { \
   return os << v.string();                           \
 }
 
-#endif // KONIG__UTILITY__ENUM_HPP
+#endif // KONIG_UTILITY_ENUM_HPP
 
 

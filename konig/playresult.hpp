@@ -1,5 +1,5 @@
-#ifndef KONIG__PLAYRESULT_HPP
-#define KONIG__PLAYRESULT_HPP
+#ifndef KONIG_PLAYRESULT_HPP
+#define KONIG_PLAYRESULT_HPP
 
 #include <konig/score.hpp>
 
@@ -13,5 +13,5 @@ struct PlayResult {
 
 }
 
-#endif // KONIG__PLAYRESULT_HPP
+#endif // KONIG_PLAYRESULT_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG__MESSAGEDATA_HPP
-#define KONIG__MESSAGEDATA_HPP
+#ifndef KONIG_MESSAGEDATA_HPP
+#define KONIG_MESSAGEDATA_HPP
 
 #include <boost/fusion/include/map.hpp>
 #include <boost/serialization/set.hpp>
@@ -239,5 +239,5 @@ struct MessageData<MessageType::notifyInvalid> {
 
 }
 
-#endif // KONIG__MESSAGEDATA_HPP
+#endif // KONIG_MESSAGEDATA_HPP
 

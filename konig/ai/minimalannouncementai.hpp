@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__MINIMALANNOUNCEMENTAI_HPP
-#define KONIG_AI__MINIMALANNOUNCEMENTAI_HPP
+#ifndef KONIG_AI_MINIMALANNOUNCEMENTAI_HPP
+#define KONIG_AI_MINIMALANNOUNCEMENTAI_HPP
 
 #include <announcementai.hpp>
 
@@ -19,5 +19,5 @@ class MinimalAnnouncementAi : public AnnouncementAi {
 
 }}
 
-#endif // KONIG_AI__MINIMALANNOUNCEMENTAI_HPP
+#endif // KONIG_AI_MINIMALANNOUNCEMENTAI_HPP
 

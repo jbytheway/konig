@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__SPECIFICBIDSAI_HPP
-#define KONIG_AI__SPECIFICBIDSAI_HPP
+#ifndef KONIG_AI_SPECIFICBIDSAI_HPP
+#define KONIG_AI_SPECIFICBIDSAI_HPP
 
 #include <konig/ai/bidai.hpp>
 
@@ -16,5 +16,5 @@ class SpecificBidsAi : public BidAi {
 
 }}
 
-#endif // KONIG_AI__SPECIFICBIDSAI_HPP
+#endif // KONIG_AI_SPECIFICBIDSAI_HPP
 

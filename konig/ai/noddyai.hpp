@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__NODDYAI_HPP
-#define KONIG_AI__NODDYAI_HPP
+#ifndef KONIG_AI_NODDYAI_HPP
+#define KONIG_AI_NODDYAI_HPP
 
 #include <random>
 
@@ -22,5 +22,5 @@ class NoddyAi : public Ai {
 
 }}
 
-#endif // KONIG_AI__NODDYAI_HPP
+#endif // KONIG_AI_NODDYAI_HPP
 

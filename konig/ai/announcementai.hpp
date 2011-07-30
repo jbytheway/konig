@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__ANNOUNCEMENTAI_HPP
-#define KONIG_AI__ANNOUNCEMENTAI_HPP
+#ifndef KONIG_AI_ANNOUNCEMENTAI_HPP
+#define KONIG_AI_ANNOUNCEMENTAI_HPP
 
 #include <boost/shared_ptr.hpp>
 
@@ -33,5 +33,5 @@ AnnouncementAi::operator=(AnnouncementAi const&) = default;
 
 }}
 
-#endif // KONIG_AI__ANNOUNCEMENTAI_HPP
+#endif // KONIG_AI_ANNOUNCEMENTAI_HPP
 

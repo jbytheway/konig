@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__NOSUCHAI_HPP
-#define KONIG_AI__NOSUCHAI_HPP
+#ifndef KONIG_AI_NOSUCHAI_HPP
+#define KONIG_AI_NOSUCHAI_HPP
 
 #include <konig/ai/aierror.hpp>
 
@@ -14,5 +14,5 @@ class NoSuchAi : public AiError {
 
 }}
 
-#endif // KONIG_AI__NOSUCHAI_HPP
+#endif // KONIG_AI_NOSUCHAI_HPP
 

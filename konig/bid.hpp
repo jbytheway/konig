@@ -1,5 +1,5 @@
-#ifndef KONIG__BID_HPP
-#define KONIG__BID_HPP
+#ifndef KONIG_BID_HPP
+#define KONIG_BID_HPP
 
 #include <cstdint>
 
@@ -48,5 +48,5 @@ class KONIG_API Bid {
 
 }
 
-#endif // KONIG__BID_HPP
+#endif // KONIG_BID_HPP
 

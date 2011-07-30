@@ -1,5 +1,5 @@
-#ifndef KONIG_CLIENT__ASYNCCALLERROR_HPP
-#define KONIG_CLIENT__ASYNCCALLERROR_HPP
+#ifndef KONIG_CLIENT_ASYNCCALLERROR_HPP
+#define KONIG_CLIENT_ASYNCCALLERROR_HPP
 
 namespace konig { namespace client {
 
@@ -12,5 +12,5 @@ class AsyncCallError : std::runtime_error {
 
 }}
 
-#endif // KONIG_CLIENT__ASYNCCALLERROR_HPP
+#endif // KONIG_CLIENT_ASYNCCALLERROR_HPP
 

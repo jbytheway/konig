@@ -1,5 +1,5 @@
-#ifndef KONIG__CONTRACTS_HPP
-#define KONIG__CONTRACTS_HPP
+#ifndef KONIG_CONTRACTS_HPP
+#define KONIG_CONTRACTS_HPP
 
 #include <vector>
 
@@ -65,5 +65,5 @@ class KONIG_API Contracts {
 
 }
 
-#endif // KONIG__CONTRACTS_HPP
+#endif // KONIG_CONTRACTS_HPP
 

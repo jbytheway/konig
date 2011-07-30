@@ -1,5 +1,5 @@
-#ifndef KONIG__DEALER_HPP
-#define KONIG__DEALER_HPP
+#ifndef KONIG_DEALER_HPP
+#define KONIG_DEALER_HPP
 
 #include <random>
 
@@ -64,5 +64,5 @@ Dealer::Ptr Dealer::create(const ForwardRange& descriptions, unsigned long seed)
 
 }
 
-#endif // KONIG__DEALER_HPP
+#endif // KONIG_DEALER_HPP
 

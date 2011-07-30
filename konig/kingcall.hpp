@@ -1,5 +1,5 @@
-#ifndef KONIG__KINGCALL_HPP
-#define KONIG__KINGCALL_HPP
+#ifndef KONIG_KINGCALL_HPP
+#define KONIG_KINGCALL_HPP
 
 #include <string>
 
@@ -46,5 +46,5 @@ std::ostream& operator<<(std::ostream&, KingCall const);
 
 }
 
-#endif // KONIG__KINGCALL_HPP
+#endif // KONIG_KINGCALL_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__LISTENAI_HPP
-#define KONIG_AI__LISTENAI_HPP
+#ifndef KONIG_AI_LISTENAI_HPP
+#define KONIG_AI_LISTENAI_HPP
 
 #include <konig/ai/fateai.hpp>
 
@@ -18,5 +18,5 @@ class KONIG_AI_API ListenAi : public FateAi {
 
 }}
 
-#endif // KONIG_AI__LISTENAI_HPP
+#endif // KONIG_AI_LISTENAI_HPP
 

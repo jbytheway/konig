@@ -1,5 +1,5 @@
-#ifndef KONIG__PARTIALCARDS
-#define KONIG__PARTIALCARDS
+#ifndef KONIG_PARTIALCARDS
+#define KONIG_PARTIALCARDS
 
 #include <vector>
 #include <iterator>
@@ -38,5 +38,5 @@ class PartialCards {
 
 }
 
-#endif // KONIG__PARTIALCARDS
+#endif // KONIG_PARTIALCARDS
 

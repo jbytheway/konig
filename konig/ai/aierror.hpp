@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__AIERROR_HPP
-#define KONIG_AI__AIERROR_HPP
+#ifndef KONIG_AI_AIERROR_HPP
+#define KONIG_AI_AIERROR_HPP
 
 #include <stdexcept>
 
@@ -14,5 +14,5 @@ class AiError : public std::logic_error {
 
 }}
 
-#endif // KONIG_AI__AIERROR_HPP
+#endif // KONIG_AI_AIERROR_HPP
 

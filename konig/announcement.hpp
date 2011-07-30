@@ -1,5 +1,5 @@
-#ifndef KONIG__ANNOUNCEMENT_HPP
-#define KONIG__ANNOUNCEMENT_HPP
+#ifndef KONIG_ANNOUNCEMENT_HPP
+#define KONIG_ANNOUNCEMENT_HPP
 
 #include <konig/api.hpp>
 #include <konig/feat.hpp>
@@ -46,5 +46,5 @@ std::istream& operator>>(std::istream&, Announcement&);
 
 }
 
-#endif // KONIG__ANNOUNCEMENT_HPP
+#endif // KONIG_ANNOUNCEMENT_HPP
 

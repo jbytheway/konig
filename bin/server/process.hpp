@@ -1,5 +1,5 @@
-#ifndef KONIG_SERVER__PROCESS_HPP
-#define KONIG_SERVER__PROCESS_HPP
+#ifndef KONIG_SERVER_PROCESS_HPP
+#define KONIG_SERVER_PROCESS_HPP
 
 #include <vector>
 
@@ -34,5 +34,5 @@ inline void swap(Process& l, Process& r) {
 
 }}
 
-#endif // KONIG_SERVER__PROCESS_HPP
+#endif // KONIG_SERVER_PROCESS_HPP
 

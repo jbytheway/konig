@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__INVALIDERROR_HPP
-#define KONIG_AI__INVALIDERROR_HPP
+#ifndef KONIG_AI_INVALIDERROR_HPP
+#define KONIG_AI_INVALIDERROR_HPP
 
 namespace konig { namespace ai {
 
@@ -12,5 +12,5 @@ class KONIG_AI_API InvalidError : public std::logic_error {
 
 }}
 
-#endif // KONIG_AI__INVALIDERROR_HPP
+#endif // KONIG_AI_INVALIDERROR_HPP
 

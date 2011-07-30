@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__PLAYAI_HPP
-#define KONIG_AI__PLAYAI_HPP
+#ifndef KONIG_AI_PLAYAI_HPP
+#define KONIG_AI_PLAYAI_HPP
 
 #include <konig/ai/fateai.hpp>
 
@@ -26,5 +26,5 @@ inline PlayAi& PlayAi::operator=(PlayAi const&) = default;
 
 }}
 
-#endif // KONIG_AI__PLAYAI_HPP
+#endif // KONIG_AI_PLAYAI_HPP
 

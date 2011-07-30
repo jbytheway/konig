@@ -1,5 +1,5 @@
-#ifndef KONIG__ACHIEVEMENT_HPP
-#define KONIG__ACHIEVEMENT_HPP
+#ifndef KONIG_ACHIEVEMENT_HPP
+#define KONIG_ACHIEVEMENT_HPP
 
 #include <konig/core.hpp>
 
@@ -23,5 +23,5 @@ class Achievement {
 
 }
 
-#endif // KONIG__ACHIEVEMENT_HPP
+#endif // KONIG_ACHIEVEMENT_HPP
 

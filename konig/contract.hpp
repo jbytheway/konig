@@ -1,5 +1,5 @@
-#ifndef KONIG__CONTRACT_HPP
-#define KONIG__CONTRACT_HPP
+#ifndef KONIG_CONTRACT_HPP
+#define KONIG_CONTRACT_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -124,5 +124,5 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
 
 }
 
-#endif // KONIG__CONTRACT_HPP
+#endif // KONIG_CONTRACT_HPP
 

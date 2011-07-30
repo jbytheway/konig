@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__NEGATIVE_DEFENSIVE_FOLLOW_HPP
-#define KONIG_AI__NEGATIVE_DEFENSIVE_FOLLOW_HPP
+#ifndef KONIG_AI_NEGATIVE_DEFENSIVE_FOLLOW_HPP
+#define KONIG_AI_NEGATIVE_DEFENSIVE_FOLLOW_HPP
 
 #include <konig/ai/fateai.hpp>
 
@@ -9,5 +9,5 @@ Card negative_defensive_follow(FateAi const&);
 
 }}
 
-#endif // KONIG_AI__NEGATIVE_DEFENSIVE_FOLLOW_HPP
+#endif // KONIG_AI_NEGATIVE_DEFENSIVE_FOLLOW_HPP
 

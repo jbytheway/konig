@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__SPECIFICPLAYAI_HPP
-#define KONIG_AI__SPECIFICPLAYAI_HPP
+#ifndef KONIG_AI_SPECIFICPLAYAI_HPP
+#define KONIG_AI_SPECIFICPLAYAI_HPP
 
 #include <list>
 #include <random>
@@ -31,5 +31,5 @@ class KONIG_AI_API SpecificPlayAi : public PlayAi {
 
 }}
 
-#endif // KONIG_AI__SPECIFICPLAYAI_HPP
+#endif // KONIG_AI_SPECIFICPLAYAI_HPP
 

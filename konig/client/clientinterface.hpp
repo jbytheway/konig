@@ -1,5 +1,5 @@
-#ifndef KONIG_CLIENT__CLIENTINTERFACE_HPP
-#define KONIG_CLIENT__CLIENTINTERFACE_HPP
+#ifndef KONIG_CLIENT_CLIENTINTERFACE_HPP
+#define KONIG_CLIENT_CLIENTINTERFACE_HPP
 
 #include <konig/player.hpp>
 #include <konig/clientid.hpp>
@@ -17,5 +17,5 @@ class ClientInterface {
 
 }}
 
-#endif // KONIG_CLIENT__CLIENTINTERFACE_HPP
+#endif // KONIG_CLIENT_CLIENTINTERFACE_HPP
 

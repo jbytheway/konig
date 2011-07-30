@@ -1,5 +1,5 @@
-#ifndef KONIG__SUIT_HPP
-#define KONIG__SUIT_HPP
+#ifndef KONIG_SUIT_HPP
+#define KONIG_SUIT_HPP
 
 #include <stdexcept>
 #include <ostream>
@@ -104,5 +104,5 @@ inline std::ostream& operator<<(std::ostream& o, const Suit s) {
 
 }
 
-#endif // KONIG__SUIT_HPP
+#endif // KONIG_SUIT_HPP
 

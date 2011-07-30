@@ -1,5 +1,5 @@
-#ifndef KONIG__MESSAGETYPE_HPP
-#define KONIG__MESSAGETYPE_HPP
+#ifndef KONIG_MESSAGETYPE_HPP
+#define KONIG_MESSAGETYPE_HPP
 
 #include <konig/core.hpp>
 #include <konig/utility/enum.hpp>
@@ -24,5 +24,5 @@ KONIG_UTILITY_ENUM_HEADER(MessageType, KONIG_MESSAGETYPE_VALUES())
 
 }
 
-#endif // KONIG__MESSAGETYPE_HPP
+#endif // KONIG_MESSAGETYPE_HPP
 

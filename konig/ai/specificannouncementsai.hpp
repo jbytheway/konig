@@ -1,5 +1,5 @@
-#ifndef KONIG_AI__SPECIFICANNOUNCEMENTSAI_HPP
-#define KONIG_AI__SPECIFICANNOUNCEMENTSAI_HPP
+#ifndef KONIG_AI_SPECIFICANNOUNCEMENTSAI_HPP
+#define KONIG_AI_SPECIFICANNOUNCEMENTSAI_HPP
 
 #include <konig/ai/announcementai.hpp>
 #include <konig/ai/fateai.hpp>
@@ -42,5 +42,5 @@ class SpecificAnnouncementsAi : public AnnouncementAi {
 
 }}
 
-#endif // KONIG_AI__SPECIFICANNOUNCEMENTSAI_HPP
+#endif // KONIG_AI_SPECIFICANNOUNCEMENTSAI_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG__CLIENTID_HPP
-#define KONIG__CLIENTID_HPP
+#ifndef KONIG_CLIENTID_HPP
+#define KONIG_CLIENTID_HPP
 
 #include <cstdint>
 
@@ -12,5 +12,5 @@ class ClientId : public utility::IdBase<std::uint8_t, ClientId> {
 
 }
 
-#endif // KONIG__CLIENTID_HPP
+#endif // KONIG_CLIENTID_HPP
 

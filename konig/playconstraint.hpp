@@ -1,5 +1,5 @@
-#ifndef KONIG__PLAYCONSTRAINT_HPP
-#define KONIG__PLAYCONSTRAINT_HPP
+#ifndef KONIG_PLAYCONSTRAINT_HPP
+#define KONIG_PLAYCONSTRAINT_HPP
 
 namespace konig {
 
@@ -19,5 +19,5 @@ class PlayConstraint {
 
 }
 
-#endif // KONIG__PLAYCONSTRAINT_HPP
+#endif // KONIG_PLAYCONSTRAINT_HPP
 

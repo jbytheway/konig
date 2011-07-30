@@ -1,5 +1,5 @@
-#ifndef KONIG__CARD_HPP
-#define KONIG__CARD_HPP
+#ifndef KONIG_CARD_HPP
+#define KONIG_CARD_HPP
 
 #include <cassert>
 
@@ -140,5 +140,5 @@ inline std::ostream& operator<<(std::ostream& o, const Card& c) {
 
 }
 
-#endif // KONIG__CARD_HPP
+#endif // KONIG_CARD_HPP
 

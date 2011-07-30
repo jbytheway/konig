@@ -1,5 +1,5 @@
-#ifndef KONIG__COMPLETEDEALER_HPP
-#define KONIG__COMPLETEDEALER_HPP
+#ifndef KONIG_COMPLETEDEALER_HPP
+#define KONIG_COMPLETEDEALER_HPP
 
 #include <vector>
 
@@ -19,5 +19,5 @@ class CompleteDealer : public Dealer {
 
 }
 
-#endif // KONIG__COMPLETEDEALER_HPP
+#endif // KONIG_COMPLETEDEALER_HPP
 

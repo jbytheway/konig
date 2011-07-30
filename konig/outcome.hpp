@@ -1,5 +1,5 @@
-#ifndef KONIG__OUTCOME_HPP
-#define KONIG__OUTCOME_HPP
+#ifndef KONIG_OUTCOME_HPP
+#define KONIG_OUTCOME_HPP
 
 #include <map>
 
@@ -57,5 +57,5 @@ KONIG_API std::ostream& operator<<(std::ostream&, const Outcome&);
 
 }
 
-#endif // KONIG__OUTCOME_HPP
+#endif // KONIG_OUTCOME_HPP
 

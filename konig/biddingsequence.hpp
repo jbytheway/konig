@@ -1,5 +1,5 @@
-#ifndef KONIG__BIDDINGSEQUENCE_HPP
-#define KONIG__BIDDINGSEQUENCE_HPP
+#ifndef KONIG_BIDDINGSEQUENCE_HPP
+#define KONIG_BIDDINGSEQUENCE_HPP
 
 #include <boost/tuple/tuple.hpp>
 
@@ -23,5 +23,5 @@ class KONIG_API BiddingSequence {
 
 }
 
-#endif // KONIG__BIDDINGSEQUENCE_HPP
+#endif // KONIG_BIDDINGSEQUENCE_HPP
 

@@ -1,5 +1,5 @@
-#ifndef KONIG__UTILITY__INTERSECTS_HPP
-#define KONIG__UTILITY__INTERSECTS_HPP
+#ifndef KONIG_UTILITY_INTERSECTS_HPP
+#define KONIG_UTILITY_INTERSECTS_HPP
 
 #include <set>
 
@@ -21,5 +21,5 @@ bool intersects(std::set<T> const& l, std::set<T> const& r)
 
 }}
 
-#endif // KONIG__UTILITY__INTERSECTS_HPP
+#endif // KONIG_UTILITY_INTERSECTS_HPP
 
