@@ -24,7 +24,6 @@ class CommandHandler :
     void unset_server_interface();
 
     // Functions used by UI side
-    virtual void command(std::string const&);
     virtual void end();
 
     // Functions used by ServerInterface side
@@ -41,6 +40,12 @@ class CommandHandler :
     void present_talon() const;
     void present_hand(bool with_accepted=false) const;
     void present_current_trick() const;
+
+    // Functions to implement commands
+    konig::client::ServerInterface& server_interface() {
+      assert(server_interface_);
+      return *server_interface_;
+    }
   private:
     void set_mode(UiMode const);
 
@@ -49,9 +54,6 @@ class CommandHandler :
     GameTracker tracker_;
     bool aborting_;
     UiMode mode_;
-
-    class CommandParser;
-    boost::scoped_ptr<CommandParser> parser_;
 
     boost::any return_value_;
 };
