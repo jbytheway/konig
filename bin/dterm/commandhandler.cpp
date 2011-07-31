@@ -2,12 +2,6 @@
 
 #include <unordered_map>
 
-#include <boost/spirit/home/phoenix/core/reference.hpp>
-#include <boost/spirit/home/phoenix/object/construct.hpp>
-#include <boost/spirit/home/phoenix/operator/arithmetic.hpp>
-#include <boost/spirit/home/phoenix/stl/container.hpp>
-#include <boost/spirit/include/qi.hpp>
-
 #include <konig/fatal.hpp>
 
 namespace konig { namespace dterm {
