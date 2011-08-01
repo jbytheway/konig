@@ -1,5 +1,7 @@
 #include "realgame.hpp"
 
+#include "oracle.hpp"
+
 namespace konig { namespace real {
 
 RealGame::RealGame(Ruleset const& rules, Oracle& oracle) :
@@ -10,7 +12,7 @@ RealGame::RealGame(Ruleset const& rules, Oracle& oracle) :
 
 void RealGame::play()
 {
-  KONIG_FATAL("not implemented");
+  oracle_.init();
 }
 
 }}

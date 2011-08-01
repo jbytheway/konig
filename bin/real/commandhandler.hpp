@@ -6,6 +6,8 @@
 namespace konig { namespace real {
 
 class CommandHandler : public terminal::CommandHandler {
+  public:
+    CommandHandler(boost::asio::io_service&);
 };
 
 }}

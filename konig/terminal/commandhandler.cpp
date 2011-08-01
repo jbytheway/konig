@@ -15,9 +15,15 @@
 
 namespace konig { namespace terminal {
 
-CommandHandler::CommandHandler() :
+CommandHandler::CommandHandler(
+  boost::asio::io_service& io,
+  std::string prompt
+) :
+  io_(io),
   output_(NULL),
-  parser_(new CommandParser(*this))
+  prompt_(std::move(prompt)),
+  parser_(new CommandParser(*this)),
+  aborting_(false)
 {}
 
 CommandHandler::~CommandHandler() = default;
@@ -25,6 +31,7 @@ CommandHandler::~CommandHandler() = default;
 void CommandHandler::set_output(terminal::MessageSink& output)
 {
   output_ = &output;
+  output_->set_prompt(prompt_);
 }
 
 void CommandHandler::unset_output()

@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
   using konig::real::CommandHandler;
   using std::placeholders::_1;
   using std::placeholders::_2;
-  CommandHandler ch;
+  CommandHandler ch(io);
   relasio::readline rw(
     io,
     relasio::_command_handler=std::bind(&CommandHandler::command, &ch, _1),

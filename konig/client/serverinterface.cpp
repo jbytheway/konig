@@ -7,7 +7,7 @@
 
 #include <konig/fatal.hpp>
 #include <konig/protocol.hpp>
-#include <konig/client/asynccallerror.hpp>
+#include <konig/playerunavailableerror.hpp>
 
 namespace konig { namespace client {
 
@@ -124,7 +124,7 @@ class Responder {
     void operator()() {
       try {
         server_interface_.send(Message<response>((player_.*member)()));
-      } catch (AsyncCallError const&) {
+      } catch (PlayerUnavailableError const&) {
         server_interface_.close();
       }
     }

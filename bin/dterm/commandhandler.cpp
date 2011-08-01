@@ -7,169 +7,6 @@
 namespace konig { namespace dterm {
 
 namespace {
-
-class BidChecker : public terminal::Checker {
-  public:
-    BidChecker(GameTracker const& t, boost::any& r) :
-      Checker(r),
-      tracker_(t)
-    {}
-
-    virtual bool command(std::list<std::string> const& tokens) {
-      if (tokens.size() != 1) return false;
-      std::string const& token = tokens.front();
-      if (token == "pass" || token == "p") {
-        return_ = Bid::pass;
-        return true;
-      }
-      Contracts const& contracts = tracker_.rules().contracts();
-      Bid bid = contracts.index_by_bid_name(token);
-      if (!bid.is_pass()) {
-        return_ = bid;
-        return true;
-      }
-      return false;
-    }
-  private:
-    GameTracker const& tracker_;
-};
-
-class KingChecker : public terminal::Checker {
-  public:
-    KingChecker(boost::any& r) :
-      Checker(r)
-    {}
-
-    virtual bool command(std::list<std::string> const& tokens) {
-      if (tokens.size() != 1) return false;
-      std::string const& king = tokens.front();
-      KingCall k;
-      if (KingCall::from_string(k, king)) {
-        return_ = k;
-        return true;
-      }
-      return false;
-    }
-};
-
-class BoolChecker : public terminal::Checker {
-  public:
-    BoolChecker(boost::any& r) :
-      Checker(r)
-    {
-      if (bools_.empty()) {
-        bools_ = {
-          {"y", true }, {"yes", true}, {"1", true },
-          {"n", false}, {"no", false}, {"0", false}
-        };
-      }
-    }
-
-    virtual bool command(std::list<std::string> const& tokens) {
-      if (tokens.size() != 1) return false;
-      std::string const& value = tokens.front();
-      auto it = bools_.find(value);
-      if (it == bools_.end()) {
-        return false;
-      }
-      return_ = it->second;
-      return true;
-    }
-  private:
-    static std::unordered_map<std::string, bool> bools_;
-};
-
-std::unordered_map<std::string, bool> BoolChecker::bools_;
-
-class TalonChecker : public terminal::Checker {
-  public:
-    TalonChecker(boost::any& r) :
-      Checker(r)
-    {}
-
-    virtual bool command(std::list<std::string> const& tokens) {
-      if (tokens.size() != 1) return false;
-      std::string const& choice = tokens.front();
-      if (choice == "0") {
-        return_ = uint8_t(0);
-        return true;
-      } else if (choice == "1") {
-        return_ = uint8_t(1);
-        return true;
-      }
-      return false;
-    }
-};
-
-class DiscardChecker : public terminal::Checker {
-  public:
-    DiscardChecker(boost::any& r) :
-      Checker(r)
-    {}
-
-    virtual bool command(std::list<std::string> const& tokens) {
-      Cards cards;
-      BOOST_FOREACH(auto const& token, tokens) {
-        Cards thisCards;
-        if (Cards::from_string(thisCards, token)) {
-          cards.insert(thisCards);
-        } else {
-          return false;
-        }
-      }
-      return_ = cards;
-      return true;
-    }
-};
-
-class AnnounceChecker : public terminal::Checker {
-  public:
-    AnnounceChecker(boost::any& r) :
-      Checker(r)
-    {}
-
-    virtual bool command(std::list<std::string> const& tokens) {
-      if (tokens.empty()) return false;
-      std::vector<Announcement> announcements;
-      if (tokens.size() == 1 &&
-          (tokens.back() == "p" || tokens.back() == "pass")) {
-        return_ = announcements;
-        return true;
-      }
-      BOOST_FOREACH(auto const& token, tokens) {
-        Announcement announcement;
-        if (Announcement::from_string(announcement, token)) {
-          announcements.push_back(announcement);
-        } else {
-          return false;
-        }
-      }
-      return_ = announcements;
-      return true;
-    }
-};
-
-class CardChecker : public terminal::Checker {
-  public:
-    CardChecker(boost::any& r) :
-      Checker(r)
-    {}
-
-    virtual bool command(std::list<std::string> const& tokens) {
-      if (tokens.size() != 1) return false;
-      std::string const& token = tokens.front();
-      Card card;
-      if (Card::from_string(card, token)) {
-        return_ = card;
-        return true;
-      }
-      return false;
-    }
-};
-
-}
-
-namespace {
   void get_setting(terminal::CommandParser& p, std::list<std::string> args) {
     if (args.size() == 1) {
       auto& name = args.front();
@@ -223,11 +60,9 @@ namespace {
 }
 
 CommandHandler::CommandHandler(boost::asio::io_service& io) :
-  io_(io),
+  terminal::CommandHandler(io, "> "),
   server_interface_(NULL),
-  tracker_(*this),
-  aborting_(false),
-  mode_(UiMode::none)
+  tracker_(*this)
 {
   parser_->add_command(terminal::Command(
       { "g", "get" }, &get_setting,
@@ -366,49 +201,6 @@ void CommandHandler::present_current_trick() const
     os << " ";
   }
   output_->message(os.str());
-}
-
-void CommandHandler::set_mode(UiMode const mode)
-{
-  BOOST_STATIC_ASSERT(int(UiMode::max) == 8);
-  switch (mode) {
-    case UiMode::none:
-      parser_->pre_checker().reset();
-      output_->set_prompt("> ");
-      break;
-    case UiMode::bid:
-      parser_->pre_checker().reset(new BidChecker(tracker_, return_value_));
-      output_->set_prompt("bid> ");
-      break;
-    case UiMode::callKing:
-      parser_->pre_checker().reset(new KingChecker(return_value_));
-      output_->set_prompt("call> ");
-      break;
-    case UiMode::chooseConcession:
-      parser_->pre_checker().reset(new BoolChecker(return_value_));
-      output_->set_prompt("concede?> ");
-      break;
-    case UiMode::chooseTalonHalf:
-      parser_->pre_checker().reset(new TalonChecker(return_value_));
-      output_->set_prompt("choose> ");
-      break;
-    case UiMode::discard:
-      parser_->pre_checker().
-        reset(new DiscardChecker(return_value_));
-      output_->set_prompt("discard> ");
-      break;
-    case UiMode::announce:
-      parser_->pre_checker().
-        reset(new AnnounceChecker(return_value_));
-      output_->set_prompt("announce> ");
-      break;
-    case UiMode::playCard:
-      parser_->pre_checker().reset(new CardChecker(return_value_));
-      output_->set_prompt("play> ");
-      break;
-    default:
-      KONIG_FATAL("unexpected UiMode");
-  }
 }
 
 }}

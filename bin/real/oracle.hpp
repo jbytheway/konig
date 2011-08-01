@@ -10,9 +10,13 @@ class CommandHandler;
 class Oracle {
   public:
     Oracle(CommandHandler&, ai::Ai::Ptr);
+
+    void init();
   private:
     CommandHandler& handler_;
     ai::Ai::Ptr ai_;
+
+    PlayPosition position_;
 };
 
 }}
