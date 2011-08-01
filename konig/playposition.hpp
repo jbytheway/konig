@@ -6,6 +6,7 @@
 namespace konig {
 
 enum PlayPosition {
+  position_min = 0,
   position_forehand = 0,
   position_max = 4
 };
