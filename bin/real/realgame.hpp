@@ -2,16 +2,15 @@
 #define KONIG_REAL_REALGAME_HPP
 
 #include <konig/ruleset.hpp>
+#include <konig/oracle.hpp>
 
 namespace konig { namespace real {
-
-class Oracle;
 
 class RealGame {
   public:
     RealGame(Ruleset const&, Oracle&);
 
-    void play();
+    PlayResult play();
   private:
     Ruleset const& rules_;
     Oracle& oracle_;

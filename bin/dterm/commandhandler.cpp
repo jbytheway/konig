@@ -103,7 +103,6 @@ void CommandHandler::unset_server_interface()
 void CommandHandler::end()
 {
   assert(server_interface_);
-  aborting_ = true;
   server_interface_->close();
   terminal::CommandHandler::end();
 }

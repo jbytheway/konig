@@ -81,6 +81,33 @@ PlayResult NegativeContract::play(
   return PlayResult{outcome, tricks, scores};
 }
 
+PlayResult NegativeContract::play(
+  Oracle& oracle,
+  PlayPosition declarer_position
+) const
+{
+  std::array<bool, 4> offence = {{false, false, false, false}};
+  offence[declarer_position] = true;
+
+  AnnouncementSequence announcements(shared_from_this());
+  ContractAndAnnouncements whole_contract =
+    announcements.get_announcements(oracle, declarer_position);
+
+  oracle.notify_announcements_done();
+
+  Cards declarers_cards;
+  Cards defences_cards;
+  boost::optional<Card> called_king; // Necessary to pass to play_tricks
+  std::vector<Trick> tricks = play_tricks(
+    oracle, declarers_cards, defences_cards,
+    whole_contract, called_king, declarer_position, offence
+  );
+  Outcome outcome =
+    whole_contract.score(tricks, declarers_cards, defences_cards, offence);
+  std::array<int, 4> scores = outcome.compute_scores(offence);
+  return PlayResult{outcome, tricks, scores};
+}
+
 Announcednesses NegativeContract::initial_announcednesses() const
 {
   Announcednesses result;

@@ -7,6 +7,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <konig/card.hpp>
+#include <konig/constrainedcard.hpp>
 #include <konig/achievement.hpp>
 #include <konig/trick.hpp>
 
@@ -48,16 +49,18 @@ class Feat {
         value_ == king_ultimo;
     }
 
-    Card constrained_card(Card called_king) const {
+    ConstrainedCard constrained_card(
+      boost::optional<Card> const& called_king
+    ) const {
       switch (value_) {
         case pagat:
-          return Card(TrumpRank::pagat);
+          return ConstrainedCard(Card(TrumpRank::pagat));
         case uhu:
-          return Card(TrumpRank::uhu);
+          return ConstrainedCard(Card(TrumpRank::uhu));
         case kakadu:
-          return Card(TrumpRank::kakadu);
+          return ConstrainedCard(Card(TrumpRank::kakadu));
         case king_ultimo:
-          return called_king;
+          return ConstrainedCard(called_king);
         default:
           throw std::logic_error("feat does not constrain play");
       }

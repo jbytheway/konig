@@ -21,6 +21,13 @@
 
 namespace konig {
 
+Cards Cards::make_deck()
+{
+  Cards result;
+  Card::make_deck(std::inserter(result, result.begin()));
+  return result;
+}
+
 Cards Cards::from_string(std::string const& description)
 {
   Cards result;

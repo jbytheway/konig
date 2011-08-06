@@ -12,6 +12,21 @@ namespace uiModes {
     static inline char const* prompt() { return "position> "; }
   };
 
+  struct Hand : terminal::UiMode {
+    typedef terminal::checkers::CardsChecker pre_checker_type;
+    static inline char const* prompt() { return "hand> "; }
+  };
+
+  struct Talon : terminal::UiMode {
+    typedef terminal::checkers::CardsChecker pre_checker_type;
+    static inline char const* prompt() { return "talon half> "; }
+  };
+
+  struct Ouvert : terminal::UiMode {
+    typedef terminal::checkers::CardsChecker pre_checker_type;
+    static inline char const* prompt() { return "ouvert> "; }
+  };
+
 }
 
 }}

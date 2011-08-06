@@ -25,16 +25,23 @@ class Trischaken : public Contract {
       ) const;
 
     virtual PlayResult play(
-        std::array<Cards, 4> hands,
-        std::array<Cards, 2> talon,
-        const std::vector<boost::shared_ptr<Player>>& players,
-        PlayPosition declarer_position,
-        std::ostream* debug_stream
-      ) const;
+      std::array<Cards, 4> hands,
+      std::array<Cards, 2> talon,
+      const std::vector<boost::shared_ptr<Player>>& players,
+      PlayPosition declarer_position,
+      std::ostream* debug_stream
+    ) const;
+
+    virtual PlayResult play(
+      Oracle&,
+      PlayPosition declarer_position
+    ) const;
 
     virtual bool has_no_announcements() const { return true; }
 
     virtual bool is_partnership() const { return false; }
+
+    virtual uint8_t talon_halves() const { return 0; }
 
     virtual bool grants_lead() const { return false; }
 

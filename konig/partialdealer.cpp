@@ -39,8 +39,7 @@ Deal PartialDealer::deal()
 
 void PartialDealer::init(const std::string descriptions[6])
 {
-  std::set<Card> deck;
-  Card::make_deck(inserter(deck, deck.begin()));
+  Cards deck = Cards::make_deck();
   for (size_t i=0; i<6; ++i) {
     size_t size;
     if (i<4) size = 12; else size = 3;

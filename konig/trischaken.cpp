@@ -64,32 +64,15 @@ std::string Trischaken::outcome_name(
   return result + suffix;
 }
 
-PlayResult Trischaken::play(
-    std::array<Cards, 4> hands,
-    std::array<Cards, 2> /*talon*/,
-    const std::vector<boost::shared_ptr<Player>>& players,
-    PlayPosition declarer_position,
-    std::ostream* debug_stream
-  ) const
+namespace {
+
+PlayResult make_trischaken_play_result(
+  ContractAndAnnouncements& whole_contract,
+  Cards const& declarers_cards,
+  Cards const& defences_cards,
+  std::vector<Trick> const& tricks
+)
 {
-  std::array<bool, 4> offence = {{false, false, false, false}};
-  offence[declarer_position] = true;
-
-  AnnouncementSequence announcements(shared_from_this());
-  ContractAndAnnouncements whole_contract =
-    announcements.no_announcements();
-
-  std::for_each(
-      players.begin(), players.end(),
-      boost::bind(&Player::notify_announcements_done, _1)
-    );
-
-  Cards declarers_cards;
-  Cards defences_cards;
-  std::vector<Trick> tricks = play_tricks(
-      hands, declarers_cards, defences_cards,
-      players, whole_contract, declarer_position, offence, debug_stream
-    );
   // For Trischaken things are complicated, so we have to do some stuff here
   // that would normally be inside Feat
   std::array<bool, 4> achievers;
@@ -123,6 +106,67 @@ PlayResult Trischaken::play(
     whole_contract.score(tricks, declarers_cards, defences_cards, achievers);
   std::array<int, 4> scores = outcome.compute_scores(achievers);
   return PlayResult{outcome, tricks, scores};
+}
+
+}
+
+PlayResult Trischaken::play(
+    std::array<Cards, 4> hands,
+    std::array<Cards, 2> /*talon*/,
+    const std::vector<boost::shared_ptr<Player>>& players,
+    PlayPosition declarer_position,
+    std::ostream* debug_stream
+  ) const
+{
+  std::array<bool, 4> offence = {{false, false, false, false}};
+  offence[declarer_position] = true;
+
+  AnnouncementSequence announcements(shared_from_this());
+  ContractAndAnnouncements whole_contract =
+    announcements.no_announcements();
+
+  std::for_each(
+      players.begin(), players.end(),
+      boost::bind(&Player::notify_announcements_done, _1)
+    );
+
+  Cards declarers_cards;
+  Cards defences_cards;
+  std::vector<Trick> tricks = play_tricks(
+      hands, declarers_cards, defences_cards,
+      players, whole_contract, declarer_position, offence, debug_stream
+    );
+
+  return make_trischaken_play_result(
+    whole_contract, declarers_cards, defences_cards, tricks
+  );
+}
+
+PlayResult Trischaken::play(
+  Oracle& oracle,
+  PlayPosition declarer_position
+) const
+{
+  std::array<bool, 4> offence = {{false, false, false, false}};
+  offence[declarer_position] = true;
+
+  AnnouncementSequence announcements(shared_from_this());
+  ContractAndAnnouncements whole_contract =
+    announcements.no_announcements();
+
+  oracle.notify_announcements_done();
+
+  Cards declarers_cards;
+  Cards defences_cards;
+  boost::optional<Card> called_king; // Necessary to pass to play_tricks
+  std::vector<Trick> tricks = play_tricks(
+    oracle, declarers_cards, defences_cards,
+    whole_contract, called_king, declarer_position, offence
+  );
+
+  return make_trischaken_play_result(
+    whole_contract, declarers_cards, defences_cards, tricks
+  );
 }
 
 Announcednesses Trischaken::initial_announcednesses() const

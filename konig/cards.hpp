@@ -18,6 +18,7 @@ namespace konig {
 class KONIG_API Cards : public std::set<Card> {
   friend class boost::serialization::access;
   public:
+    static Cards make_deck();
     static Cards from_string(std::string const&);
     static bool from_string(Cards&, std::string const&);
 

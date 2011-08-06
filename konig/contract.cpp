@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include <boost/bind.hpp>
+#include <boost/range/numeric.hpp>
 
 #include <konig/fatal.hpp>
 #include <konig/player.hpp>
@@ -14,15 +15,15 @@
 namespace konig {
 
 std::vector<Trick> Contract::play_tricks(
-    std::array<Cards, 4> hands,
-    Cards& declarers_cards,
-    Cards& defences_cards,
-    const std::vector<Player::Ptr>& players,
-    const ContractAndAnnouncements& whole_contract,
-    PlayPosition declarer_position,
-    std::array<bool, 4> const& offence,
-    std::ostream* debug_stream
-  ) const
+  std::array<Cards, 4> hands,
+  Cards& declarers_cards,
+  Cards& defences_cards,
+  const std::vector<Player::Ptr>& players,
+  const ContractAndAnnouncements& whole_contract,
+  PlayPosition declarer_position,
+  std::array<bool, 4> const& offence,
+  std::ostream* debug_stream
+) const
 {
   for (size_t i=0; i<4; ++i) {
     assert(hands[i].size() == 12);
@@ -78,6 +79,95 @@ std::vector<Trick> Contract::play_tricks(
         players.begin(), players.end(),
         boost::bind(&Player::notify_ouvert, _1, hands[declarer_position])
       );
+    }
+  }
+
+  return tricks;
+}
+
+std::vector<Trick> Contract::play_tricks(
+  Oracle& oracle,
+  Cards& declarers_cards,
+  Cards& defenses_cards,
+  const ContractAndAnnouncements& whole_contract,
+  boost::optional<Card>& called_king,
+  PlayPosition declarer_position,
+  std::array<bool, 4>& offence
+) const
+{
+  assert(declarer_position < 4);
+  std::array<Cards, 4> cards_taken;
+
+  PlayPosition leading = position_forehand;
+  if (grants_lead()) {
+    leading = declarer_position;
+  }
+
+  std::vector<Trick> tricks;
+
+  for (unsigned int trick_number = 12; trick_number > 0; --trick_number) {
+    Trick t(leading, rising_rule(), hold_pagat());
+    for (unsigned int i=0; i<4; ++i) {
+      PlayPosition playing = PlayPosition((leading + i) % 4);
+      Card c = oracle.play_card(playing);
+      // Pick up partner
+      if (is_partnership()) {
+        if (!called_king) {
+          if (playing != declarer_position &&
+            !c.trump() && c.suit_rank() == SuitRank::king) {
+            called_king = c;
+          }
+        }
+
+        if (called_king && *called_king == c) {
+          offence[playing] = true;
+        }
+      }
+      t.add(c);
+      oracle.notify_play_card(playing, c);
+    }
+    leading = t.winner();
+    cards_taken[leading].insert(t.cards());
+
+    tricks.push_back(std::move(t));
+    if (trick_number == 12 && ouvert()) {
+      Cards ouvert = oracle.get_ouvert(declarer_position);
+      oracle.notify_ouvert(ouvert);
+    }
+  }
+
+  for (size_t i=0; i<4; ++i) {
+    if (offence[i]) {
+      declarers_cards.insert(cards_taken[i]);
+    } else {
+      defenses_cards.insert(cards_taken[i]);
+    }
+  }
+
+  if (involves_talon()) {
+    // To score correctly we need to deal with the cards out of play, and who
+    // they belong to
+    if (talon_halves() > 0) {
+      // We need to figure out what declarer's discard was and add it to his
+      // cards
+      Cards discard = Cards::make_deck();
+      discard.erase(declarers_cards);
+      discard.erase(defenses_cards);
+      assert(discard.size() == talon_halves()*3);
+      declarers_cards.insert(discard);
+    } else {
+      // This is solo(dreier) and we never saw the talon
+      Cards talon = Cards::make_deck();
+      talon.erase(declarers_cards);
+      talon.erase(defenses_cards);
+      assert(talon.size() == 6);
+
+      // In solo against three declarer gets the cards; otherwise defenders
+      if (is_partnership() && 1 == boost::accumulate(offence, 0)) {
+        declarers_cards.insert(talon);
+      } else {
+        defenses_cards.insert(talon);
+      }
     }
   }
 

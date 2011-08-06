@@ -7,7 +7,7 @@
 #include <konig/ai/ai.hpp>
 
 #include "commandhandler.hpp"
-#include "oracle.hpp"
+#include "terminaloracle.hpp"
 #include "realgame.hpp"
 
 namespace konig { namespace real {
@@ -72,11 +72,15 @@ int main(int argc, char* argv[])
   konig::Ruleset rules = konig::Ruleset::cheltenham();
 
   konig::ai::Ai::Ptr ai = konig::ai::Ai::create(options.ai);
-  konig::real::Oracle oracle(ch, ai);
+  konig::real::TerminalOracle oracle(rules, ch, ai);
 
   konig::real::RealGame game(rules, oracle);
   io.post(std::bind(&konig::real::RealGame::play, game));
-  io.run();
+  try {
+    io.run();
+  } catch (konig::PlayerUnavailableError const&) {
+    messageSink.message("Aborting request for data");
+  }
   ch.unset_output();
 }
 

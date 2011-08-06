@@ -45,7 +45,7 @@ KingCall GameTracker::call_king()
 
 bool GameTracker::choose_concede()
 {
-  return handler_.get_from_user<terminal::uiModes::ChooseConcession>();
+  return handler_.get_from_user<terminal::uiModes::ChooseConcede>();
 }
 
 uint8_t GameTracker::choose_talon_half()

@@ -7,14 +7,14 @@
 namespace konig {
 
 ContractAndAnnouncements::ContractAndAnnouncements(
-    Contract::ConstPtr contract,
-    Card called_king
-  ) :
+  Contract::ConstPtr contract,
+  boost::optional<Card> called_king
+) :
   contract_(std::move(contract)),
   called_king_(called_king),
   announcednesses_(
-      contract_ ? contract_->initial_announcednesses() : Announcednesses()
-    ),
+    contract_ ? contract_->initial_announcednesses() : Announcednesses()
+  ),
   had_first_announcements_(false),
   num_passes_(0)
 {}
@@ -66,8 +66,8 @@ void ContractAndAnnouncements::add(std::vector<Announcement> announcements)
     if (new_announcedness == Announcedness::announced &&
         f.constrains_play()) {
       play_constraints_[
-          std::make_pair(offensive, f.constrained_card(called_king_))
-        ] = f.constrained_to_trick();
+        std::make_pair(offensive, f.constrained_card(called_king_))
+      ] = f.constrained_to_trick();
     }
   }
 }
@@ -110,14 +110,20 @@ Outcome ContractAndAnnouncements::score(
     std::count(game_achievers.begin(), game_achievers.end(), true);
   bool const against_three = (num_game_achievers == 1);
   Outcome o(contract_, num_game_achievers, false);
+  Card called_king;
+  if (called_king_) {
+    called_king = *called_king_;
+  } else if (contract_->is_partnership()) {
+    KONIG_FATAL("need to figure out which king was called");
+  }
   BOOST_FOREACH(const auto& i, announcednesses_) {
     bool offensive = i.first.second;
     Feat feat = i.first.first;
     Announcedness announcedness = i.second;
     Achievement achievement = feat.result_for(
-        contract_, called_king_, tricks, declarers_cards, defenses_cards,
-        offensive, game_achievers
-      );
+      contract_, called_king, tricks, declarers_cards, defenses_cards,
+      offensive, game_achievers
+    );
     o.add(
       offensive, feat, announcedness, achievement, against_three,
       announcednesses_

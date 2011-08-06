@@ -1,5 +1,6 @@
 #include <konig/positivecontract.hpp>
 
+#include <boost/optional.hpp>
 #include <boost/bind.hpp>
 #include <boost/serialization/export.hpp>
 
@@ -67,10 +68,10 @@ std::string PositiveContract::outcome_name(
 }
 
 PlayResult PositiveContract::play(
-    std::array<Cards, 4> hands, std::array<Cards, 2> talon,
-    const std::vector<Player::Ptr>& players, PlayPosition declarer_position,
-    std::ostream* debug_stream
-  ) const
+  std::array<Cards, 4> hands, std::array<Cards, 2> talon,
+  const std::vector<Player::Ptr>& players, PlayPosition declarer_position,
+  std::ostream* debug_stream
+) const
 {
   Player::Ptr declarer = players[declarer_position];
   Cards& declarers_hand = hands[declarer_position];
@@ -78,7 +79,7 @@ PlayResult PositiveContract::play(
   offence[declarer_position] = true;
 
   KingCall king(KingCall::invalid);
-  Card called_king(TrumpRank::pagat);
+  boost::optional<Card> called_king;
   bool against_three = false;
 
   if (partnership_) {
@@ -107,7 +108,7 @@ PlayResult PositiveContract::play(
 
     // Identify partner
     for (uint8_t i=0; i<4; ++i) {
-      if (hands[i].count(called_king)) {
+      if (hands[i].count(*called_king)) {
         offence[i] = true;
         break;
       }
@@ -119,7 +120,7 @@ PlayResult PositiveContract::play(
       );
 
     against_three =
-      talon[0].count(called_king) || talon[1].count(called_king);
+      talon[0].count(*called_king) || talon[1].count(*called_king);
   }
 
   Cards declarers_cards;
@@ -257,6 +258,97 @@ PlayResult PositiveContract::play(
       hands, declarers_cards, defences_cards,
       players, whole_contract, declarer_position, offence, debug_stream
     );
+  Outcome outcome =
+    whole_contract.score(tricks, declarers_cards, defences_cards, offence);
+  std::array<int, 4> scores = outcome.compute_scores(offence);
+  return PlayResult{outcome, tricks, scores};
+}
+
+PlayResult PositiveContract::play(
+  Oracle& oracle,
+  PlayPosition declarer_position
+) const
+{
+  std::array<bool, 4> offence = {{false, false, false, false}};
+  offence[declarer_position] = true;
+
+  KingCall king(KingCall::invalid);
+
+  if (partnership_) {
+    king = oracle.call_king(declarer_position);
+    oracle.notify_call_king(king);
+  }
+
+  Cards declarers_cards;
+  Cards defences_cards;
+  boost::optional<Card> called_king;
+
+  if (talon_halves_ > 0) {
+    std::array<Cards, 2> talon = oracle.get_talon();
+    oracle.notify_talon(talon);
+    Cards whole_talon(talon[0]);
+    whole_talon.insert(talon[1]);
+
+    static_assert(KingCall::invalid > KingCall::fourth_king,
+      "need this condition for the following check to correctly exclude "
+      "both invalid and fourth-king");
+    if (king < KingCall::fourth_king) {
+      called_king = Card(Suit(king), SuitRank::king);
+    }
+
+    bool against_three =
+      (called_king && whole_talon.count(*called_king)) ||
+      (king == KingCall::fourth_king && whole_talon.count(SuitRank::king));
+
+    // Where appropriate, offer the option to concede
+    if (against_three) {
+      // NB against_three can only be true if it's a partnership contract (see
+      // above) and we also know the talon is revealed, so we know it's a
+      // contract where concession is allowed.
+      bool concession = oracle.choose_concede(declarer_position);
+      if (concession) {
+        oracle.notify_concede();
+
+        if (!called_king) {
+          assert(whole_talon.count(SuitRank::king) == 1);
+          called_king = *whole_talon.find(SuitRank::king);
+        }
+
+        AnnouncementSequence announcements(shared_from_this(), *called_king);
+        ContractAndAnnouncements whole_contract =
+          announcements.no_announcements();
+
+        Outcome outcome = whole_contract.score_conceded(offence);
+        std::array<int, 4> scores = outcome.compute_scores(offence);
+        return PlayResult{outcome, {}, scores};
+      }
+    }
+
+    if (talon_halves_ == 1) {
+      uint8_t talon_half = oracle.choose_talon_half(declarer_position);
+      oracle.notify_talon_choice(talon_half);
+
+      Cards& rejected_half = talon[!talon_half];
+      defences_cards.insert(rejected_half);
+    }
+
+    // This is a bit crazy; when AI is discarding we'll see all the cards;
+    // otherwise only trumps.  Either way we're doing the right thing in
+    // response.
+    Cards discard = oracle.discard(declarer_position);
+    oracle.notify_discard(discard);
+  }
+
+  AnnouncementSequence announcements(shared_from_this());
+  ContractAndAnnouncements whole_contract =
+    announcements.get_announcements(oracle, declarer_position);
+
+  oracle.notify_announcements_done();
+
+  std::vector<Trick> tricks = play_tricks(
+    oracle, declarers_cards, defences_cards,
+    whole_contract, called_king, declarer_position, offence
+  );
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, offence);
   std::array<int, 4> scores = outcome.compute_scores(offence);

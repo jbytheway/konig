@@ -83,6 +83,7 @@ void CommandHandler::command(std::string const& c)
 void CommandHandler::end()
 {
   assert(output_);
+  aborting_ = true;
   output_->message("Exit");
   output_->interrupt();
 }

@@ -2,6 +2,7 @@
 #define KONIG_ANNOUNCEMENTSEQUENCE_HPP
 
 #include <boost/tuple/tuple.hpp>
+#include <boost/optional.hpp>
 
 #include <konig/player.hpp>
 #include <konig/announcement.hpp>
@@ -13,9 +14,9 @@ namespace konig {
 class AnnouncementSequence {
   public:
     AnnouncementSequence(
-        boost::shared_ptr<Contract const> contract,
-        Card called_king = Card(TrumpRank::pagat)
-      ) :
+      boost::shared_ptr<Contract const> contract,
+      boost::optional<Card> called_king = boost::optional<Card>()
+    ) :
       contract_(std::move(contract)),
       called_king_(called_king)
     {}
@@ -29,17 +30,22 @@ class AnnouncementSequence {
 
     ContractAndAnnouncements
     get_announcements(
-        const std::vector<Player::Ptr>&,
-        std::array<bool, 4> const& offence,
-        PlayPosition declarer_position
-      );
+      const std::vector<Player::Ptr>&,
+      std::array<bool, 4> const& offence,
+      PlayPosition declarer_position
+    );
+
+    ContractAndAnnouncements
+    get_announcements(
+      Oracle&,
+      PlayPosition declarer_position
+    );
 
     ContractAndAnnouncements
     no_announcements();
   private:
     const boost::shared_ptr<Contract const> contract_;
-    const Card called_king_;
-    std::vector<std::vector<Announcement> > announcements_;
+    const boost::optional<Card> called_king_;
 };
 
 }

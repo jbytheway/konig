@@ -37,16 +37,23 @@ class PositiveContract : public Contract {
       ) const;
 
     virtual PlayResult play(
-        std::array<Cards, 4> hands,
-        std::array<Cards, 2> talon,
-        const std::vector<boost::shared_ptr<Player>>& players,
-        PlayPosition declarer_position,
-        std::ostream* debug_stream
-      ) const;
+      std::array<Cards, 4> hands,
+      std::array<Cards, 2> talon,
+      const std::vector<boost::shared_ptr<Player>>& players,
+      PlayPosition declarer_position,
+      std::ostream* debug_stream
+    ) const;
+
+    virtual PlayResult play(
+      Oracle&,
+      PlayPosition declarer_position
+    ) const;
 
     virtual bool has_no_announcements() const { return false; }
 
     virtual bool is_partnership() const { return partnership_; }
+
+    virtual uint8_t talon_halves() const { return talon_halves_; }
 
     virtual bool grants_lead() const { return false; }
 

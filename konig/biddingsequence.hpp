@@ -5,6 +5,7 @@
 
 #include <konig/contracts.hpp>
 #include <konig/player.hpp>
+#include <konig/oracle.hpp>
 
 namespace konig {
 
@@ -15,10 +16,12 @@ class KONIG_API BiddingSequence {
     {}
 
     boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
-    get_bids(const std::vector<Player::Ptr>&);
+    get_bids(std::vector<Player::Ptr> const&);
+
+    boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
+    get_bids(Oracle&);
   private:
-    const Contracts& contracts_;
-    std::vector<Bid> bids_;
+    Contracts const& contracts_;
 };
 
 }

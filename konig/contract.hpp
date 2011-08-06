@@ -13,6 +13,7 @@
 #include <konig/announcement.hpp>
 #include <konig/announcednesses.hpp>
 #include <konig/playresult.hpp>
+#include <konig/oracle.hpp>
 
 namespace konig {
 
@@ -40,16 +41,23 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
     const std::string& name() const { return name_; }
 
     virtual PlayResult play(
-        std::array<Cards, 4> hands,
-        std::array<Cards, 2> talon,
-        const std::vector<boost::shared_ptr<Player>>& players,
-        PlayPosition declarer_position,
-        std::ostream* debug_stream
-      ) const = 0;
+      std::array<Cards, 4> hands,
+      std::array<Cards, 2> talon,
+      const std::vector<boost::shared_ptr<Player>>& players,
+      PlayPosition declarer_position,
+      std::ostream* debug_stream
+    ) const = 0;
+
+    virtual PlayResult play(
+      Oracle&,
+      PlayPosition declarer_position
+    ) const = 0;
 
     virtual bool has_no_announcements() const = 0;
 
     virtual bool is_partnership() const = 0;
+
+    virtual uint8_t talon_halves() const = 0;
 
     virtual bool grants_lead() const = 0;
 
@@ -83,15 +91,25 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
     ) const = 0;
 
     std::vector<Trick> play_tricks(
-        std::array<Cards, 4> hands,
-        Cards& declarers_cards,
-        Cards& defenses_cards,
-        const std::vector<boost::shared_ptr<Player>>& players,
-        const ContractAndAnnouncements& whole_contract,
-        PlayPosition declarer_position,
-        std::array<bool, 4> const& offence,
-        std::ostream* debug_stream
-      ) const;
+      std::array<Cards, 4> hands,
+      Cards& declarers_cards,
+      Cards& defenses_cards,
+      const std::vector<boost::shared_ptr<Player>>& players,
+      const ContractAndAnnouncements& whole_contract,
+      PlayPosition declarer_position,
+      std::array<bool, 4> const& offence,
+      std::ostream* debug_stream
+    ) const;
+
+    std::vector<Trick> play_tricks(
+      Oracle&,
+      Cards& declarers_cards,
+      Cards& defenses_cards,
+      const ContractAndAnnouncements& whole_contract,
+      boost::optional<Card>& called_king,
+      PlayPosition declarer_position,
+      std::array<bool, 4>& offence
+    ) const;
 
     // Contracts
     static Ptr rufer();

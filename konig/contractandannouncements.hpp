@@ -5,6 +5,7 @@
 #include <array>
 
 #include <boost/bind.hpp>
+#include <boost/optional.hpp>
 
 #include <konig/utility/for_all.hpp>
 #include <konig/contract.hpp>
@@ -15,9 +16,9 @@ namespace konig {
 class KONIG_API ContractAndAnnouncements {
   public:
     ContractAndAnnouncements(
-        Contract::ConstPtr = Contract::ConstPtr(),
-        Card called_king = Card(TrumpRank::pagat)
-      );
+      Contract::ConstPtr = Contract::ConstPtr(),
+      boost::optional<Card> called_king = boost::optional<Card>()
+    );
 
     const Contract::ConstPtr& contract() const { return contract_; }
 
@@ -70,12 +71,13 @@ class KONIG_API ContractAndAnnouncements {
     std::string string(uint8_t num_offence) const;
   private:
     Contract::ConstPtr contract_;
-    Card called_king_;
+    boost::optional<Card> called_king_;
     std::vector<Announcement> last_announcements_;
     Announcednesses announcednesses_;
     bool had_first_announcements_;
     uint8_t num_passes_;
-    typedef std::map<std::pair<bool, Card>, unsigned int> PlayConstraints;
+    typedef std::map<std::pair<bool, ConstrainedCard>, unsigned int>
+      PlayConstraints;
     PlayConstraints play_constraints_;
 };
 

@@ -66,14 +66,15 @@ Achievement Feat::result_for(
     case kakadu:
       {
         const Trick& trick = tricks[12-constrained_to_trick()];
-        PlayPosition played_by = trick.player_of(constrained_card(called_king));
+        Card const interesting_card = constrained_card(called_king).get_card();
+        PlayPosition played_by = trick.player_of(interesting_card);
         if (played_by != position_max &&
             achievers[played_by] == feat_offensive) {
           bool winning_side = achievers[trick.winner()];
           const Card winning_card = trick.winning_card();
           return
             ( winning_side == feat_offensive &&
-              winning_card == constrained_card(called_king)) ?
+              winning_card == interesting_card) ?
             Achievement::made : Achievement::off;
         } else {
           return Achievement::neutral;

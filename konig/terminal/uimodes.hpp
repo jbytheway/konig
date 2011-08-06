@@ -18,7 +18,7 @@ namespace uiModes {
     static char const* prompt() { return "call> "; }
   };
 
-  struct ChooseConcession : UiMode {
+  struct ChooseConcede : UiMode {
     typedef checkers::BoolChecker pre_checker_type;
     static char const* prompt() { return "concede?> "; }
   };
