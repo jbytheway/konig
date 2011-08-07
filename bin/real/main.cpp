@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
     io,
     relasio::_command_handler=std::bind(&CommandHandler::command, &ch, _1),
     relasio::_eof_handler=std::bind(&CommandHandler::end, &ch),
-    relasio::_history_file=home/".konig"/"dterm"/"history",
+    relasio::_history_file=home/".konig"/"real"/"history",
     relasio::_history_filter=[](std::string const& s){return s.size()>2;}
   );
   konig::terminal::RelasioMessageSink messageSink(rw);
