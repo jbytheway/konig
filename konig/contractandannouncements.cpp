@@ -93,10 +93,11 @@ PlayConstraint ContractAndAnnouncements::play_constraint(
 }
 
 Outcome ContractAndAnnouncements::score(
-    const std::vector<Trick>& tricks,
-    const Cards& declarers_cards,
-    const Cards& defenses_cards,
-    std::array<bool, 4> const& game_achievers
+    std::vector<Trick> const& tricks,
+    Cards const& declarers_cards,
+    Cards const& defenses_cards,
+    std::array<bool, 4> const& game_achievers,
+    boost::optional<Card> const& called_king
   )
 {
 #ifndef NDEBUG
@@ -105,17 +106,17 @@ Outcome ContractAndAnnouncements::score(
   } else {
     assert(declarers_cards.size() + defenses_cards.size() == 48);
   }
+  if (called_king_) {
+    assert(called_king);
+    assert(*called_king == *called_king_);
+  } else if (contract_->is_partnership()) {
+    assert(called_king);
+  }
 #endif
   uint8_t const num_game_achievers =
     std::count(game_achievers.begin(), game_achievers.end(), true);
   bool const against_three = (num_game_achievers == 1);
   Outcome o(contract_, num_game_achievers, false);
-  Card called_king;
-  if (called_king_) {
-    called_king = *called_king_;
-  } else if (contract_->is_partnership()) {
-    KONIG_FATAL("need to figure out which king was called");
-  }
   BOOST_FOREACH(const auto& i, announcednesses_) {
     bool offensive = i.first.second;
     Feat feat = i.first.first;

@@ -258,8 +258,9 @@ PlayResult PositiveContract::play(
       hands, declarers_cards, defences_cards,
       players, whole_contract, declarer_position, offence, debug_stream
     );
-  Outcome outcome =
-    whole_contract.score(tricks, declarers_cards, defences_cards, offence);
+  Outcome outcome = whole_contract.score(
+    tricks, declarers_cards, defences_cards, offence, called_king
+  );
   std::array<int, 4> scores = outcome.compute_scores(offence);
   return PlayResult{outcome, tricks, scores};
 }
@@ -273,15 +274,18 @@ PlayResult PositiveContract::play(
   offence[declarer_position] = true;
 
   KingCall king(KingCall::invalid);
+  boost::optional<Card> called_king;
 
   if (partnership_) {
     king = oracle.call_king(declarer_position);
     oracle.notify_call_king(king);
+    if (king != KingCall::fourth_king) {
+      called_king = Card(Suit(king), SuitRank::king);
+    }
   }
 
   Cards declarers_cards;
   Cards defences_cards;
-  boost::optional<Card> called_king;
 
   if (talon_halves_ > 0) {
     std::array<Cards, 2> talon = oracle.get_talon();
@@ -349,8 +353,9 @@ PlayResult PositiveContract::play(
     oracle, declarers_cards, defences_cards,
     whole_contract, called_king, declarer_position, offence
   );
-  Outcome outcome =
-    whole_contract.score(tricks, declarers_cards, defences_cards, offence);
+  Outcome outcome = whole_contract.score(
+    tricks, declarers_cards, defences_cards, offence, called_king
+  );
   std::array<int, 4> scores = outcome.compute_scores(offence);
   return PlayResult{outcome, tricks, scores};
 }
@@ -414,6 +419,7 @@ int PositiveContract::value_of(
     // Nasty special case for Solo kontras
     if (cancel_kontra_against_three_ &&
         against_three &&
+        ac == Achievement::off &&
         an == Announcedness::kontraed) {
       // We cancel the kontra *unless* declarer made another announcement
       bool cancel = true;

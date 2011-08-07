@@ -61,7 +61,8 @@ class KONIG_API ContractAndAnnouncements {
         const std::vector<Trick>& tricks,
         const Cards& declarers_cards,
         const Cards& defenses_cards,
-        std::array<bool, 4> const& game_achievers
+        std::array<bool, 4> const& game_achievers,
+        boost::optional<Card> const& called_king = boost::optional<Card>()
       );
 
     Outcome score_conceded(

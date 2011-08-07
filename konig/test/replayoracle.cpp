@@ -12,6 +12,40 @@ using boost::assign::list_of;
 
 namespace konig {
 
+BOOST_AUTO_TEST_CASE(s_outcomes_possible)
+{
+  Ruleset const rules = Ruleset::cheltenham();
+
+  {
+    ReplayOracle oracle(
+      rules,
+      {"r", "s", "", "", ""},
+      "C",
+      {},
+      "",
+      {"", "x", "", "", ""},
+      {
+        "H9", "H8", "H7", " 3",
+        "CN", "C9", " 2", "C7",
+        "S7", " 5", "SJ", "SK",
+        " 1", "CJ", " 6", "Ct",
+        " 8", "DQ", "D7", " 4",
+        "HN", "HJ", "11", " 7",
+        "10", "21", "D8", "20",
+        "14", " 9", "19", "SQ",
+        "15", "17", "Dt", "S8",
+        "16", "12", "Sk", "CQ",
+        "S9", "13", "DN", "St",
+        "HK", "18", "DK", "SN"
+      }
+    );
+    auto result = play_game(rules, oracle);
+    BOOST_CHECK_EQUAL(result.outcome.string(), "stx");
+    BOOST_CHECK_EQUAL(result.scores[0], -4);
+    BOOST_CHECK(result.scores == list_of(-4)(12)(-4)(-4));
+  }
+}
+
 BOOST_AUTO_TEST_CASE(d_outcomes_possible)
 {
   Ruleset const rules = Ruleset::cheltenham();

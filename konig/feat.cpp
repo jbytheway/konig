@@ -23,7 +23,7 @@ Feat::Feat(TrumpRank r)
 
 Achievement Feat::result_for(
     const boost::shared_ptr<Contract const>& contract,
-    Card called_king,
+    boost::optional<Card> const& called_king,
     const std::vector<Trick>& tricks,
     const Cards& declarers_cards,
     const Cards& defences_cards,
@@ -52,8 +52,9 @@ Achievement Feat::result_for(
         Achievement::made : Achievement::neutral;
     case king_ultimo:
       {
+        assert(called_king);
         const Trick& last_trick = tricks.back();
-        if (last_trick.count(called_king)) {
+        if (last_trick.count(*called_king)) {
           bool winning_side = achievers[last_trick.winner()];
           return (winning_side == feat_offensive) ?
             Achievement::made : Achievement::off;
