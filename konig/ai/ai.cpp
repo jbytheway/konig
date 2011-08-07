@@ -1,11 +1,11 @@
 #include <konig/ai/ai.hpp>
 
 #include <konig/fatal.hpp>
+#include <konig/invaliderror.hpp>
 #include <konig/ai/nosuchai.hpp>
 #include <konig/ai/noddyai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/forwardingai.hpp>
-#include <konig/ai/invaliderror.hpp>
 
 namespace konig { namespace ai {
 

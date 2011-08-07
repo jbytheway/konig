@@ -1,9 +1,10 @@
 #include <konig/biddingsequence.hpp>
+
+#include <konig/invaliderror.hpp>
 #include <konig/ai/specificbidsai.hpp>
 #include <konig/ai/specificannouncementsai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/forwardingai.hpp>
-#include <konig/ai/invaliderror.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -40,22 +41,22 @@ namespace {
 
 BOOST_AUTO_TEST_CASE(bidding_failures)
 {
-  BOOST_CHECK_THROW(do_bid_test({""}), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test({"r"}), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test({"t"}), ai::InvalidError);
-  BOOST_CHECK_THROW(do_bid_test({"6d"}), ai::InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({""}), InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"r"}), InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"t"}), InvalidError);
+  BOOST_CHECK_THROW(do_bid_test({"6d"}), InvalidError);
   BOOST_CHECK_THROW(do_bid_test({"r", "", "", "",
-                                 "s"}), ai::InvalidError);
+                                 "s"}), InvalidError);
   BOOST_CHECK_THROW(do_bid_test({"r", "s", "", "",
-                                 "t"}), ai::InvalidError);
+                                 "t"}), InvalidError);
   BOOST_CHECK_THROW(do_bid_test({"r", "t", "", "",
-                                 "t"}), ai::InvalidError);
+                                 "t"}), InvalidError);
   BOOST_CHECK_THROW(do_bid_test({"p", "s", "", "",
-                                 ""}), ai::InvalidError);
+                                 ""}), InvalidError);
   BOOST_CHECK_THROW(do_bid_test({"r", "p", "", "",
-                                 "s"}), ai::InvalidError);
+                                 "s"}), InvalidError);
   BOOST_CHECK_THROW(do_bid_test({"r", "r", "", "",
-                                 ""}), ai::InvalidError);
+                                 ""}), InvalidError);
 }
 
 BOOST_AUTO_TEST_CASE(bidding_results)

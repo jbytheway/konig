@@ -4,7 +4,7 @@
 
 namespace konig { namespace real {
 
-RealGame::RealGame(Ruleset const& rules, Oracle& oracle) :
+RealGame::RealGame(Ruleset const& rules, OneAiOracle& oracle) :
   rules_(rules),
   oracle_(oracle)
 {

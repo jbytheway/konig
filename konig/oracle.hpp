@@ -16,11 +16,6 @@ class Oracle {
   public:
     virtual ~Oracle() = 0;
 
-    // TODO: Maybe these first three don't really belong here...
-    virtual void init() = 0;
-    virtual Cards get_hand() = 0;
-    virtual void start_game(Ruleset const&, Cards const& hand) = 0;
-
     virtual Bid bid(PlayPosition) = 0;
     virtual void notify_bid(PlayPosition, Bid) = 0;
     virtual void notify_contract_established(Bid bid) = 0;

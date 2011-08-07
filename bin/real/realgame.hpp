@@ -2,18 +2,19 @@
 #define KONIG_REAL_REALGAME_HPP
 
 #include <konig/ruleset.hpp>
-#include <konig/oracle.hpp>
+
+#include "oneaioracle.hpp"
 
 namespace konig { namespace real {
 
 class RealGame {
   public:
-    RealGame(Ruleset const&, Oracle&);
+    RealGame(Ruleset const&, OneAiOracle&);
 
     PlayResult play();
   private:
     Ruleset const& rules_;
-    Oracle& oracle_;
+    OneAiOracle& oracle_;
 };
 
 }}

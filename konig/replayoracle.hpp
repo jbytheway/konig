@@ -1,21 +1,23 @@
-#ifndef KONIG_REAL_TERMINALORACLE_HPP
-#define KONIG_REAL_TERMINALORACLE_HPP
+#ifndef KONIG_REPLAYORACLE_HPP
+#define KONIG_REPLAYORACLE_HPP
 
-#include <konig/ai/ai.hpp>
+#include <list>
 
-#include "oneaioracle.hpp"
+#include <konig/oracle.hpp>
 
-namespace konig { namespace real {
+namespace konig {
 
-class CommandHandler;
-
-class TerminalOracle : public OneAiOracle {
+class ReplayOracle : public Oracle {
   public:
-    TerminalOracle(Ruleset const&, CommandHandler&, ai::Ai::Ptr);
-
-    virtual void init();
-    virtual Cards get_hand();
-    virtual void start_game(Ruleset const&, Cards const& hand);
+    ReplayOracle(
+      Ruleset const&,
+      std::vector<std::string> const& bid_names,
+      std::string const& king_call_name,
+      std::vector<std::string> const& talon_string,
+      std::string const& discard_names,
+      std::vector<std::string> const& announcement_names,
+      std::vector<std::string> const& plays
+    );
 
     virtual Bid bid(PlayPosition);
     virtual void notify_bid(PlayPosition, Bid);
@@ -39,14 +41,17 @@ class TerminalOracle : public OneAiOracle {
     virtual void notify_ouvert(Cards const&);
     virtual void notify_invalid(PlayPosition, std::string const&);
   private:
-    Ruleset const& rules_;
-    CommandHandler& handler_;
-    ai::Ai::Ptr ai_;
-
-    PlayPosition position_;
+    std::array<std::list<Bid>, 4> bids_;
+    boost::optional<KingCall> king_call_;
+    std::array<Cards, 2> talon_;
+    bool concession_;
+    int talon_choice_;
+    Cards discard_;
+    std::array<std::list<std::vector<Announcement>>, 4> announcements_;
+    std::array<std::list<Card>, 4> plays_;
 };
 
-}}
+}
 
-#endif // KONIG_REAL_TERMINALORACLE_HPP
+#endif // KONIG_REPLAYORACLE_HPP
 
