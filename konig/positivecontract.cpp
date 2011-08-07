@@ -115,9 +115,9 @@ PlayResult PositiveContract::play(
     }
 
     std::for_each(
-        players.begin(), players.end(),
-        boost::bind(&Player::notify_call_king, _1, king)
-      );
+      players.begin(), players.end(),
+      boost::bind(&Player::notify_call_king, _1, king)
+    );
 
     against_three =
       talon[0].count(*called_king) || talon[1].count(*called_king);
