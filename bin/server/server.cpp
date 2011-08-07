@@ -249,12 +249,7 @@ void Server::go()
       auto deal = dealer->deal();
       out_ << deal << std::endl;
       auto result = play_game(rules, players, deal);
-      out_ << result.outcome << '\n';
-      out_ << '\n';
-      std::copy(
-          result.tricks.begin(), result.tricks.end(),
-          std::ostream_iterator<konig::Trick>(out_, "\n")
-        );
+      result.dump(out_);
     }
   } catch (RemoteCallError const&) {
     out_ << "remote call failed; game aborted\n";
