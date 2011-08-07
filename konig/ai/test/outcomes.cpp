@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE(t_outcomes_possible)
   }
 }
 
-BOOST_AUTO_TEST_CASE(concession_possible)
+BOOST_AUTO_TEST_CASE(rufer_against_three_scoring)
 {
   {
     auto result = do_outcome_test(
@@ -213,6 +213,10 @@ BOOST_AUTO_TEST_CASE(concession_possible)
     BOOST_CHECK_EQUAL(result.outcome.string(), "rt/f!v!");
     BOOST_CHECK(result.scores == list_of(-15)(5)(5)(5));
   }
+}
+
+BOOST_AUTO_TEST_CASE(concession_possible)
+{
   {
     auto result = do_outcome_test(
       {"C:K D:Kt", "4 C:8 D:Q"},
