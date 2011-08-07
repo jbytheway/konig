@@ -8,7 +8,7 @@
 
 #include <optimal/optionsparser.hpp>
 
-#include <konig/game.hpp>
+#include <konig/play_game.hpp>
 #include <konig/dealer.hpp>
 #include <konig/ai/ai.hpp>
 
@@ -147,8 +147,7 @@ int main(int argc, char const* const* const argv) {
       std::cout << std::endl;
     }
     if (!options.play) continue;
-    konig::Game game(rules, ais, deal);
-    auto result = game.play(debug_stream);
+    auto result = play_game(rules, ais, deal, debug_stream);
 
     total_score += result.scores[0];
     outcome_counts.insert({result.outcome.string(), 0}).first->second++;

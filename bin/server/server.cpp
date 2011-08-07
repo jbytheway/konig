@@ -8,7 +8,7 @@
 
 #include <konig/fatal.hpp>
 #include <konig/dealer.hpp>
-#include <konig/game.hpp>
+#include <konig/play_game.hpp>
 
 #include "remoteplayer.hpp"
 
@@ -248,8 +248,7 @@ void Server::go()
     { // TODO: How often?  Rotation of forehand.
       auto deal = dealer->deal();
       out_ << deal << std::endl;
-      Game game(rules, players, deal);
-      auto result = game.play();
+      auto result = play_game(rules, players, deal);
       out_ << result.outcome << '\n';
       out_ << '\n';
       std::copy(

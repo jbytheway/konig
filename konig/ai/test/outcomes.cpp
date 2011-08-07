@@ -6,7 +6,7 @@
 #include <konig/ai/specificannouncementsai.hpp>
 #include <konig/ai/specificplayai.hpp>
 #include <konig/ai/forwardingai.hpp>
-#include <konig/game.hpp>
+#include <konig/play_game.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -103,8 +103,7 @@ namespace {
       ));
     }
     Deal deal(hands, talon);
-    Game game(rules, players, deal);
-    return game.play();
+    return play_game(rules, players, deal);
   }
 }
 
