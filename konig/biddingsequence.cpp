@@ -60,7 +60,7 @@ namespace {
           );
         } else if (!(bid.is_pass() || bid >= current)) {
           bidder.notify_invalid(
-            "bid must match or beat prefvious bid (or be pass)"
+            "bid must match or beat previous bid (or be pass)"
           );
         } else if (bid == current && !forehand) {
           bidder.notify_invalid(
