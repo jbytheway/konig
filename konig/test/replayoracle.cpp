@@ -79,6 +79,40 @@ BOOST_AUTO_TEST_CASE(s_outcomes_possible)
   }
 }
 
+BOOST_AUTO_TEST_CASE(br_outcomes_possible)
+{
+  Ruleset const rules = Ruleset::cheltenham();
+
+  {
+    ReplayOracle oracle(
+      rules,
+      {"r", "", "br", "", ""},
+      "D",
+      {"H:N3 12", "H1 D:2J"},
+      "",
+      {"", "", "1", ""},
+      {
+        "S7", "S8", " 6", " 8",
+        "DK", "D8", "DQ", "D7",
+        "S9", "SK", " 9", "17",
+        " 2", "HJ", "HN", "H7",
+        "St", "SQ", "12", " 3",
+        "Sk", "HK", "H9", "HQ",
+        "SN", "SJ", "13", " 4",
+        "21", "10", " 7", "CK",
+        " 5", "19", "14", "CN",
+        "16", "DN", "15", "C7",
+        "CQ", "11", " 1", "C8",
+        "18", "20", "H8", "C9"
+      }
+    );
+    auto result = play_game(rules, oracle);
+    BOOST_CHECK_EQUAL(result.outcome.string(), "br1-f");
+    BOOST_CHECK_EQUAL(result.scores[0], -1);
+    BOOST_CHECK(result.scores == list_of(-1)(1)(-1)(1));
+  }
+}
+
 BOOST_AUTO_TEST_CASE(d_outcomes_possible)
 {
   Ruleset const rules = Ruleset::cheltenham();
