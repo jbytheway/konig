@@ -37,6 +37,7 @@ class TerminalOracle : public OneAiOracle {
     virtual void notify_play_card(PlayPosition, Card);
     virtual Cards get_ouvert(PlayPosition);
     virtual void notify_ouvert(Cards const&);
+    virtual void notify_result(PlayResult const&);
     virtual void notify_invalid(PlayPosition, std::string const&);
   private:
     Ruleset const& rules_;

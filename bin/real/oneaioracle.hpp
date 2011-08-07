@@ -10,6 +10,8 @@ class OneAiOracle : public Oracle {
     virtual void init() = 0;
     virtual Cards get_hand() = 0;
     virtual void start_game(Ruleset const&, Cards const& hand) = 0;
+    // ...lots more members in Oracle...
+    virtual void notify_result(PlayResult const&) = 0;
 };
 
 }}

@@ -17,7 +17,9 @@ PlayResult RealGame::play()
   Cards hand = oracle_.get_hand();
   oracle_.start_game(rules_, hand);
 
-  return play_game(rules_, oracle_);
+  auto result = play_game(rules_, oracle_);
+  oracle_.notify_result(result);
+  return result;
 }
 
 }}

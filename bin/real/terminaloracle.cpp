@@ -141,6 +141,13 @@ void TerminalOracle::notify_contract_established(Bid bid)
   inform(handler_.output(), "contract is ", rules_.contracts()[bid]->name());
 }
 
+void TerminalOracle::notify_result(PlayResult const& result)
+{
+  std::ostringstream os;
+  result.dump(os);
+  handler_.output().message(os.str());
+}
+
 #define NOTIFY_MEMBER_PARAM(z, i, types) \
   BOOST_PP_SEQ_ELEM(i, types) a##i
 
