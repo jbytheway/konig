@@ -2,7 +2,7 @@
 
 namespace konig {
 
-void PlayResult::dump(std::ostream& o)
+void PlayResult::dump(std::ostream& o) const
 {
   o << outcome << '\n';
   o << '\n';

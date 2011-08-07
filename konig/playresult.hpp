@@ -11,7 +11,7 @@ struct PlayResult {
   std::vector<Trick> tricks;
   std::array<Score, 4> scores;
 
-  void dump(std::ostream&);
+  void dump(std::ostream&) const;
 };
 
 }
