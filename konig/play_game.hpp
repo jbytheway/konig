@@ -32,6 +32,11 @@ KONIG_API PlayResult play_game(
   return play_game(rules, players_v, std::move(deal), debug_stream);
 }
 
+KONIG_API PlayResult play_game(
+  const Ruleset&,
+  Oracle&
+);
+
 }
 
 #endif // KONIG_PLAY_GAME_HPP

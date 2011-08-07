@@ -7,7 +7,7 @@
 
 namespace konig {
 
-KONIG_API PlayResult play_game(
+PlayResult play_game(
   const Ruleset& rules,
   const std::vector<Player::Ptr>& players,
   Deal deal,
@@ -42,6 +42,20 @@ KONIG_API PlayResult play_game(
   }
 
   return contract->play(hands, talon, players, declarer, debug_stream);
+}
+
+PlayResult play_game(
+  const Ruleset& rules,
+  Oracle& oracle
+)
+{
+  BiddingSequence bids(rules.contracts());
+  Contract::ConstPtr contract;
+  PlayPosition declarer;
+  boost::tie(contract, declarer) = bids.get_bids(oracle);
+  assert(declarer < 4);
+
+  return contract->play(oracle, declarer);
 }
 
 }
