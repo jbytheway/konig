@@ -147,6 +147,22 @@ void TerminalOracle::notify_result(PlayResult const& result)
   result.dump(os);
   handler_.output().message(os.str());
 }
+void TerminalOracle::notify_play_card(PlayPosition position, Card card)
+{
+  ai_->notify_play_card(position, card);
+  // FIXME: This is nasty; would be much nicer if we could use
+  // trick_complete_hook somehow
+  auto const& tricks = ai_->tricks();
+  if (tricks.size() >= 2 ) {
+    Trick const& current_trick = tricks.back();
+    Trick const& complete_trick = current_trick.played() == 0 ?
+      *boost::prior(boost::prior(tricks.end())) : current_trick;
+    if (complete_trick.complete()) {
+      auto s = boost::lexical_cast<std::string>(complete_trick);
+      handler_.output().message(s);
+    }
+  }
+}
 
 #define NOTIFY_MEMBER_PARAM(z, i, types) \
   BOOST_PP_SEQ_ELEM(i, types) a##i
@@ -170,7 +186,6 @@ NOTIFY_MEMBER(talon_choice, (uint8_t))
 NOTIFY_MEMBER(discard, (Cards))
 NOTIFY_MEMBER(announcements, (std::vector<Announcement>))
 NOTIFY_MEMBER(announcements_done, )
-NOTIFY_MEMBER(play_card, (PlayPosition)(Card))
 NOTIFY_MEMBER(ouvert, (Cards const&))
 
 #undef NOTIFY_MEMBER
