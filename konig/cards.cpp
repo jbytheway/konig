@@ -62,12 +62,12 @@ struct CardsGrammar :
     CardsGrammar::base_type(start)
   {
     suit_parser =
-      (qi::char_("CDHS"))[
+      (qi::char_("CDHScdhs"))[
           qi::_val = px::bind(&Suit::from_char, qi::_1)
         ];
 
     suit_rank_parser = (
-      qi::char_("KQNJt9871234")
+      qi::char_("KQNJTkqnjt9871234")
     )[ qi::_val = px::bind(&SuitRank::from_char, qi::_1) ];
 
     suit_ranks_parser %= *suit_rank_parser;
