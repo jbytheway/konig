@@ -147,8 +147,12 @@ std::ostream& operator<<(std::ostream& o, const Cards& c)
     if (!boost::empty(suit)) {
       o << s << ':';
       std::transform(
-          suit.second, suit.first, std::ostream_iterator<SuitRank>(o),
-          boost::bind(&Card::suit_rank, _1)
+          suit.second, suit.first, std::ostream_iterator<char>(o),
+          px::bind(
+            &SuitRank::to_char,
+            px::bind(&Card::suit_rank, arg1),
+            s.is_red()
+          )
         );
       o << ' ';
     }

@@ -1,6 +1,8 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
+#include <boost/lexical_cast.hpp>
+
 #include <konig/cards.hpp>
 
 namespace konig {
@@ -56,6 +58,38 @@ BOOST_AUTO_TEST_CASE(cards_parser)
     Cards::from_string("Sk_ 21 _"),
     (Cards{Card{TrumpRank::skus}, Card{TrumpRank::mond}})
   );
+}
+
+BOOST_AUTO_TEST_CASE(cards_to_string)
+{
+  {
+    Cards c{Card{TrumpRank::skus}};
+    BOOST_CHECK_EQUAL("Sk ", boost::lexical_cast<std::string>(c));
+  }
+  {
+    Cards c{Card{TrumpRank::skus}, Card{TrumpRank::mond}};
+    BOOST_CHECK_EQUAL("Sk 21 ", boost::lexical_cast<std::string>(c));
+  }
+  {
+    Cards c{{Suit::hearts, SuitRank::king}};
+    BOOST_CHECK_EQUAL("H:K ", boost::lexical_cast<std::string>(c));
+  }
+  {
+    Cards c{{Suit::hearts, SuitRank::king}, {Suit::hearts, SuitRank::queen}};
+    BOOST_CHECK_EQUAL("H:KQ ", boost::lexical_cast<std::string>(c));
+  }
+  {
+    Cards c{{Suit::spades, SuitRank::king}, {Suit::hearts, SuitRank::queen}};
+    BOOST_CHECK_EQUAL("H:Q S:K ", boost::lexical_cast<std::string>(c));
+  }
+  {
+    Cards c{{Suit::clubs, SuitRank::ten}};
+    BOOST_CHECK_EQUAL("C:t ", boost::lexical_cast<std::string>(c));
+  }
+  {
+    Cards c{{Suit::diamonds, SuitRank::ace}};
+    BOOST_CHECK_EQUAL("D:1 ", boost::lexical_cast<std::string>(c));
+  }
 }
 
 }

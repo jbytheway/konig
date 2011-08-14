@@ -1,6 +1,10 @@
 #ifndef KONIG_SUITRANK_HPP
 #define KONIG_SUITRANK_HPP
 
+#include <cstdint>
+#include <cassert>
+#include <string>
+
 #include <konig/core.hpp>
 
 namespace konig {
@@ -25,7 +29,7 @@ class SuitRank {
       max = 15
     };
 
-    static SuitRank from_value(const uint8_t v) {
+    static SuitRank from_value(const std::uint8_t v) {
       return SuitRank(internal_enum(v));
     }
 
@@ -40,90 +44,16 @@ class SuitRank {
     bool valid() const { return value_ >= low_pip && value_ <= king; }
     bool face() const { assert(valid()); return value_ >= jack; }
 
+    char to_char(bool is_red = false) const;
+
     operator internal_enum() const { return internal_enum(value_); }
     SuitRank& operator++() { ++value_; return *this; }
     SuitRank& operator--() { --value_; return *this; }
   private:
-    uint8_t value_;
+    std::uint8_t value_;
 };
 
-inline SuitRank::SuitRank(const std::string& s) {
-  if (s.size() != 1) {
-    throw std::logic_error("not a suit rank");
-  }
-  switch (s[0]) {
-    case 'k':
-    case 'K':
-      value_ = king;
-      break;
-    case 'q':
-    case 'Q':
-      value_ = queen;
-      break;
-    case 'n':
-    case 'N':
-      value_ = knight;
-      break;
-    case 'j':
-    case 'J':
-      value_ = jack;
-      break;
-    case 't':
-    case 'T':
-    case 'a':
-    case 'A':
-    case '1':
-      value_ = ten;
-      break;
-    case '2':
-    case '9':
-      value_ = nine;
-      break;
-    case '3':
-    case '8':
-      value_ = eight;
-      break;
-    case '4':
-    case '7':
-      value_ = seven;
-      break;
-    default:
-      throw std::logic_error("not a suit rank");
-  }
-}
-
-inline std::ostream& operator<<(std::ostream& o, const SuitRank r) {
-  char name;
-  switch (r) {
-    case SuitRank::seven:
-      name = '7';
-      break;
-    case SuitRank::eight:
-      name = '8';
-      break;
-    case SuitRank::nine:
-      name = '9';
-      break;
-    case SuitRank::ten:
-      name = 't';
-      break;
-    case SuitRank::jack:
-      name = 'J';
-      break;
-    case SuitRank::knight:
-      name = 'N';
-      break;
-    case SuitRank::queen:
-      name = 'Q';
-      break;
-    case SuitRank::king:
-      name = 'K';
-      break;
-    default:
-      throw std::logic_error("invalid suit rank");
-  }
-  return o << name;
-}
+std::ostream& operator<<(std::ostream& o, const SuitRank r);
 
 }
 
