@@ -47,5 +47,37 @@ Card::Card(const std::string& description)
   }
 }
 
+unsigned int Card::card_points() const {
+  if (trump()) {
+    if (rank_ == TrumpRank::pagat ||
+        rank_ == TrumpRank::mond ||
+        rank_ == TrumpRank::skus)
+      return 13;
+    return 1;
+  } else {
+    switch (rank_) {
+      case SuitRank::king:
+        return 13;
+      case SuitRank::queen:
+        return 10;
+      case SuitRank::knight:
+        return 7;
+      case SuitRank::jack:
+        return 4;
+      default:
+        return 1;
+    }
+  }
+}
+
+std::ostream& operator<<(std::ostream& o, const Card& c) {
+  if (c.trump()) {
+    o << c.trump_rank();
+  } else {
+    o << c.suit() << c.suit_rank().to_char(c.suit().is_red());
+  }
+  return o;
+}
+
 }
 
