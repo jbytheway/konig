@@ -24,6 +24,14 @@ BOOST_AUTO_TEST_CASE(cards_parser)
     Cards::from_string("hk"), (Cards{{Suit::hearts, SuitRank::king}})
   );
   BOOST_CHECK_EQUAL(
+    Cards::from_string("H:KQ"),
+    (Cards{{Suit::hearts, SuitRank::king}, {Suit::hearts, SuitRank::queen}})
+  );
+  BOOST_CHECK_EQUAL(
+    Cards::from_string("HKq"),
+    (Cards{{Suit::hearts, SuitRank::king}, {Suit::hearts, SuitRank::queen}})
+  );
+  BOOST_CHECK_EQUAL(
     Cards::from_string("C:t"), (Cards{{Suit::clubs, SuitRank::ten}})
   );
   BOOST_CHECK_EQUAL(

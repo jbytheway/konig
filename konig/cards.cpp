@@ -80,13 +80,8 @@ struct CardsGrammar :
 
     chunk_parser = (
       suit_parser[px::bind(&CardChunk::suit, qi::_val) = qi::_1] >>
-      qi::lit(':') >>
+      -qi::lit(':') >>
       suit_ranks_parser[px::bind(&CardChunk::ranks, qi::_val) = qi::_1]
-    ) | (
-      suit_parser[px::bind(&CardChunk::suit, qi::_val) = qi::_1] >>
-      suit_rank_parser[
-        px::push_back(px::bind(&CardChunk::ranks, qi::_val), qi::_1)
-      ]
     );
 
     start = *(
