@@ -50,14 +50,16 @@ void CommandHandler::command(std::string const& c)
   typedef std::string::const_iterator it;
   qi::rule<it, std::string()> unquoted =
     +(~char_("\"' \t\n\r\v\f"))[_val += qi::_1];
-  qi::rule<it, std::string()> quoted =
+  qi::rule<it, std::string()> quoted_double =
     char_('"') >> *(~char_('"'))[_val += qi::_1] >> char_('"');
+  qi::rule<it, std::string()> quoted_single =
+    char_("'") >> *(~char_("'"))[_val += qi::_1] >> char_("'");
   it first = c.begin();
   bool r = parse(
       first, c.end(),
       *(
         qi::omit[*qi::ascii::space] >>
-        (unquoted | quoted)
+        (unquoted | quoted_double | quoted_single)
       ) >> qi::omit[*qi::ascii::space],
       tokens
     );
