@@ -25,7 +25,7 @@ reestablish: $(ESTABLISHED)
 $(HAND_NUMS): hands/%: $(SIM)
 	mkdir -p $(dir $@)
 	{ printf "%s " "$*"; \
-		$< -p- -m -s $* | cut -d , -f 1 | sed 's/ $$//' | tr ' \n' '_ ' ; } > $@
+		$< -p- -m -s $* | cut -d , -f 1 | sed 's/ $$//' | tr ' ' '_' ; } > $@
 
 define MAKE_RESULTS
 $(1)_RESULTS_NUMS := $(addprefix $(1)/results.,$(NUMS))
@@ -33,7 +33,7 @@ $(1)_FULL_NUMS := $(addprefix $(1).full.,$(NUMS))
 $$($(1)_RESULTS_NUMS): $(1)/results.%: $(this_srcdir)$(1).exp hands/% \
 		$(this_srcdir)Makefile.local
 	mkdir -p $$(dir $$@)
-	cat hands/$$* > $$@
+	< hands/$$* tr '\n' ' ' > $$@
 	$(SIM) -a "`cat $$<`" -c "`awk '{print $$$$2}' hands/$$*`" \
 		-n $(NUM_TRIALS) -s "$$*" \
 		-d- -t- -r- -u >> $$@
