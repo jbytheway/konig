@@ -30,7 +30,7 @@ class AnnouncementSequence {
 
     ContractAndAnnouncements
     get_announcements(
-      const std::vector<Player::Ptr>&,
+      const Players&,
       std::array<bool, 4> const& offence,
       PlayPosition declarer_position
     );

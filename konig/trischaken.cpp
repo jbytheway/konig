@@ -8,7 +8,7 @@
 #include <boost/spirit/home/phoenix/operator/self.hpp>
 
 #include <konig/fatal.hpp>
-#include <konig/player.hpp>
+#include <konig/players.hpp>
 #include <konig/announcementsequence.hpp>
 #include <konig/protocol.hpp> // For achive classes so serialization works
 
@@ -113,7 +113,7 @@ PlayResult make_trischaken_play_result(
 PlayResult Trischaken::play(
     std::array<Cards, 4> hands,
     std::array<Cards, 2> /*talon*/,
-    const std::vector<boost::shared_ptr<Player>>& players,
+    const Players& players,
     PlayPosition declarer_position,
     std::ostream* debug_stream
   ) const

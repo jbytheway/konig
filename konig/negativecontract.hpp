@@ -34,7 +34,7 @@ class NegativeContract : public Contract {
     virtual PlayResult play(
       std::array<Cards, 4> hands,
       std::array<Cards, 2> talon,
-      const std::vector<boost::shared_ptr<Player>>& players,
+      const Players& players,
       PlayPosition declarer_position,
       std::ostream* debug_stream
     ) const;

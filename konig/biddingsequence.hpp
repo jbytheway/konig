@@ -16,7 +16,7 @@ class KONIG_API BiddingSequence {
     {}
 
     boost::tuple<Contract const&, PlayPosition>
-    get_bids(std::vector<Player::Ptr> const&);
+    get_bids(Players const&);
 
     boost::tuple<Contract const&, PlayPosition>
     get_bids(Oracle&);

@@ -2,6 +2,7 @@
 #include <boost/assign/list_of.hpp>
 
 #include <konig/utility/intersects.hpp>
+#include <konig/players.hpp>
 #include <konig/ai/specificbidsai.hpp>
 #include <konig/ai/specificannouncementsai.hpp>
 #include <konig/ai/specificplayai.hpp>
@@ -88,7 +89,7 @@ namespace {
       BOOST_CHECK_EQUAL(hand.size(), 12);
     }
 
-    std::vector<Player::Ptr> players;
+    std::vector<boost::shared_ptr<Player>> players_v;
     for (size_t i=0; i<4; ++i) {
       BidAi::Ptr bidder(new ai::SpecificBidsAi(std::move(bids[i])));
       AnnouncementAi::Ptr announcer(
@@ -98,10 +99,11 @@ namespace {
         )
       );
       PlayAi::Ptr player(new ai::SpecificPlayAi(std::move(play_seqs[i])));
-      players.push_back(Player::Ptr(
+      players_v.push_back(Player::Ptr(
           new ForwardingAi(bidder, announcer, player)
       ));
     }
+    Players players(players_v);
     Deal deal(hands, talon);
     return play_game(rules, players, deal);
   }

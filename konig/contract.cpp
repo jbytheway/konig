@@ -6,7 +6,7 @@
 #include <boost/range/numeric.hpp>
 
 #include <konig/fatal.hpp>
-#include <konig/player.hpp>
+#include <konig/players.hpp>
 #include <konig/positivecontract.hpp>
 #include <konig/negativecontract.hpp>
 #include <konig/trischaken.hpp>
@@ -18,7 +18,7 @@ std::vector<Trick> Contract::play_tricks(
   std::array<Cards, 4> hands,
   Cards& declarers_cards,
   Cards& defences_cards,
-  const std::vector<Player::Ptr>& players,
+  const Players& players,
   const ContractAndAnnouncements& whole_contract,
   PlayPosition declarer_position,
   std::array<bool, 4> const& offence,
@@ -28,7 +28,6 @@ std::vector<Trick> Contract::play_tricks(
   for (size_t i=0; i<4; ++i) {
     assert(hands[i].size() == 12);
   }
-  assert(players.size() == 4);
   assert(declarer_position < 4);
 
   PlayPosition leading = position_forehand;
@@ -44,7 +43,7 @@ std::vector<Trick> Contract::play_tricks(
       PlayPosition playing = PlayPosition((leading + i) % 4);
       Card c;
       while (true) {
-        c = players[playing]->play_card();
+        c = players[playing].play_card();
         if (hands[playing].count(c) &&
             t.legal_plays(
               hands[playing], offence[playing], trick_number, whole_contract
@@ -54,7 +53,7 @@ std::vector<Trick> Contract::play_tricks(
           std::ostringstream os;
           os << "invalid play " << c << " to trick " << t << " from hand " <<
             hands[playing];
-          players[playing]->notify_invalid(os.str());
+          players[playing].notify_invalid(os.str());
         }
       }
       t.add(c);

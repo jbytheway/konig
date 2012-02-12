@@ -6,6 +6,7 @@
 
 #include <konig/kingcall.hpp>
 #include <konig/announcementsequence.hpp>
+#include <konig/players.hpp>
 #include <konig/protocol.hpp> // For achive classes so serialization works
 
 BOOST_CLASS_EXPORT(konig::PositiveContract)
@@ -69,11 +70,11 @@ std::string PositiveContract::outcome_name(
 
 PlayResult PositiveContract::play(
   std::array<Cards, 4> hands, std::array<Cards, 2> talon,
-  const std::vector<Player::Ptr>& players, PlayPosition declarer_position,
+  const Players& players, PlayPosition declarer_position,
   std::ostream* debug_stream
 ) const
 {
-  Player::Ptr declarer = players[declarer_position];
+  Player& declarer = players[declarer_position];
   Cards& declarers_hand = hands[declarer_position];
   std::array<bool, 4> offence = {{false, false, false, false}};
   offence[declarer_position] = true;
@@ -84,7 +85,7 @@ PlayResult PositiveContract::play(
 
   if (partnership_) {
     while (true) {
-      king = declarer->call_king();
+      king = declarer.call_king();
       if (king != KingCall::fourth_king) {
         called_king = Card(Suit(king), SuitRank::king);
         break;
@@ -137,7 +138,7 @@ PlayResult PositiveContract::play(
       // NB against_three can only be true if it's a partnership contract (see
       // above) and we also know the talon is revealed, so we know it's a
       // contract where concession is allowed.
-      bool concession = declarer->choose_concede();
+      bool concession = declarer.choose_concede();
       if (concession) {
         std::for_each(
           players.begin(), players.end(),
@@ -157,13 +158,13 @@ PlayResult PositiveContract::play(
     if (talon_halves_ == 1) {
       uint8_t talon_half;
       while (true) {
-        talon_half = declarer->choose_talon_half();
+        talon_half = declarer.choose_talon_half();
         if (talon_half < 2) {
           break;
         } else {
           std::ostringstream os;
           os << "invalid talon half " << int(talon_half);
-          declarer->notify_invalid(os.str());
+          declarer.notify_invalid(os.str());
         }
       }
 
@@ -190,7 +191,7 @@ PlayResult PositiveContract::play(
     Cards discard;
 
     while (true) {
-      discard = declarer->discard();
+      discard = declarer.discard();
       // Check conditions on discard
       if (discard.size() != 3U*talon_halves_ ||
           discard.count(SuitRank::king) != 0 ||
@@ -207,7 +208,7 @@ PlayResult PositiveContract::play(
                 declarers_hand.count(SuitRank::king))) {
         std::ostringstream os;
         os << "invalid discard";
-        declarer->notify_invalid(os.str());
+        declarer.notify_invalid(os.str());
       } else {
         // All conditions OK
         break;
@@ -227,11 +228,11 @@ PlayResult PositiveContract::play(
       end = trump_discards.insert(end, trump_discard);
     }
 
-    BOOST_FOREACH(Player::Ptr const& p, players) {
-      if (p == declarer) {
-        p->notify_discard(discard);
+    for (auto& p : players) {
+      if (&p == &declarer) {
+        p.notify_discard(discard);
       } else {
-        p->notify_discard(trump_discards);
+        p.notify_discard(trump_discards);
       }
     }
   } else {

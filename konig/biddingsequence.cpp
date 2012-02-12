@@ -1,8 +1,11 @@
 #include <konig/biddingsequence.hpp>
 
+#include <list>
+
 #include <boost/bind.hpp>
 
 #include <konig/contract.hpp>
+#include <konig/players.hpp>
 
 namespace konig {
 
@@ -13,29 +16,29 @@ namespace {
   };
 
   struct PlayerBidder : Bidder {
-    PlayerBidder(Player::Ptr player) : player_(std::move(player)) {}
+    PlayerBidder(Player& player) : player_(&player) {}
 
     virtual Bid bid() const { return player_->bid(); }
     virtual void notify_invalid(std::string s) const {
       player_->notify_invalid(std::move(s));
     }
 
-    Player::Ptr player_;
+    Player* player_;
   };
 
   struct OracleBidder : Bidder {
     OracleBidder(Oracle& oracle, PlayPosition position) :
-      oracle_(oracle),
+      oracle_(&oracle),
       position_(position)
     {}
 
-    virtual Bid bid() const { return oracle_.bid(position_); }
+    virtual Bid bid() const { return oracle_->bid(position_); }
     virtual void notify_invalid(std::string s) const {
-      oracle_.notify_invalid(position_, std::move(s));
+      oracle_->notify_invalid(position_, std::move(s));
     }
 
-    Oracle& oracle_;
-    PlayPosition const position_;
+    Oracle* oracle_;
+    PlayPosition position_;
   };
 
   Bid get_bid(
@@ -94,15 +97,13 @@ namespace {
   };
 
   struct PlayersBidders : Bidders {
-    PlayersBidders(std::vector<Player::Ptr> const& players) :
-      players_(players),
-      bidders_{
-        PlayerBidder{players[0]},
-        PlayerBidder{players[1]},
-        PlayerBidder{players[2]},
-        PlayerBidder{players[3]}
+    PlayersBidders(Players const& players) :
+      players_(players)
+    {
+      for (auto& p : players) {
+        bidders_.emplace_back(p);
       }
-    {}
+    }
 
     virtual Bidder const& operator[](size_t i) const {
       assert(i < 4);
@@ -123,20 +124,18 @@ namespace {
       );
     }
 
-    std::vector<Player::Ptr> const& players_;
+    Players const& players_;
     std::vector<PlayerBidder> bidders_;
   };
 
   struct OracleBidders : Bidders {
     OracleBidders(Oracle& oracle) :
-      oracle_(oracle),
-      bidders_{
-        OracleBidder{oracle, PlayPosition(0)},
-        OracleBidder{oracle, PlayPosition(1)},
-        OracleBidder{oracle, PlayPosition(2)},
-        OracleBidder{oracle, PlayPosition(3)}
+      oracle_(oracle)
+    {
+      for (PlayPosition p=position_min; p!=position_max; ++p) {
+        bidders_.emplace_back(oracle, p);
       }
-    {}
+    }
 
     virtual Bidder const& operator[](size_t i) const {
       assert(i < 4);
@@ -208,9 +207,8 @@ namespace {
 }
 
 boost::tuple<Contract const&, PlayPosition>
-BiddingSequence::get_bids(std::vector<Player::Ptr> const& players)
+BiddingSequence::get_bids(Players const& players)
 {
-  assert(players.size() == 4);
   PlayersBidders bidders(players);
   return get_bids_impl(contracts_, bidders);
 }

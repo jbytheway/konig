@@ -18,7 +18,7 @@
 namespace konig {
 
 class ContractAndAnnouncements;
-class Player;
+class Players;
 
 class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
   friend class boost::serialization::access;
@@ -43,7 +43,7 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
     virtual PlayResult play(
       std::array<Cards, 4> hands,
       std::array<Cards, 2> talon,
-      const std::vector<boost::shared_ptr<Player>>& players,
+      const Players& players,
       PlayPosition declarer_position,
       std::ostream* debug_stream
     ) const = 0;
@@ -94,7 +94,7 @@ class KONIG_API Contract : public boost::enable_shared_from_this<Contract> {
       std::array<Cards, 4> hands,
       Cards& declarers_cards,
       Cards& defenses_cards,
-      const std::vector<boost::shared_ptr<Player>>& players,
+      const Players& players,
       const ContractAndAnnouncements& whole_contract,
       PlayPosition declarer_position,
       std::array<bool, 4> const& offence,

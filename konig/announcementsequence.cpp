@@ -5,6 +5,8 @@
 #include <boost/bind.hpp>
 #include <boost/range/algorithm/copy.hpp>
 
+#include <konig/players.hpp>
+
 namespace konig {
 
 void AnnouncementSequence::get_announcement(
@@ -42,16 +44,15 @@ void AnnouncementSequence::get_announcement(
 
 ContractAndAnnouncements
 AnnouncementSequence::get_announcements(
-  const std::vector<Player::Ptr>& players,
+  const Players& players,
   std::array<bool, 4> const& offence,
   PlayPosition declarer_position
 )
 {
-  assert(players.size() == 4);
   ContractAndAnnouncements result(contract_, called_king_);
   PlayPosition announcer = declarer_position;
   // first announcements may be unusual (e.g. forced to announce a bird)
-  get_announcement(*players[announcer], true, offence[announcer], result);
+  get_announcement(players[announcer], true, offence[announcer], result);
 
   std::for_each(
       players.begin(), players.end(),
@@ -64,7 +65,7 @@ AnnouncementSequence::get_announcements(
   while (num_passes < 3) {
     ++announcer;
     announcer = PlayPosition(announcer % 4);
-    get_announcement(*players[announcer], false, offence[announcer], result);
+    get_announcement(players[announcer], false, offence[announcer], result);
     if (result.last_announcements().empty()) {
       ++num_passes;
     } else {

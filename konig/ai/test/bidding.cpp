@@ -1,6 +1,7 @@
 #include <konig/biddingsequence.hpp>
 
 #include <konig/invaliderror.hpp>
+#include <konig/players.hpp>
 #include <konig/ai/specificbidsai.hpp>
 #include <konig/ai/specificannouncementsai.hpp>
 #include <konig/ai/specificplayai.hpp>
@@ -21,19 +22,20 @@ namespace {
     for (size_t i=0; i<bid_names.size(); ++i) {
       bids[i%4].push_back(contracts.index_by_bid_name(bid_names[i]));
     }
-    std::vector<Player::Ptr> players;
+    std::vector<boost::shared_ptr<Player>> players_v;
     BOOST_FOREACH(auto& bid, bids) {
       BidAi::Ptr bidder(new SpecificBidsAi(std::move(bid)));
       AnnouncementAi::Ptr announcer(new SpecificAnnouncementsAi());
       PlayAi::Ptr player(new SpecificPlayAi());
-      players.push_back(Player::Ptr(
+      players_v.push_back(Player::Ptr(
           new ForwardingAi(bidder, announcer, player)
       ));
     }
+    Players players(players_v);
     // Fake the game start
     Cards fake_hand = Cards::from_string("C:789tJNQK D:789t");
     for (PlayPosition p = position_forehand; p != position_max; ++p) {
-      players[p]->start_game(rules, p, fake_hand);
+      players[p].start_game(rules, p, fake_hand);
     }
     return bs.get_bids(players).get<0>().bid_name();
   }
