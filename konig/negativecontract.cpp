@@ -60,7 +60,7 @@ PlayResult NegativeContract::play(
   std::array<bool, 4> offence = {{false, false, false, false}};
   offence[declarer_position] = true;
 
-  AnnouncementSequence announcements(shared_from_this());
+  AnnouncementSequence announcements(*this);
   ContractAndAnnouncements whole_contract =
     announcements.get_announcements(players, offence, declarer_position);
 
@@ -89,7 +89,7 @@ PlayResult NegativeContract::play(
   std::array<bool, 4> offence = {{false, false, false, false}};
   offence[declarer_position] = true;
 
-  AnnouncementSequence announcements(shared_from_this());
+  AnnouncementSequence announcements(*this);
   ContractAndAnnouncements whole_contract =
     announcements.get_announcements(oracle, declarer_position);
 

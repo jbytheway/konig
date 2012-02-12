@@ -35,7 +35,7 @@ namespace {
     for (PlayPosition p = position_forehand; p != position_max; ++p) {
       players[p]->start_game(rules, p, fake_hand);
     }
-    return bs.get_bids(players).get<0>()->bid_name();
+    return bs.get_bids(players).get<0>().bid_name();
   }
 }
 

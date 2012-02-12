@@ -141,7 +141,7 @@ void CommandHandler::present_bidding() const
     if (bid.is_pass()) {
       presentation += "pass ";
     } else {
-      presentation += contracts.at(bid)->bid_name() + " ";
+      presentation += contracts.at(bid).bid_name() + " ";
     }
   }
   output_->message(presentation);

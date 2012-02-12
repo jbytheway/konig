@@ -14,10 +14,10 @@ namespace konig {
 class AnnouncementSequence {
   public:
     AnnouncementSequence(
-      boost::shared_ptr<Contract const> contract,
+      Contract const& contract,
       boost::optional<Card> called_king = boost::optional<Card>()
     ) :
-      contract_(std::move(contract)),
+      contract_(contract),
       called_king_(called_king)
     {}
 
@@ -44,7 +44,7 @@ class AnnouncementSequence {
     ContractAndAnnouncements
     no_announcements();
   private:
-    const boost::shared_ptr<Contract const> contract_;
+    Contract const& contract_;
     const boost::optional<Card> called_king_;
 };
 

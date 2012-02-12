@@ -9,11 +9,11 @@
 namespace konig {
 
 Outcome::Outcome(
-  Contract::ConstPtr contract,
+  Contract const& contract,
   uint8_t num_game_achievers,
   bool conceded
 ) :
-  contract_(std::move(contract)),
+  contract_(contract.shared_from_this()),
   num_game_achievers_(num_game_achievers),
   conceded_(conceded),
   achiever_score_{0}
@@ -40,7 +40,7 @@ void Outcome::add(
     ac = Achievement::off;
   assert(!results_.count(std::make_pair(f, offence)));
   results_[std::make_pair(f, offence)] = std::make_pair(an, ac);
-  int score = contract_->value_of(f, an, ac, against_three, announcednesses);
+  int score = contract().value_of(f, an, ac, against_three, announcednesses);
   if (offence) {
     achiever_score_ += score;
   } else {
@@ -93,7 +93,7 @@ std::ostream& operator<<(std::ostream& o, const Outcome& outcome)
     Announcedness announcedness = i->second.first;
     Achievement achievement = i->second.second;
     if (f == Feat::game) {
-      o << outcome.contract()->outcome_name(
+      o << outcome.contract().outcome_name(
           outcome.num_game_achievers(), announcedness, achievement,
           outcome.conceded()
         );

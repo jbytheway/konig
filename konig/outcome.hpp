@@ -21,13 +21,13 @@ class KONIG_API Outcome {
 
     Outcome() = default;
     Outcome(
-      boost::shared_ptr<Contract const>,
+      Contract const&,
       uint8_t num_game_achievers,
       bool conceded = false
     );
 
-    const boost::shared_ptr<Contract const>& contract() const {
-      return contract_;
+    Contract const& contract() const {
+      return *contract_;
     }
     uint8_t num_game_achievers() const { return num_game_achievers_; }
     bool conceded() const { return conceded_; }
@@ -46,6 +46,8 @@ class KONIG_API Outcome {
     std::array<int, 4>
     compute_scores(std::array<bool, 4> const& achievers) const;
   private:
+    // This genuinely must be a shared_ptr because Outcomes sometimes outlive
+    // the corresponding Rulesets which store the Contracts
     boost::shared_ptr<Contract const> contract_;
     uint8_t num_game_achievers_;
     bool conceded_;

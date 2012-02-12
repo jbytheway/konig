@@ -144,7 +144,7 @@ PlayResult PositiveContract::play(
           boost::bind(&Player::notify_concede, _1)
         );
 
-        AnnouncementSequence announcements(shared_from_this(), called_king);
+        AnnouncementSequence announcements(*this, called_king);
         ContractAndAnnouncements whole_contract =
           announcements.no_announcements();
 
@@ -245,7 +245,7 @@ PlayResult PositiveContract::play(
     }
   }
 
-  AnnouncementSequence announcements(shared_from_this(), called_king);
+  AnnouncementSequence announcements(*this, called_king);
   ContractAndAnnouncements whole_contract =
     announcements.get_announcements(players, offence, declarer_position);
 
@@ -318,7 +318,7 @@ PlayResult PositiveContract::play(
           called_king = *whole_talon.find(SuitRank::king);
         }
 
-        AnnouncementSequence announcements(shared_from_this(), *called_king);
+        AnnouncementSequence announcements(*this, *called_king);
         ContractAndAnnouncements whole_contract =
           announcements.no_announcements();
 
@@ -343,7 +343,7 @@ PlayResult PositiveContract::play(
     oracle.notify_discard(discard);
   }
 
-  AnnouncementSequence announcements(shared_from_this());
+  AnnouncementSequence announcements(*this);
   ContractAndAnnouncements whole_contract =
     announcements.get_announcements(oracle, declarer_position);
 

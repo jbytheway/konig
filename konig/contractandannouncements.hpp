@@ -16,11 +16,11 @@ namespace konig {
 class KONIG_API ContractAndAnnouncements {
   public:
     ContractAndAnnouncements(
-      Contract::ConstPtr = Contract::ConstPtr(),
+      Contract const&,
       boost::optional<Card> called_king = boost::optional<Card>()
     );
 
-    const Contract::ConstPtr& contract() const { return contract_; }
+    Contract const& contract() const { return contract_; }
 
     const Announcednesses& announcednesses() const { return announcednesses_; }
 
@@ -40,7 +40,7 @@ class KONIG_API ContractAndAnnouncements {
           boost::bind(&ContractAndAnnouncements::is_legal, this, _1, offence)
         ) &&
         (!first_announcements ||
-          contract_->valid_first_announcements(announcements));
+          contract_.valid_first_announcements(announcements));
     }
 
     bool is_done() const;
@@ -71,7 +71,7 @@ class KONIG_API ContractAndAnnouncements {
 
     std::string string(uint8_t num_offence) const;
   private:
-    Contract::ConstPtr contract_;
+    Contract const& contract_;
     boost::optional<Card> called_king_;
     std::vector<Announcement> last_announcements_;
     Announcednesses announcednesses_;

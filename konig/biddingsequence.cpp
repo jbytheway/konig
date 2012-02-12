@@ -155,7 +155,7 @@ namespace {
     std::vector<OracleBidder> bidders_;
   };
 
-  boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
+  boost::tuple<Contract const&, PlayPosition>
   get_bids_impl(Contracts const& contracts, Bidders const& bidders)
   {
     bool player_has_passed[4] = {0};
@@ -207,7 +207,7 @@ namespace {
   }
 }
 
-boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
+boost::tuple<Contract const&, PlayPosition>
 BiddingSequence::get_bids(std::vector<Player::Ptr> const& players)
 {
   assert(players.size() == 4);
@@ -215,7 +215,7 @@ BiddingSequence::get_bids(std::vector<Player::Ptr> const& players)
   return get_bids_impl(contracts_, bidders);
 }
 
-boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
+boost::tuple<Contract const&, PlayPosition>
 BiddingSequence::get_bids(Oracle& oracle)
 {
   OracleBidders bidders(oracle);

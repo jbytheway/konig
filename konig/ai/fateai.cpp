@@ -96,7 +96,7 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
 {
   std::set<CardFate> played_by_p{CardFate::played_by(p)};
   fates_[c] = played_by_p;
-  bool const rising_rule = contract().contract()->rising_rule();
+  bool const rising_rule = contract().contract().rising_rule();
 
   CardFate players_hand = CardFate::held_by(p);
   Trick const& trick = tricks().back();
@@ -133,7 +133,7 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
     }
   }
 
-  if (contract().contract()->hold_pagat() && c == Card(TrumpRank::pagat)) {
+  if (contract().contract().hold_pagat() && c == Card(TrumpRank::pagat)) {
     BOOST_FOREACH(auto& p, fates_of(Suit::trumps)) {
       p.second.erase(players_hand);
     }
@@ -163,7 +163,7 @@ Suit FateAi::called_suit(int const fallback) const
 
 bool FateAi::is_called_suit(Suit const s) const
 {
-  if (!contract().contract()->is_partnership()) {
+  if (!contract().contract().is_partnership()) {
     return false;
   }
   return s == called_suit();
@@ -171,7 +171,7 @@ bool FateAi::is_called_suit(Suit const s) const
 
 bool FateAi::guess_is_partner(PlayPosition const pos) const
 {
-  if (!contract().contract()->is_partnership()) {
+  if (!contract().contract().is_partnership()) {
     return false;
   }
   Card called_king(called_suit(), SuitRank::king);

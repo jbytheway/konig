@@ -31,17 +31,17 @@ PlayResult play_game(
     players[i]->start_game(rules, i, hands[i]);
   }
   BiddingSequence bids(rules.contracts());
-  Contract::ConstPtr contract;
-  PlayPosition declarer;
-  boost::tie(contract, declarer) = bids.get_bids(players);
+  auto const r = bids.get_bids(players);
+  Contract const& contract = boost::tuples::get<0>(r);
+  PlayPosition declarer = boost::tuples::get<1>(r);
   assert(declarer < 4);
 
   if (debug_stream) {
-    *debug_stream << "contract is " << contract->name() <<
+    *debug_stream << "contract is " << contract.name() <<
       " by " << declarer << std::endl;
   }
 
-  return contract->play(hands, talon, players, declarer, debug_stream);
+  return contract.play(hands, talon, players, declarer, debug_stream);
 }
 
 PlayResult play_game(
@@ -50,12 +50,12 @@ PlayResult play_game(
 )
 {
   BiddingSequence bids(rules.contracts());
-  Contract::ConstPtr contract;
-  PlayPosition declarer;
-  boost::tie(contract, declarer) = bids.get_bids(oracle);
+  auto const r = bids.get_bids(oracle);
+  Contract const& contract = boost::tuples::get<0>(r);
+  PlayPosition declarer = boost::tuples::get<1>(r);
   assert(declarer < 4);
 
-  return contract->play(oracle, declarer);
+  return contract.play(oracle, declarer);
 }
 
 }

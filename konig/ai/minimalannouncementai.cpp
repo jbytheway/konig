@@ -156,7 +156,7 @@ std::vector<Announcement> MinimalAnnouncementAi::announce(FateAi const& ai)
   auto contract_and_announcements = ai.contract();
   if (first_announcements_) {
     first_announcements_ = false;
-    if (contract_and_announcements.contract()->must_announce_bird() &&
+    if (contract_and_announcements.contract().must_announce_bird() &&
       ai.position() == ai.declarer()) {
       auto const& hand = ai.hand();
       auto const first_bird = hand.lower_bound(Suit::trumps);

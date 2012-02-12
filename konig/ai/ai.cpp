@@ -48,7 +48,7 @@ void Ai::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   last_non_pass_ = Bid::pass;
   declarer_ = position_forehand;
   offence_ = false;
-  contract_ = ContractAndAnnouncements();
+  contract_ = boost::none;
   king_call_ = KingCall::invalid;
   talon_[0].clear();
   talon_[1].clear();
@@ -70,15 +70,15 @@ void Ai::notify_bid(PlayPosition p, Bid bid)
     declarer_ = p;
     last_non_pass_ = bid;
     offence_ = (p == position_);
-    contract_ = ContractAndAnnouncements(rules_.contracts().at(last_non_pass_));
+    contract_ = boost::in_place(rules_.contracts().at(last_non_pass_));
     PlayPosition first_leader = position_forehand;
-    if (contract_.contract()->grants_lead()) {
+    if (contract_->contract().grants_lead()) {
       first_leader = declarer_;
     }
     tricks_.clear();
     tricks_.push_back(Trick(
-        first_leader, contract_.contract()->rising_rule(),
-        contract_.contract()->hold_pagat()
+        first_leader, contract_->contract().rising_rule(),
+        contract_->contract().hold_pagat()
     ));
   }
   bidding_.push_back(bid);
@@ -87,7 +87,7 @@ void Ai::notify_bid(PlayPosition p, Bid bid)
 void Ai::notify_contract_established(Bid)
 {
   contract_established_hook();
-  if (contract_.is_done()) {
+  if (contract_->is_done()) {
     // This happens in Trischaken
     play_start_hook();
   }
@@ -100,12 +100,12 @@ void Ai::notify_call_king(KingCall call)
     Cards::iterator king = hand_.find(SuitRank::king);
     if (king != hand_.end()) {
       offence_ = true;
-      contract_.set_called_king(*king);
+      contract_->set_called_king(*king);
     }
   } else {
     Card called_king(Suit(call), SuitRank::king);
     offence_ = offence_ || hand_.count(called_king);
-    contract_.set_called_king(called_king);
+    contract_->set_called_king(called_king);
   }
 }
 
@@ -124,7 +124,7 @@ void Ai::notify_talon(const std::array<Cards, 2>& talon)
     Cards::iterator king = accepted_.find(SuitRank::king);
     if (king != accepted_.end()) {
       called_king_in_talon_ = true;
-      contract_.set_called_king(*king);
+      contract_->set_called_king(*king);
     }
   } else if (king_call_ != KingCall::invalid) {
     Card called_king(Suit(king_call_), SuitRank::king);
@@ -151,8 +151,8 @@ void Ai::notify_discard(Cards discard)
 
 void Ai::notify_announcements(std::vector<Announcement> announcements)
 {
-  contract_.add(std::move(announcements));
-  if (contract_.is_done()) {
+  contract_->add(std::move(announcements));
+  if (contract_->is_done()) {
     play_start_hook();
   }
 }
@@ -168,8 +168,8 @@ void Ai::notify_play_card(PlayPosition p, Card c)
     trick_complete_hook();
     if (tricks_.size() < 12) {
       tricks_.push_back(Trick(
-          tricks_.back().winner(), contract_.contract()->rising_rule(),
-          contract_.contract()->hold_pagat()
+          tricks_.back().winner(), contract_->contract().rising_rule(),
+          contract_->contract().hold_pagat()
       ));
     }
   }
@@ -206,7 +206,7 @@ Cards Ai::legal_plays() const
 {
   assert(!tricks_.empty());
   return tricks_.back().legal_plays(
-      hand_, offence_, trick_number(), contract_
+      hand_, offence_, trick_number(), *contract_
     );
 }
 

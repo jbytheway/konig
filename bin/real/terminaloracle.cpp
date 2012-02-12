@@ -105,7 +105,7 @@ Bid TerminalOracle::bid(PlayPosition position)
   if (position == position_) {
     Bid result = ai_->bid();
     inform(handler_.output(), "bid ",
-      result.is_pass() ? "pass" : rules_.contracts()[result]->name());
+      result.is_pass() ? "pass" : rules_.contracts()[result].name());
     return result;
   } else {
     return handler_.get_from_user<terminal::uiModes::Bid>(rules_);
@@ -138,7 +138,7 @@ FORWARDING_MEMBER(Card, play_card, PlayCard, "played ")
 void TerminalOracle::notify_contract_established(Bid bid)
 {
   ai_->notify_contract_established(bid);
-  inform(handler_.output(), "contract is ", rules_.contracts()[bid]->name());
+  inform(handler_.output(), "contract is ", rules_.contracts()[bid].name());
 }
 
 void TerminalOracle::notify_result(PlayResult const& result)

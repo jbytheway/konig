@@ -15,10 +15,10 @@ class KONIG_API BiddingSequence {
       contracts_(contracts)
     {}
 
-    boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
+    boost::tuple<Contract const&, PlayPosition>
     get_bids(std::vector<Player::Ptr> const&);
 
-    boost::tuple<boost::shared_ptr<Contract const>, PlayPosition>
+    boost::tuple<Contract const&, PlayPosition>
     get_bids(Oracle&);
   private:
     Contracts const& contracts_;

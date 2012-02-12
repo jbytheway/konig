@@ -12,8 +12,8 @@ class KONIG_API Ruleset {
   friend class boost::serialization::access;
   public:
     Ruleset() {}
-    explicit Ruleset(const Contracts& contracts) :
-      contracts_(contracts)
+    explicit Ruleset(Contracts contracts) :
+      contracts_(std::move(contracts))
     {}
 
     const Contracts& contracts() const { return contracts_; }

@@ -7,14 +7,12 @@
 namespace konig {
 
 ContractAndAnnouncements::ContractAndAnnouncements(
-  Contract::ConstPtr contract,
+  Contract const& contract,
   boost::optional<Card> called_king
 ) :
-  contract_(std::move(contract)),
+  contract_(contract),
   called_king_(called_king),
-  announcednesses_(
-    contract_ ? contract_->initial_announcednesses() : Announcednesses()
-  ),
+  announcednesses_(contract_.initial_announcednesses()),
   had_first_announcements_(false),
   num_passes_(0)
 {}
@@ -43,7 +41,7 @@ bool ContractAndAnnouncements::is_legal(
 
 bool ContractAndAnnouncements::is_done() const
 {
-  return contract_->has_no_announcements() || num_passes_ == 3;
+  return contract_.has_no_announcements() || num_passes_ == 3;
 }
 
 void ContractAndAnnouncements::add(std::vector<Announcement> announcements)
@@ -101,7 +99,7 @@ Outcome ContractAndAnnouncements::score(
   )
 {
 #ifndef NDEBUG
-  if (contract_->involves_talon()) {
+  if (contract_.involves_talon()) {
     assert(declarers_cards.size() + defenses_cards.size() == 54);
   } else {
     assert(declarers_cards.size() + defenses_cards.size() == 48);
@@ -109,7 +107,7 @@ Outcome ContractAndAnnouncements::score(
   if (called_king_) {
     assert(called_king);
     assert(*called_king == *called_king_);
-  } else if (contract_->is_partnership()) {
+  } else if (contract_.is_partnership()) {
     assert(called_king);
   }
 #endif
@@ -153,14 +151,14 @@ std::string ContractAndAnnouncements::string(uint8_t num_offence) const
   std::ostringstream os;
   if (!announcednesses_.count(std::make_pair(Feat::game, true))) {
     // special case for Trishacken
-    os << contract()->contract_name(num_offence, Announcedness::announced);
+    os << contract().contract_name(num_offence, Announcedness::announced);
   } else {
     BOOST_FOREACH(auto const& i, announcednesses()) {
       bool defensive = !i.first.second;
       Feat f = i.first.first;
       Announcedness announcedness = i.second;
       if (f == Feat::game) {
-        os << contract()->contract_name(num_offence, announcedness);
+        os << contract().contract_name(num_offence, announcedness);
       } else if (announcedness != Announcedness::unannounced) {
         os << f;
         if (defensive) os << "!";

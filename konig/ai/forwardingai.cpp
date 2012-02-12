@@ -121,7 +121,7 @@ void ForwardingAi::contract_established_hook()
 
   // Prepare announcer for declarer, and (in non-partnership contracts) for
   // everyone else
-  if (position() == declarer() || !contract().contract()->is_partnership()) {
+  if (position() == declarer() || !contract().contract().is_partnership()) {
     announcer_->reset(*this);
   }
 }
@@ -155,7 +155,7 @@ PlayAi::Ptr ForwardingAi::pick_auto_ai()
   } else {
     me = partner;
   }
-  auto contract_name = contract().contract()->bid_name();
+  auto contract_name = contract().contract().bid_name();
   switch (me) {
     case declarer:
       if (contract_name == "r") {

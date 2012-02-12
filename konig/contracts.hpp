@@ -24,7 +24,7 @@ class KONIG_API Contracts {
     Contracts(boost::shared_ptr<Contract> c) :
       reserved_bids_(0)
     {
-      contracts_.push_back(c);
+      contracts_.push_back(std::move(c));
     }
 
     Contracts(std::vector<boost::shared_ptr<Contract>> c, uint32_t r) :
@@ -35,17 +35,17 @@ class KONIG_API Contracts {
 
     size_t size() const { return contracts_.size(); }
     Bid reserved_bids() const { return reserved_bids_; }
-    const boost::shared_ptr<Contract const> operator[](size_t const i) const {
-      return contracts_[i];
+    Contract const& operator[](size_t const i) const {
+      return *contracts_[i];
     }
-    const boost::shared_ptr<Contract const> operator[](Bid const i) const {
-      return contracts_[i.value()];
+    Contract const& operator[](Bid const i) const {
+      return *contracts_[i.value()];
     }
-    const boost::shared_ptr<Contract const> at(size_t const i) const {
-      return contracts_.at(i);
+    Contract const& at(size_t const i) const {
+      return *contracts_.at(i);
     }
-    const boost::shared_ptr<Contract const> at(Bid const i) const {
-      return contracts_.at(i.value());
+    Contract const& at(Bid const i) const {
+      return *contracts_.at(i.value());
     }
 
     // Return Bid::pass when not found
@@ -58,7 +58,12 @@ class KONIG_API Contracts {
       ar & BOOST_SERIALIZATION_NVP(reserved_bids_);
     }
 
-    // HACK: Would like to use const Contracts here but it breaks serialization
+    // HACK: Would like to const Contracts here but it breaks
+    // serialization
+    //
+    // Note that shared_ptr is warranted, because players store copies,
+    // Outcomes store contracts and might outlive this object, and
+    // this object is sent over the wire.
     std::vector<boost::shared_ptr<Contract>> contracts_;
     Bid reserved_bids_;
 };

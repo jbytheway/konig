@@ -22,7 +22,7 @@ Feat::Feat(TrumpRank r)
 }
 
 Achievement Feat::result_for(
-    const boost::shared_ptr<Contract const>& contract,
+    Contract const& contract,
     boost::optional<Card> const& called_king,
     const std::vector<Trick>& tricks,
     const Cards& declarers_cards,
@@ -37,7 +37,7 @@ Achievement Feat::result_for(
   switch (value_) {
     case game:
       assert(feat_offensive);
-      return contract->result_for(declarers_cards, tricks);
+      return contract.result_for(declarers_cards, tricks);
     case forty_five:
       // Remember to cater for 45 via valat
       return

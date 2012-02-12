@@ -44,7 +44,7 @@ class KONIG_AI_API Ai : public Player {
     Bid last_non_pass() const { return last_non_pass_; }
     PlayPosition declarer() const { return declarer_; }
     bool offence() const { return offence_; }
-    ContractAndAnnouncements const& contract() const { return contract_; }
+    ContractAndAnnouncements const& contract() const { return *contract_; }
     std::array<Cards, 2> const& talon() const { return talon_; }
     Cards const& accepted() const { return accepted_; }
     Cards const& rejected() const { return rejected_; }
@@ -62,7 +62,7 @@ class KONIG_AI_API Ai : public Player {
     Bid last_non_pass_;
     PlayPosition declarer_;
     bool offence_;
-    ContractAndAnnouncements contract_;
+    boost::optional<ContractAndAnnouncements> contract_;
     KingCall king_call_;
     std::array<Cards, 2> talon_;
     bool called_king_in_talon_;
