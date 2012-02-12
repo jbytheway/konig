@@ -110,12 +110,12 @@ Options get_options(int const argc, char const* const* const argv) {
   if (parser.parse(options_file, argc, argv)) {
     std::cerr << "options parsing failed:\n" <<
       boost::algorithm::join(parser.getErrors(), "\n") << '\n' << std::endl;
-    konig::simulator::usage(std::cerr);
+    usage(std::cerr);
     exit(EXIT_FAILURE);
   }
 
   if (options.help) {
-    konig::simulator::usage(std::cout);
+    usage(std::cout);
     exit(EXIT_SUCCESS);
   }
 
