@@ -31,24 +31,17 @@ $(HAND_NUMS): hands/%: $(SIM)
 		$< -p- -m -s $* | cut -d , -f 1 | sed 's/ $$//' | tr ' ' '_' ; } > $@
 
 define MAKE_RESULTS
-$(1)_RESULTS_NUMS := $(addprefix $(1)/results.,$(NUMS))
 $(1)_FULL_NUMS := $(addprefix $(1).full.,$(NUMS))
-$$($(1)_RESULTS_NUMS): $(1)/results.%: $(this_srcdir)$(1).exp hands/% \
-		$(this_srcdir)Makefile.local
-	mkdir -p $$(dir $$@)
-	< hands/$$* tr '\n' ' ' > $$@
-	$(SIM) -a "`cat $$<`" -c "`awk '{print $$$$2}' hands/$$*`" \
-		-n $(NUM_TRIALS) -s "$$*" \
-		-d- -t- -r- -u >> $$@
 
 $$($(1)_FULL_NUMS): $(1).full.%: \
 		$(this_srcdir)$(1).exp hands/% $(this_srcdir)Makefile.local
 	$(SIM) -a "`cat $$<`" -c "`awk '{print $$$$2}' hands/$$*`" \
 		-n $(NUM_TRIALS) -s "$$*" -f -g -t- -# > $$@
-
-$(1).results: $$($(1)_RESULTS_NUMS)
-	cat $$^ > $$@
 endef
+
+$(RESULTS): %.results: %.exp hands_all
+	$(SIM) -a "`cat $<`" -C hands_all -n $(NUM_TRIALS) \
+		-d- -t- -r- -u > $@
 
 $(foreach base,$(BASES),$(eval $(call MAKE_RESULTS,$(base))))
 

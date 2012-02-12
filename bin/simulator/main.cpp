@@ -4,7 +4,10 @@
 
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/range/algorithm/find.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/algorithm/string/split.hpp>
 
 #include <optimal/optionsparser.hpp>
 
@@ -31,6 +34,7 @@ struct Options {
   bool show_scores;
   std::vector<std::string> ais;
   std::vector<std::string> chunks;
+  boost::filesystem::path chunks_file;
   bool show_deal;
   bool on_fly;
   bool gaps;
@@ -55,6 +59,9 @@ void usage(std::ostream& o)
 "  -c, --chunks CHUNK,...\n"
 "                Comma-separated list of partial specifications for the\n"
 "                chunks of cards (4 hands, 2 talon-halves).\n"
+"  -C, --chunks-file FILE\n"
+"                File of deals to be handled in turn.  Each line should be\n"
+"                a seed, space, then chunks as for --chunks.\n"
 "  -d-, --no-show-deal\n"
 "                Don't show the deal.\n"
 "  -f, --on-fly  Show contract and deal as they happen (rather than waiting\n"
@@ -76,14 +83,13 @@ void usage(std::ostream& o)
   << std::flush;
 }
 
-}}
-
-int main(int argc, char const* const* const argv) {
-  konig::simulator::Options options;
+Options get_options(int const argc, char const* const* const argv) {
+  Options options;
   optimal::OptionsParser parser;
   parser.addOption("scores",       '#', &options.show_scores);
   parser.addOption("ais",          'a', &options.ais,    ",");
   parser.addOption("chunks",       'c', &options.chunks, ",");
+  parser.addOption("chunks-file",  'C', &options.chunks_file);
   parser.addOption("show-deal",    'd', &options.show_deal);
   parser.addOption("on-fly",       'f', &options.on_fly);
   parser.addOption("gaps",         'g', &options.gaps);
@@ -105,13 +111,21 @@ int main(int argc, char const* const* const argv) {
     std::cerr << "options parsing failed:\n" <<
       boost::algorithm::join(parser.getErrors(), "\n") << '\n' << std::endl;
     konig::simulator::usage(std::cerr);
-    return EXIT_FAILURE;
+    exit(EXIT_FAILURE);
   }
 
   if (options.help) {
     konig::simulator::usage(std::cout);
-    return EXIT_SUCCESS;
+    exit(EXIT_SUCCESS);
   }
+
+  return options;
+}
+
+}}
+
+int main(int argc, char const* const* const argv) {
+  auto options = konig::simulator::get_options(argc, argv);
 
   std::vector<konig::ai::Ai::Ptr> ais;
   BOOST_FOREACH(const std::string& ai_desc, options.ais) {
@@ -123,63 +137,99 @@ int main(int argc, char const* const* const argv) {
     assert(ais.back());
   }
 
-  if (options.chunks.size() > 6) {
-    std::cerr << "too many chunks specified" << std::endl;
-    return EXIT_FAILURE;
+  std::ostream* const debug_stream = ( options.on_fly ? &std::cout : NULL );
+  konig::Ruleset const rules = konig::Ruleset::cheltenham();
+
+  std::vector<
+    std::pair<boost::optional<unsigned long>, std::vector<std::string>>
+  > chunkss;
+
+  if (!options.chunks_file.empty()) {
+    boost::filesystem::ifstream is(options.chunks_file);
+    std::string line;
+
+    while (std::getline(is, line)) {
+      auto space = boost::range::find(line, ' ');
+      if (space == line.end()) {
+        std::cerr << "malformed line in chunks file\n";
+        return EXIT_FAILURE;
+      }
+      auto seed = boost::lexical_cast<unsigned long>(
+        std::string(line.begin(), space));
+      auto chunks_s = std::string(space+1, line.end());
+      std::vector<std::string> chunks;
+      boost::algorithm::split(
+        chunks, chunks_s, [](char c){return c==',';}
+      );
+      chunkss.push_back({seed, chunks});
+    }
+  } else {
+    chunkss.push_back({options.seed, options.chunks});
   }
 
-  while (options.chunks.size() < 6) {
-    options.chunks.push_back(std::string());
-  }
+  for (auto const& seed_chunks : chunkss) {
+    auto const seed = seed_chunks.first;
+    auto const& chunks_orig = seed_chunks.second;
+    auto chunks = chunks_orig;
 
-  std::ostream* debug_stream = ( options.on_fly ? &std::cout : NULL );
-  konig::Ruleset rules = konig::Ruleset::cheltenham();
-  konig::Dealer::Ptr dealer = options.seed ?
-    konig::Dealer::create(options.chunks, *options.seed) :
-    konig::Dealer::create(options.chunks);
-  konig::Score total_score{0};
-  std::map<std::string, unsigned long> outcome_counts;
+    if (chunks.size() > 6) {
+      std::cerr << "too many chunks specified" << std::endl;
+      return EXIT_FAILURE;
+    }
 
-  for (unsigned long i=0; i<options.num_deals; ++i) {
-    konig::Deal deal = dealer->deal();
-    if (options.show_deal) {
-      deal.write(std::cout, ( options.machine ? "," : "\n" ));
+    while (chunks.size() < 6) {
+      chunks.push_back(std::string());
+    }
+
+    konig::Dealer::Ptr dealer = seed ?
+      konig::Dealer::create(chunks, *seed) :
+      konig::Dealer::create(chunks);
+    std::map<std::string, unsigned long> outcome_counts;
+    konig::Score total_score{0};
+
+    for (unsigned long i=0; i<options.num_deals; ++i) {
+      konig::Deal deal = dealer->deal();
+      if (options.show_deal) {
+        deal.write(std::cout, ( options.machine ? "," : "\n" ));
+        std::cout << std::endl;
+      }
+      if (!options.play) continue;
+      auto result = play_game(rules, ais, deal, debug_stream);
+
+      total_score += result.scores[0];
+      outcome_counts.insert({result.outcome.string(), 0}).first->second++;
+
+      if (options.show_results) {
+        std::cout << result.outcome << '\n';
+      }
+      if (options.show_scores) {
+        std::copy(
+          result.scores.begin(), result.scores.end(),
+          std::ostream_iterator<int>(std::cout, " ")
+        );
+        std::cout << '\n';
+      }
+      if (options.show_tricks) {
+        std::cout << '\n';
+        std::copy(
+            result.tricks.begin(), result.tricks.end(),
+            std::ostream_iterator<konig::Trick>(std::cout, "\n")
+          );
+      }
+      if (options.gaps) {
+        std::cout << "\n\n";
+      }
+    }
+
+    if (options.summary) {
+      auto chunks_s = boost::algorithm::join(chunks_orig, ",");
+      std::cout << boost::format("%03d %s %1.6f") % (seed ? *seed : -1) %
+        chunks_s % (total_score/double(options.num_deals));
+      BOOST_FOREACH(auto const& p, outcome_counts) {
+        std::cout << ' ' << p.second << ' ' << p.first;
+      }
       std::cout << std::endl;
     }
-    if (!options.play) continue;
-    auto result = play_game(rules, ais, deal, debug_stream);
-
-    total_score += result.scores[0];
-    outcome_counts.insert({result.outcome.string(), 0}).first->second++;
-
-    if (options.show_results) {
-      std::cout << result.outcome << '\n';
-    }
-    if (options.show_scores) {
-      std::copy(
-        result.scores.begin(), result.scores.end(),
-        std::ostream_iterator<int>(std::cout, " ")
-      );
-      std::cout << '\n';
-    }
-    if (options.show_tricks) {
-      std::cout << '\n';
-      std::copy(
-          result.tricks.begin(), result.tricks.end(),
-          std::ostream_iterator<konig::Trick>(std::cout, "\n")
-        );
-    }
-    if (options.gaps) {
-      std::cout << "\n\n";
-    }
-  }
-
-  if (options.summary) {
-    std::cout << boost::format("%1.6f") % (total_score/double(options.num_deals));
-    BOOST_FOREACH(auto const& p, outcome_counts) {
-      std::cout << ' ' << p.second << ' ' << p.first;
-    }
-    std::cout << std::endl;
   }
 }
 
