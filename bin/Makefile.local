@@ -1,2 +1,2 @@
-SUBDIRS := simulator server dterm real ai_client
+SUBDIRS := simulator server dterm real ai_client features
 
