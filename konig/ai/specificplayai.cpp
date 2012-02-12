@@ -75,7 +75,8 @@ void SpecificPlayAi::init_play_rules(std::vector<Card> const& play_sequence)
   assert(play_sequence.size() == 12);
   BOOST_FOREACH(Card const& card, play_sequence) {
     PlayRule::Ptr p(new PlayCard(card));
-    play_rules_.push_back(std::list<PlayRule::Ptr>{p});
+    play_rules_.emplace_back();
+    play_rules_.back().push_back(std::move(p));
   }
 }
 
@@ -83,8 +84,12 @@ void SpecificPlayAi::init_play_rules(std::string const& play_sequence)
 {
   // Special case: when nothing is specified, play randomly
   if (play_sequence.empty()) {
-    std::list<PlayRule::Ptr> p;
-    play_rules_ = std::vector<std::list<PlayRule::Ptr>>(12, p);
+    // Amusingly the {12, {}} constructor doesn't work because it tries to copy
+    // something uncopyable
+    play_rules_.clear();
+    for (int i=0; i<12; ++i) {
+      play_rules_.emplace_back();
+    }
     return;
   }
 
@@ -102,9 +107,9 @@ void SpecificPlayAi::init_play_rules(std::string const& play_sequence)
         play_instructions, chunk, arg1 == ':',
         boost::algorithm::token_compress_on
       );
-    play_rules_.push_back(std::list<boost::shared_ptr<PlayRule> >());
+    play_rules_.push_back({});
     BOOST_FOREACH(const std::string& play_instruction, play_instructions) {
-      boost::shared_ptr<PlayRule> p;
+      PlayRule::Ptr p;
       if (play_instruction == "h") {
         p.reset(new PlayHigh());
       } else {

@@ -17,7 +17,7 @@ class KONIG_AI_API SpecificPlayAi : public PlayAi {
     virtual Card play_card(FateAi const&);
 
     struct PlayRule {
-      typedef boost::shared_ptr<PlayRule> Ptr;
+      typedef std::unique_ptr<PlayRule> Ptr;
 
       virtual bool apply(const Trick&, const Cards& legal, Card& play) = 0;
     };
@@ -26,7 +26,7 @@ class KONIG_AI_API SpecificPlayAi : public PlayAi {
     void init_play_rules(const std::string& play_sequence);
 
     std::mt19937 random_engine_;
-    std::vector<std::list<PlayRule::Ptr> > play_rules_;
+    std::vector<std::vector<PlayRule::Ptr> > play_rules_;
 };
 
 }}
