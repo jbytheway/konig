@@ -144,7 +144,7 @@ void Ai::notify_discard(Cards discard)
   discard_ = std::move(discard);
   if (position() == declarer()) {
     hand_.insert(accepted_);
-    hand_.erase(discard);
+    hand_.erase(discard_);
     assert(hand_.size() == 12);
   }
 }
