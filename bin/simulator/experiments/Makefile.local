@@ -22,6 +22,9 @@ compare: $(COMPARES)
 
 reestablish: $(ESTABLISHED)
 
+hands_all: $(HAND_NUMS)
+	cat $^ > $@
+
 $(HAND_NUMS): hands/%: $(SIM)
 	mkdir -p $(dir $@)
 	{ printf "%s " "$*"; \
