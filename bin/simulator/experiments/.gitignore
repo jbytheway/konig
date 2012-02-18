@@ -1,8 +1,10 @@
 /hands
 /hands_all
+/hands_features
 /*.results
 /*.compare
 /*.full.*
+/*.training
 /r
 /t
 /6d

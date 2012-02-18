@@ -5,6 +5,7 @@ BASES := $(notdir $(basename $(EXPS)))
 RESULTS := $(addsuffix .results,$(BASES))
 ESTABLISHED := $(foreach base,$(BASES),$(this_srcdir)$(base).established)
 COMPARES := $(addsuffix .compare,$(BASES))
+TRAININGS := $(addsuffix .training,$(BASES))
 
 NUM_TRIALS := 100
 NUM_STD_HANDS := 1000
@@ -14,6 +15,7 @@ HAND_NUMS := $(addprefix hands/,$(NUMS))
 RESULTS_NUMS := $(foreach result,$(RESULTS),$(addprefix $(result).,$(NUMS)))
 
 SIM := ../konig-simulator
+FEAT := ../../features/konig-features
 
 test: $(RESULTS)
 
@@ -22,13 +24,16 @@ compare: $(COMPARES)
 
 reestablish: $(ESTABLISHED)
 
-hands_all: $(HAND_NUMS)
-	cat $^ > $@
-
 $(HAND_NUMS): hands/%: $(SIM)
 	mkdir -p $(dir $@)
 	{ printf "%s " "$*"; \
 		$< -p- -m -s $* | cut -d , -f 1 | sed 's/ $$//' | tr ' ' '_' ; } > $@
+
+hands_all: $(HAND_NUMS)
+	cat $^ > $@
+
+hands_features: hands_all $(FEAT)
+	$(FEAT) $< > $@
 
 define MAKE_RESULTS
 $(1)_FULL_NUMS := $(addprefix $(1).full.,$(NUMS))
@@ -51,4 +56,7 @@ $(ESTABLISHED): $(this_srcdir)%.established: %.results
 $(COMPARES): %.compare: %.results $(this_srcdir)compare.awk
 	awk -v results=$< -f $(this_srcdir)compare.awk \
 		$< $(this_srcdir)$*.established > $@
+
+$(TRAININGS): %.training: %.results hands_features
+	{ echo score; cut -d ' ' -f 3 $<; } | paste -d ' ' - hands_features > $@
 
