@@ -83,8 +83,7 @@ int main(int argc, char const* const* const argv) {
       std::cerr << "malformed line in chunks file\n";
       return EXIT_FAILURE;
     }
-    auto name = boost::lexical_cast<unsigned long>(
-      std::string(line.begin(), space));
+    auto name = std::string(line.begin(), space);
     auto hand_s = std::string(space+1, line.end());
     auto hand = konig::Cards::from_string(hand_s);
 
