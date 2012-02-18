@@ -5,6 +5,7 @@
 /*.compare
 /*.full.*
 /*.training
+/*.model
 /r
 /t
 /6d

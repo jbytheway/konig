@@ -6,6 +6,7 @@ RESULTS := $(addsuffix .results,$(BASES))
 ESTABLISHED := $(foreach base,$(BASES),$(this_srcdir)$(base).established)
 COMPARES := $(addsuffix .compare,$(BASES))
 TRAININGS := $(addsuffix .training,$(BASES))
+MODELS := $(addsuffix .model,$(BASES))
 
 NUM_TRIALS := 100
 NUM_STD_HANDS := 1000
@@ -59,4 +60,7 @@ $(COMPARES): %.compare: %.results $(this_srcdir)compare.awk
 
 $(TRAININGS): %.training: %.results hands_features
 	{ echo score; cut -d ' ' -f 3 $<; } | paste -d ' ' - hands_features > $@
+
+$(MODELS): %.model: %.training
+	./fitModel.R $< > $@
 
