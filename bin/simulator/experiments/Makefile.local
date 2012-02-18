@@ -18,7 +18,7 @@ RESULTS_NUMS := $(foreach result,$(RESULTS),$(addprefix $(result).,$(NUMS)))
 SIM := ../konig-simulator
 FEAT := ../../features/konig-features
 
-test: $(RESULTS)
+test: $(MODELS)
 
 compare: $(COMPARES)
 	wc $(COMPARES)
