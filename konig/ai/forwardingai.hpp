@@ -23,6 +23,7 @@ class ForwardingAi : public FateAi {
     virtual std::vector<Announcement> announce();
     virtual Card play_card();
 
+    virtual void game_start_hook();
     virtual void contract_established_hook();
     virtual void play_start_hook();
     virtual void trick_complete_hook();

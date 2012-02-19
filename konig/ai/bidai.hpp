@@ -13,6 +13,7 @@ class BidAi {
 
     virtual ~BidAi() = 0;
 
+    virtual void reset(Ai const&) {}
     virtual Bid bid(Ai const&) = 0;
   protected:
     BidAi() {}

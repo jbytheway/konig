@@ -115,6 +115,13 @@ Card ForwardingAi::play_card()
   return player_->play_card(*this);
 }
 
+void ForwardingAi::game_start_hook()
+{
+  FateAi::game_start_hook();
+
+  bidder_->reset(*this);
+}
+
 void ForwardingAi::contract_established_hook()
 {
   FateAi::contract_established_hook();
