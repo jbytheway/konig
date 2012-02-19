@@ -18,7 +18,7 @@ RESULTS_NUMS := $(foreach result,$(RESULTS),$(addprefix $(result).,$(NUMS)))
 SIM := ../konig-simulator
 FEAT := ../../features/konig-features
 
-test: $(MODELS)
+test: merged.model
 
 compare: $(COMPARES)
 	wc $(COMPARES)
@@ -63,4 +63,9 @@ $(TRAININGS): %.training: %.results hands_features
 
 $(MODELS): %.model: %.training
 	./fitModel.R $< > $@
+
+merged.model: $(MODELS)
+	printf "contract " > $@
+	head -n 1 $< >> $@
+	for i in $^; do printf "$${i%.model} " >> $@; tail -n 1 $$i >> $@; done
 
