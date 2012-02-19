@@ -18,20 +18,28 @@ SpecificBidAi::SpecificBidAi(std::string const& description)
   }
 }
 
+void SpecificBidAi::reset(Ai const& ai)
+{
+  if (bid_name_ == "pass") {
+    bid_ = Bid::pass;
+  } else {
+    Contracts const& contracts = ai.rules().contracts();
+    bid_ = contracts.index_by_bid_name(bid_name_);
+    if (bid_.is_pass()) {
+      throw AiError("SpecificBidAi: no such bid '"+bid_name_+"'");
+    }
+  }
+}
+
 Bid SpecificBidAi::bid(Ai const& ai)
 {
-  if (bid_name_ == "pass") return Bid::pass;
   Contracts const& contracts = ai.rules().contracts();
-  Bid bid = contracts.index_by_bid_name(bid_name_);
-  if (bid.is_pass()) {
-    throw AiError("SpecificBidAi: no such bid '"+bid_name_+"'");
-  }
-  if (ai.last_non_pass().is_pass() && bid < contracts.reserved_bids()) {
+  if (ai.last_non_pass().is_pass() && bid_ < contracts.reserved_bids()) {
     return Bid(0);
   }
-  if (bid >= ai.last_non_pass() &&
-     (bid > ai.last_non_pass() || ai.position() == position_forehand)) {
-    return bid;
+  if (bid_ >= ai.last_non_pass() &&
+     (bid_ > ai.last_non_pass() || ai.position() == position_forehand)) {
+    return bid_;
   }
   return Bid::pass;
 }
