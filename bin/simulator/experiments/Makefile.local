@@ -67,5 +67,5 @@ $(MODELS): %.model: %.training
 merged.model: $(MODELS)
 	printf "contract " > $@
 	head -n 1 $< >> $@
-	for i in $^; do printf "$${i%.model} " >> $@; tail -n 1 $$i >> $@; done
+	for i in $^; do printf "%8s " "$${i%.model}" >> $@; tail -n 1 $$i >> $@; done
 
