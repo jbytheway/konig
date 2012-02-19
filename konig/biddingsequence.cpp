@@ -2,6 +2,7 @@
 
 #include <list>
 
+#include <boost/format.hpp>
 #include <boost/bind.hpp>
 
 #include <konig/contract.hpp>
@@ -85,7 +86,8 @@ namespace {
           return bid;
         }
       } else {
-        bidder.notify_invalid("bid out of range");
+        auto message = str(boost::format("bid %d out of range")%bid.value());
+        bidder.notify_invalid(message);
       }
     }
   }
