@@ -6,6 +6,7 @@
 /*.full.*
 /*.training
 /*.model
+/*.residuals
 /r
 /t
 /6d
