@@ -2,7 +2,6 @@
 
 #include <list>
 
-#include <boost/algorithm/string/split.hpp>
 #include <boost/foreach.hpp>
 
 #include <boost/spirit/home/phoenix/core/reference.hpp>

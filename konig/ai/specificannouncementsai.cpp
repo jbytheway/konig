@@ -1,8 +1,6 @@
 #include <konig/ai/specificannouncementsai.hpp>
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/spirit/home/phoenix/operator/comparison.hpp>
-
+#include <konig/utility/split.hpp>
 #include <konig/ai/aierror.hpp>
 
 namespace konig { namespace ai {
@@ -20,15 +18,13 @@ SpecificAnnouncementsAi::SpecificAnnouncementsAi(
   discard_(discard)
 {
   if (!announcement_sequence.empty()) {
-    std::vector<std::string> chunks;
-    boost::algorithm::split(
-      chunks, announcement_sequence, arg1 == ':',
+    auto chunks = konig::utility::split(
+      announcement_sequence, ':',
       boost::algorithm::token_compress_off
     );
     BOOST_FOREACH(auto const& chunk, chunks) {
-      std::vector<std::string> subchunks;
-      boost::algorithm::split(
-        subchunks, chunk, arg1 == '/',
+      auto subchunks = konig::utility::split(
+        chunk, '/',
         boost::algorithm::token_compress_on
       );
       std::vector<Announcement> this_set;

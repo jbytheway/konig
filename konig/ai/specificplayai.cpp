@@ -2,9 +2,7 @@
 
 #include <random>
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/spirit/home/phoenix/operator/comparison.hpp>
-
+#include <konig/utility/split.hpp>
 #include <konig/ai/aierror.hpp>
 
 namespace konig { namespace ai {
@@ -93,19 +91,16 @@ void SpecificPlayAi::init_play_rules(std::string const& play_sequence)
     return;
   }
 
-  std::vector<std::string> chunks;
-  boost::algorithm::split(
-      chunks, play_sequence, arg1 == ' ',
-      boost::algorithm::token_compress_on
-    );
+  auto chunks = konig::utility::split(
+    play_sequence, ' ',
+    boost::algorithm::token_compress_on
+  );
   if (chunks.size() != 12) {
     throw AiError("invalid play sequence");
   }
   BOOST_FOREACH(const std::string& chunk, chunks) {
-    std::vector<std::string> play_instructions;
-    boost::algorithm::split(
-        play_instructions, chunk, arg1 == ':',
-        boost::algorithm::token_compress_on
+    auto play_instructions = konig::utility::split(
+        chunk, ':', boost::algorithm::token_compress_on
       );
     play_rules_.push_back({});
     BOOST_FOREACH(const std::string& play_instruction, play_instructions) {

@@ -7,10 +7,10 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/range/algorithm/find.hpp>
 #include <boost/algorithm/string/join.hpp>
-#include <boost/algorithm/string/split.hpp>
 
 #include <optimal/optionsparser.hpp>
 
+#include <konig/utility/split.hpp>
 #include <konig/play_game.hpp>
 #include <konig/dealer.hpp>
 #include <konig/ai/ai.hpp>
@@ -157,10 +157,7 @@ int main(int argc, char const* const* const argv) {
       auto seed = boost::lexical_cast<unsigned long>(
         std::string(line.begin(), space));
       auto chunks_s = std::string(space+1, line.end());
-      std::vector<std::string> chunks;
-      boost::algorithm::split(
-        chunks, chunks_s, [](char c){return c==',';}
-      );
+      auto chunks = konig::utility::split(chunks_s, ',');
       chunkss.push_back({seed, chunks});
     }
   } else {
