@@ -5,7 +5,7 @@
 
 #include <optimal/optionsparser.hpp>
 
-#include "feature.hpp"
+#include <konig/ai/feature.hpp>
 
 namespace konig { namespace features {
 
@@ -67,7 +67,7 @@ int main(int argc, char const* const* const argv) {
   boost::filesystem::ifstream is(options.hands_file);
   std::string line;
 
-  auto features = konig::features::Feature::default_features();
+  auto features = konig::ai::Feature::default_feature_sequence();
 
   std::cout << "name";
 
