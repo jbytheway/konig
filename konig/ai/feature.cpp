@@ -43,10 +43,28 @@ struct NumTopTrumps : Feature {
   }
 };
 
+struct TotalTrumpRank : Feature {
+  virtual std::string name() const { return "totaltrumprank"; }
+  virtual double compute(Cards const& hand) const {
+    int result = 0;
+    BOOST_FOREACH(auto const& c, hand.equal_range(Suit::trumps)) {
+      result += c.trump_rank();
+    }
+    return result;
+  }
+};
+
 struct CardPoints : Feature {
   virtual std::string name() const { return "cardpoints"; }
   virtual double compute(Cards const& hand) const {
     return hand.total_card_points();
+  }
+};
+
+struct Pagat : Feature {
+  virtual std::string name() const { return "pagat"; }
+  virtual double compute(Cards const& hand) const {
+    return hand.count(TrumpRank::pagat);
   }
 };
 
@@ -58,7 +76,9 @@ std::vector<Feature::Ptr> Feature::default_feature_sequence()
   result.push_back(std::make_shared<NumKings>());
   result.push_back(std::make_shared<NumVoids>());
   result.push_back(std::make_shared<NumTopTrumps>());
+  result.push_back(std::make_shared<TotalTrumpRank>());
   result.push_back(std::make_shared<CardPoints>());
+  result.push_back(std::make_shared<Pagat>());
   return result;
 }
 
