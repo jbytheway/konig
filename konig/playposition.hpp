@@ -27,7 +27,7 @@ operator+(PlayPosition const p, T const v) {
 
 inline PlayPosition operator%(PlayPosition const p, int const v) {
   assert(v==4);
-  return PlayPosition(int(p)%4);
+  return PlayPosition(std::make_unsigned<PlayPosition>::type(p)%4);
 }
 
 inline PlayPosition& operator%=(PlayPosition& p, int const v) {
