@@ -18,12 +18,36 @@
 
 namespace konig {
 
+namespace cards_detail {
+
+  struct IntToCard {
+    Card operator()(Card::index_type const i) const {
+      return Card::from_index(i);
+    }
+  };
+
+  struct CardToInt {
+    Card::index_type operator()(Card const c) const {
+      return c.index();
+    }
+  };
+
+  typedef utility::SmallSet<Card::index_type, Card::index_max> CardIntSet;
+
+}
+
 class KONIG_API Cards :
-  public utility::TransformingSet<CardIntSet, IntToCard, CardToInt> {
+  public utility::TransformingSet<
+    cards_detail::CardIntSet,
+    cards_detail::IntToCard,
+    cards_detail::CardToInt
+  > {
   friend class boost::serialization::access;
   public:
     typedef utility::TransformingSet<
-      CardIntSet, IntToCard, CardToInt
+      cards_detail::CardIntSet,
+      cards_detail::IntToCard,
+      cards_detail::CardToInt
     > base_class;
 
     static Cards make_deck();

@@ -5,20 +5,6 @@ namespace konig {
 
 typedef Card::index_type CardInt;
 
-struct IntToCard {
-  Card operator()(Card::index_type const i) const {
-    return Card::from_index(i);
-  }
-};
-
-struct CardToInt {
-  Card::index_type operator()(Card const c) const {
-    return c.index();
-  }
-};
-
-typedef utility::SmallSet<Card::index_type, Card::index_max> CardIntSet;
-
 }
 
 #endif // KONIG_CARDINT_HPP

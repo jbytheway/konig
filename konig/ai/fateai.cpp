@@ -30,7 +30,7 @@ void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   assert(other_places.size() == 4);
 
   for (CardInt c = 0; c != Card::index_max; ++c) {
-    if (this->hand().count(IntToCard()(c))) {
+    if (this->hand().count(Card::from_index(c))) {
       fates_[c] = my_hand;
     } else {
       fates_[c] = other_places;
@@ -57,12 +57,12 @@ void FateAi::notify_talon(const std::array<Cards, 2>& talon)
     CardFate::held_by(declarer()), CardFate::discard
   };
   BOOST_FOREACH(Card const& c, accepted()) {
-    fates_[CardToInt()(c)] = declarers_hand_or_discarded;
+    fates_[c.index()] = declarers_hand_or_discarded;
   }
 
   for (CardInt i = 0; i != Card::index_max; ++i) {
     auto& fates = fates_[i];
-    auto const c = IntToCard()(i);
+    auto const c = Card::from_index(i);
     if (fates.count(CardFate::talon)) {
       fates.erase(CardFate::talon);
       if (!c.trump() && !c.suit_rank() == SuitRank::king) {
@@ -78,7 +78,7 @@ void FateAi::notify_talon_choice(uint8_t choice)
 
   CardFates rejected{CardFate::reject};
   BOOST_FOREACH(Card const& c, this->rejected()) {
-    fates_[CardToInt()(c)] = rejected;
+    fates_[c.index()] = rejected;
   }
 }
 
@@ -88,14 +88,14 @@ void FateAi::notify_discard(Cards discard)
 
   CardFates discarded{CardFate::discard};
   BOOST_FOREACH(Card const& c, discard) {
-    fates_[CardToInt()(c)] = discarded;
+    fates_[c.index()] = discarded;
   }
 }
 
 void FateAi::notify_play_card(PlayPosition p, Card c)
 {
   CardFates played_by_p{CardFate::played_by(p)};
-  fates_[CardToInt()(c)] = played_by_p;
+  fates_[c.index()] = played_by_p;
   bool const rising_rule = contract().contract().rising_rule();
 
   auto const players_hand = CardFate::held_by(p);
@@ -107,7 +107,7 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
           fates.erase(players_hand);
         }
       } else if (rising_rule && c < trick.winning_card()) {
-        auto winners_start = CardToInt()(trick.winning_card());
+        auto winners_start = trick.winning_card().index();
         for (auto i = winners_start; i != Card::index_max; ++i) {
           fates_[i].erase(players_hand);
         }
@@ -124,8 +124,8 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
         }
       } else if (rising_rule && !trick.winning_card().trump() &&
           c < trick.winning_card()) {
-        auto winners_start = CardToInt()(trick.winning_card());
-        auto suit_end = CardToInt()(Card(c.suit(), SuitRank::king));
+        auto winners_start = trick.winning_card().index();
+        auto suit_end = Card(c.suit(), SuitRank::king).index();
         for (auto i = winners_start; i <= suit_end; ++i) {
           fates_[i].erase(players_hand);
         }
@@ -175,7 +175,7 @@ bool FateAi::guess_is_partner(PlayPosition const pos) const
     return false;
   }
   Card called_king(called_suit(), SuitRank::king);
-  auto const& fates = fates_[CardToInt()(called_king)];
+  auto const& fates = fates_[called_king.index()];
   if (fates.size() == 1) {
     auto fate = *fates.begin();
     return fate == CardFate::held_by(pos) || fate == CardFate::played_by(pos);
@@ -211,7 +211,7 @@ bool FateAi::had_first_round(Suit const s) const
 
 FateAi::CardFates FateAi::fates_of(Card const& card) const
 {
-  return fates_[CardToInt()(card)];
+  return fates_[card.index()];
 }
 
 FateAi::CardFates FateAi::fates_of(TrumpRank const rank) const
@@ -232,11 +232,11 @@ std::pair<FateAi::CardsFates::iterator, FateAi::CardsFates::iterator>
 FateAi::fates_of(Suit const s)
 {
   if (s == Suit::trumps) {
-    return {fates_.begin()+CardToInt()(Card(TrumpRank::pagat)), fates_.end()};
+    return {fates_.begin() + Card::index_first_trump, fates_.end()};
   } else {
     return {
-      fates_.begin() + CardToInt()(Card(s)),
-      fates_.begin() + CardToInt()(Card(s, SuitRank::king)) + 1
+      fates_.begin() + Card(s).index(),
+      fates_.begin() + Card(s, SuitRank::king).index() + 1
     };
   }
 }
@@ -248,11 +248,11 @@ std::pair<
 FateAi::fates_of(Suit const s) const
 {
   if (s == Suit::trumps) {
-    return {fates_.begin()+CardToInt()(Card(TrumpRank::pagat)), fates_.end()};
+    return {fates_.begin() + Card(TrumpRank::pagat).index(), fates_.end()};
   } else {
     return {
-      fates_.begin() + CardToInt()(Card(s)),
-      fates_.begin() + CardToInt()(Card(s, SuitRank::king)) + 1
+      fates_.begin() + Card(s).index(),
+      fates_.begin() + Card(s, SuitRank::king).index() + 1
     };
   }
 }
@@ -260,10 +260,10 @@ FateAi::fates_of(Suit const s) const
 Cards FateAi::trumps_in(CardFates const& places) const
 {
   Cards result;
-  for (auto i = CardToInt()(Card(TrumpRank::min)); i != Card::index_max; ++i) {
+  for (auto i = Card(TrumpRank::min).index(); i != Card::index_max; ++i) {
     CardFates const& fates = fates_[i];
     using utility::intersects;
-    if (intersects(places, fates)) result.insert(IntToCard()(i));
+    if (intersects(places, fates)) result.insert(Card::from_index(i));
   }
   return result;
 }
@@ -304,7 +304,7 @@ bool FateAi::guaranteed_to_win_against(
     for (TrumpRank better_rank = boost::next(card.trump_rank());
       better_rank < TrumpRank::max; ++better_rank) {
       using utility::intersects;
-      if (intersects(fates_[CardToInt()(Card(better_rank))], hands)) {
+      if (intersects(fates_[Card(better_rank).index()], hands)) {
         return false;
       }
     }
@@ -312,7 +312,7 @@ bool FateAi::guaranteed_to_win_against(
   } else {
     for (SuitRank better_rank = boost::next(card.suit_rank());
       better_rank < SuitRank::max; ++better_rank) {
-      auto const& fates = fates_[CardToInt()(Card(card.suit(), better_rank))];
+      auto const& fates = fates_[Card(card.suit(), better_rank).index()];
       using utility::intersects;
       if (intersects(fates, hands)) {
         return false;
@@ -354,8 +354,8 @@ bool FateAi::cards_are_equivalent(Cards const& cards) const
   }
 
   auto fates_range = std::make_pair(
-    fates_.begin() + CardToInt()(*cards.begin()) + 1,
-    fates_.begin() + CardToInt()(*last_it)
+    fates_.begin() + cards.begin()->index() + 1,
+    fates_.begin() + last_it->index()
   );
 
   auto other_hands = other_players_hands();
