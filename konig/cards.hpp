@@ -45,18 +45,20 @@ namespace cards_detail {
     }
   };
 
+  typedef utility::SmallSet<cards_detail::CardInt, 54> CardIntSet;
+
 }
 
 class KONIG_API Cards :
   public utility::TransformingSet<
-    utility::SmallSet<cards_detail::CardInt, 54>,
+    cards_detail::CardIntSet,
     cards_detail::IntToCard,
     cards_detail::CardToInt
   > {
   friend class boost::serialization::access;
   public:
     typedef utility::TransformingSet<
-      utility::SmallSet<cards_detail::CardInt, 54>,
+      cards_detail::CardIntSet,
       cards_detail::IntToCard,
       cards_detail::CardToInt
     > base_class;
@@ -72,6 +74,10 @@ class KONIG_API Cards :
       base_class(list)
     {
     }
+
+    Cards(base_class b) :
+      base_class(std::move(b))
+    {}
 
     template<typename Range>
     explicit Cards(Range const& r) {
@@ -218,6 +224,20 @@ class KONIG_API Cards :
 
     void erase(TrumpRank rank) {
       erase(Card(rank));
+    }
+
+    using base_class::subset;
+
+    Cards subset(Suit const s) const {
+      Card min, max;
+
+      if (s == Suit::trumps) {
+        return {subset_after(Card(TrumpRank::min))};
+      } else {
+        return {
+          subset(Card(s), Card(Suit(s+1)))
+        };
+      }
     }
 
     bool contains(const Cards& c) {
