@@ -19,7 +19,7 @@ class TrumpRank {
       max = 23
     };
 
-    TrumpRank(const internal_enum v) : value_(v) {}
+    constexpr TrumpRank(const internal_enum v) : value_(v) {}
     explicit TrumpRank(const unsigned int v) : value_(v) {
       if (v < pagat || v > skus) {
         KONIG_FATAL("invalid trump rank " << v);
