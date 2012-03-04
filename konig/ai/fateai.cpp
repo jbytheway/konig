@@ -29,7 +29,7 @@ void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   other_places.erase(*my_hand.begin());
   assert(other_places.size() == 4);
 
-  for (CardInt c = 0; c != Card::index_max; ++c) {
+  for (Card::index_type c = 0; c != Card::index_max; ++c) {
     if (this->hand().count(Card::from_index(c))) {
       fates_[c] = my_hand;
     } else {
@@ -60,7 +60,7 @@ void FateAi::notify_talon(const std::array<Cards, 2>& talon)
     fates_[c.index()] = declarers_hand_or_discarded;
   }
 
-  for (CardInt i = 0; i != Card::index_max; ++i) {
+  for (Card::index_type i = 0; i != Card::index_max; ++i) {
     auto& fates = fates_[i];
     auto const c = Card::from_index(i);
     if (fates.count(CardFate::talon)) {

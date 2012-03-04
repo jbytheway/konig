@@ -13,7 +13,6 @@
 #include <konig/utility/smallset.hpp>
 #include <konig/utility/transformingset.hpp>
 #include <konig/card.hpp>
-#include <konig/cardint.hpp>
 #include <konig/cardpoints.hpp>
 
 namespace konig {
