@@ -110,6 +110,8 @@ class TransformingSet {
       underlying_{k.underlying()}
     {}
 
+    TransformingSet(UnderlyingSet u) : underlying_{std::move(u)} {}
+
     template<typename Iterator>
     TransformingSet(Iterator i1, Iterator i2, key_compare k = key_compare()) :
       underlying_{k.underlying()}
@@ -187,6 +189,24 @@ class TransformingSet {
 
     iterator erase(iterator const& i1, iterator const& i2) {
       return {underlying_.erase(i1.underlying(), i2.underlying())};
+    }
+
+    // Returns subset between given keys
+    TransformingSet subset(key_type const& k1, key_type const& k2) const
+    {
+      return {underlying_.subset(in_cast(k1), in_cast(k2))};
+    }
+
+    // Returns subset between given iterators
+    TransformingSet subset(iterator const& i1, iterator const& i2) const
+    {
+      return {underlying_.subset(i1.underlying(), i2.underlying())};
+    }
+
+    // Returns subset after given key
+    TransformingSet subset_after(key_type const& k) const
+    {
+      return {underlying_.subset_after(in_cast(k))};
     }
 
     friend inline bool intersects(

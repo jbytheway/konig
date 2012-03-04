@@ -189,6 +189,24 @@ class SmallSet {
       return i2;
     }
 
+    // Returns subset between given keys
+    SmallSet subset(key_type const& k1, key_type const& k2) const
+    {
+      return SmallSet{storage_ & mask(k1, k2), from_storage()};
+    }
+
+    // Returns subset between given iterators
+    SmallSet subset(iterator const& i1, iterator const& i2) const
+    {
+      return SmallSet{storage_ & mask(*i1, *i2), from_storage()};
+    }
+
+    // Returns subset after given key
+    SmallSet subset_after(key_type const& k) const
+    {
+      return SmallSet{storage_ & mask(k, end_index), from_storage()};
+    }
+
     friend inline bool intersects(SmallSet const& l, SmallSet const& r) {
       return (l.storage_ & r.storage_) != 0;
     }
@@ -202,6 +220,10 @@ class SmallSet {
 
     static constexpr integer_value_type end_index =
       std::numeric_limits<storage_type>::digits;
+
+    // Internal constructor to make directly from a storage value
+    struct from_storage {};
+    SmallSet(storage_type const s, from_storage) : storage_{s} {}
 
     template<typename T>
     static storage_type mask(T const k) {
