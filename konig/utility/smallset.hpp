@@ -4,6 +4,8 @@
 #include <boost/integer.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include <konig/utility/bitops.hpp>
 
@@ -14,6 +16,7 @@ namespace konig { namespace utility {
 // needs to malloc anything)
 template<typename Value, Value Max>
 class SmallSet {
+  friend class boost::serialization::access;
   public:
     static_assert(
       std::is_integral<Value>::value || std::is_enum<Value>::value,
@@ -210,8 +213,9 @@ class SmallSet {
       return bitops::ones<storage_type>(span) << i_k1;
     }
 
-    storage_type mask(integer_value_type k1, integer_value_type k2) const {
-      return bitops::ones<storage_type>(k2-k1) << k1;
+    template<typename Archive>
+    void serialize(Archive& ar, unsigned int) {
+      ar & BOOST_SERIALIZATION_NVP(storage_);
     }
 
     storage_type storage_;

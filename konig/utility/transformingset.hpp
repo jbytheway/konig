@@ -5,6 +5,8 @@
 #include <boost/iterator/reverse_iterator.hpp>
 #include <boost/concept/assert.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include <konig/utility/intersects.hpp>
 
@@ -42,6 +44,7 @@ template<
   typename ExternalToInternal
 >
 class TransformingSet {
+  friend class boost::serialization::access;
   public:
     typedef typename UnderlyingSet::value_type underlying_value_type;
     typedef typename UnderlyingSet::iterator underlying_iterator;
@@ -205,6 +208,11 @@ class TransformingSet {
     static value_type out_cast(underlying_value_type const& v) {
       InternalToExternal f;
       return f(v);
+    }
+
+    template<typename Archive>
+    void serialize(Archive& ar, unsigned int) {
+      ar & BOOST_SERIALIZATION_NVP(underlying_);
     }
 
     UnderlyingSet underlying_;
