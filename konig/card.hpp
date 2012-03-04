@@ -50,14 +50,28 @@ class KONIG_API Card {
     };
 
     Card() : suit_(Suit::trumps), rank_(TrumpRank::pagat) {}
-    explicit Card(const TrumpRank r) : suit_(Suit::trumps), rank_(r) {
+
+    explicit Card(Suit const s) :
+      suit_(s),
+      rank_(s == Suit::trumps ?
+        rank_type(TrumpRank::min) : rank_type(SuitRank::min))
+    {
+      assert(s.valid());
+    }
+
+    explicit Card(const TrumpRank r) :
+      suit_(Suit::trumps),
+      rank_(r)
+    {
       assert(r.valid());
     }
+
     Card(const Suit s, const SuitRank r) : suit_(s), rank_(r) {
       assert(s.valid());
       assert(r.valid());
       assert(!trump());
     }
+
     Card(const std::string&);
 
     bool trump() const { return suit_ == Suit::trumps; }
@@ -84,6 +98,8 @@ class KONIG_API Card {
       return r < *this;
     }
   private:
+    typedef uint8_t rank_type;
+
     template<typename Archive>
     void serialize(Archive& ar, unsigned int) {
       ar & BOOST_SERIALIZATION_NVP(suit_);
@@ -91,7 +107,7 @@ class KONIG_API Card {
     }
 
     uint8_t suit_;
-    uint8_t rank_;
+    rank_type rank_;
 };
 
 template<typename OutputIterator>
