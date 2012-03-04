@@ -61,7 +61,7 @@ class SmallSet {
 
         void decrement() {
           storage_type const smaller_bits =
-            set_->storage_ & set_->mask(index_);
+            set_->storage_ & set_->mask(0, index_);
           index_ = value_type(bitops::highest_bit(smaller_bits));
         }
 
