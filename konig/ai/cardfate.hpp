@@ -18,15 +18,16 @@ class CardFate {
       played3,
       talon,
       reject,
-      discard
+      discard,
+      max // Must be last
     };
 
-    static CardFate held_by(PlayPosition const p) {
-      return CardFate(internal_enum(p));
+    static internal_enum held_by(PlayPosition const p) {
+      return internal_enum(p);
     }
 
-    static CardFate played_by(PlayPosition const p) {
-      return CardFate(internal_enum(p+played0));
+    static internal_enum played_by(PlayPosition const p) {
+      return internal_enum(p+played0);
     }
 
     CardFate(internal_enum const v) : value_(v) {}

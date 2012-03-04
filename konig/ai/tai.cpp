@@ -20,7 +20,7 @@ Card TAi::play_card(FateAi const& ai)
     return *plays.begin();
   }
 
-  std::set<CardFate> hands_yet_to_play;
+  FateAi::CardFates hands_yet_to_play;
   {
     PlayPosition pos = ai.position();
     for (size_t i=trick.played(); i<3; ++i) {
@@ -30,13 +30,14 @@ Card TAi::play_card(FateAi const& ai)
     }
   }
 
-  std::set<CardFate> other_hands{
+  FateAi::CardFates other_hands{
     CardFate::hand0, CardFate::hand1, CardFate::hand2, CardFate::hand3
   };
   other_hands.erase(CardFate::held_by(ai.position()));
 
+  using utility::intersects;
   bool const skus_may_be_out =
-    utility::intersects(other_hands, ai.fates_of(TrumpRank::skus));
+    intersects(other_hands, ai.fates_of(TrumpRank::skus));
 
   if (trick.leader() == ai.position()) {
     // I am leading to the trick

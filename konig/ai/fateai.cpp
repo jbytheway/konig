@@ -23,8 +23,8 @@ void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   fates_.clear();
   std::vector<Card> deck;
   Card::make_deck(std::back_inserter(deck));
-  std::set<CardFate> my_hand{CardFate::held_by(pos)};
-  std::set<CardFate> other_places{
+  CardFates my_hand{CardFate::held_by(pos)};
+  CardFates other_places{
     CardFate::hand0, CardFate::hand1, CardFate::hand2, CardFate::hand3,
     CardFate::talon
   };
@@ -55,7 +55,7 @@ void FateAi::notify_talon(const std::array<Cards, 2>& talon)
 {
   Ai::notify_talon(talon);
 
-  std::set<CardFate> declarers_hand_or_discarded{
+  CardFates declarers_hand_or_discarded{
     CardFate::held_by(declarer()), CardFate::discard
   };
   BOOST_FOREACH(Card const& c, accepted()) {
@@ -76,7 +76,7 @@ void FateAi::notify_talon_choice(uint8_t choice)
 {
   Ai::notify_talon_choice(choice);
 
-  std::set<CardFate> rejected{CardFate::reject};
+  CardFates rejected{CardFate::reject};
   BOOST_FOREACH(Card const& c, this->rejected()) {
     fates_[c] = rejected;
   }
@@ -86,7 +86,7 @@ void FateAi::notify_discard(Cards discard)
 {
   Ai::notify_discard(std::move(discard));
 
-  std::set<CardFate> discarded{CardFate::discard};
+  CardFates discarded{CardFate::discard};
   BOOST_FOREACH(Card const& c, discard) {
     fates_[c] = discarded;
   }
@@ -94,11 +94,11 @@ void FateAi::notify_discard(Cards discard)
 
 void FateAi::notify_play_card(PlayPosition p, Card c)
 {
-  std::set<CardFate> played_by_p{CardFate::played_by(p)};
+  CardFates played_by_p{CardFate::played_by(p)};
   fates_[c] = played_by_p;
   bool const rising_rule = contract().contract().rising_rule();
 
-  CardFate players_hand = CardFate::held_by(p);
+  auto const players_hand = CardFate::held_by(p);
   Trick const& trick = tricks().back();
   if (trick.played()) {
     if (trick.suit() == Suit::trumps) {
@@ -209,26 +209,26 @@ bool FateAi::had_first_round(Suit const s) const
   return had_first_round_[s];
 }
 
-std::set<CardFate> FateAi::fates_of(Card const& card) const
+FateAi::CardFates FateAi::fates_of(Card const& card) const
 {
   return fates_.find(card)->second;
 }
 
-std::set<CardFate> FateAi::fates_of(TrumpRank const rank) const
+FateAi::CardFates FateAi::fates_of(TrumpRank const rank) const
 {
   return fates_of(Card(rank));
 }
 
-std::set<CardFate> FateAi::other_players_hands() const
+FateAi::CardFates FateAi::other_players_hands() const
 {
-  std::set<CardFate> hands{
+  CardFates hands{
     CardFate::hand0, CardFate::hand1, CardFate::hand2, CardFate::hand3
   };
   hands.erase(CardFate::held_by(position()));
   return hands;
 }
 
-std::pair<FateAi::Fates::iterator, FateAi::Fates::iterator>
+std::pair<FateAi::CardsFates::iterator, FateAi::CardsFates::iterator>
 FateAi::fates_of(Suit const s)
 {
   if (s == Suit::trumps) {
@@ -242,7 +242,10 @@ FateAi::fates_of(Suit const s)
   }
 }
 
-std::pair<FateAi::Fates::const_iterator, FateAi::Fates::const_iterator>
+std::pair<
+  FateAi::CardsFates::const_iterator,
+  FateAi::CardsFates::const_iterator
+>
 FateAi::fates_of(Suit const s) const
 {
   if (s == Suit::trumps) {
@@ -256,12 +259,13 @@ FateAi::fates_of(Suit const s) const
   }
 }
 
-Cards FateAi::trumps_in(std::set<CardFate> const& places) const
+Cards FateAi::trumps_in(CardFates const& places) const
 {
   Cards result;
   BOOST_FOREACH(auto const& p, fates_of(Suit::trumps)) {
-    std::set<CardFate> const& fates = p.second;
-    if (utility::intersects(places, fates)) result.insert(p.first);
+    CardFates const& fates = p.second;
+    using utility::intersects;
+    if (intersects(places, fates)) result.insert(p.first);
   }
   return result;
 }
@@ -279,12 +283,12 @@ bool FateAi::trumps_known_exhausted() const
 
 size_t FateAi::num_players_known_out_of_trumps() const
 {
-  std::set<CardFate> result;
+  CardFates result;
   BOOST_FOREACH(auto const& p, fates_of(Suit::trumps)) {
-    std::set<CardFate> const& fates = p.second;
+    CardFates const& fates = p.second;
     utility::union_into(result, fates);
   }
-  std::set<CardFate> hands{
+  CardFates hands{
     CardFate::hand0, CardFate::hand1, CardFate::hand2, CardFate::hand3
   };
   utility::intersection_into(result, hands);
@@ -293,7 +297,7 @@ size_t FateAi::num_players_known_out_of_trumps() const
 
 bool FateAi::guaranteed_to_win_against(
   Card const& card,
-  std::set<CardFate> const& hands
+  CardFates const& hands
 ) const
 {
   if (hands.empty()) return true;
@@ -302,7 +306,8 @@ bool FateAi::guaranteed_to_win_against(
   if (card.trump()) {
     for (TrumpRank better_rank = boost::next(card.trump_rank());
       better_rank < TrumpRank::max; ++better_rank) {
-      if (utility::intersects(fates_.find(Card(better_rank))->second, hands)) {
+      using utility::intersects;
+      if (intersects(fates_.find(Card(better_rank))->second, hands)) {
         return false;
       }
     }
@@ -312,12 +317,14 @@ bool FateAi::guaranteed_to_win_against(
       better_rank < SuitRank::max; ++better_rank) {
       auto p = fates_.find(Card(card.suit(), better_rank));
       assert(p != fates_.end());
-      if (utility::intersects(p->second, hands)) {
+      using utility::intersects;
+      if (intersects(p->second, hands)) {
         return false;
       }
     }
     BOOST_FOREACH(auto const& p, fates_of(Suit::trumps)) {
-      if (utility::intersects(p.second, hands)) {
+      using utility::intersects;
+      if (intersects(p.second, hands)) {
         return false;
       }
     }
@@ -330,7 +337,7 @@ bool FateAi::guaranteed_to_win_against(
   PlayPosition const pos
 ) const
 {
-  std::set<CardFate> in_pos_hand{CardFate::held_by(pos)};
+  CardFates in_pos_hand{CardFate::held_by(pos)};
   return guaranteed_to_win_against(card, in_pos_hand);
 }
 
@@ -357,7 +364,8 @@ bool FateAi::cards_are_equivalent(Cards const& cards) const
   auto other_hands = other_players_hands();
 
   BOOST_FOREACH(auto const& fates, fates_range) {
-    if (utility::intersects(fates.second, other_hands)) {
+    using utility::intersects;
+    if (intersects(fates.second, other_hands)) {
       return false;
     }
   }

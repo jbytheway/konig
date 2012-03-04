@@ -52,8 +52,8 @@ Card OffenceAi::play_card(FateAi const& ai)
 
   size_t const trick_number = ai.tricks().size();
   size_t const num_trumps_out = ai.trumps_out().size();
-  std::set<CardFate> hands_yet_to_play;
-  std::set<CardFate> opponents_yet_to_play;
+  FateAi::CardFates hands_yet_to_play;
+  FateAi::CardFates opponents_yet_to_play;
   {
     PlayPosition pos = ai.position();
     for (size_t i=trick.played(); i<3; ++i) {
