@@ -55,13 +55,14 @@ Card::Card(const std::string& description)
 
 unsigned int Card::card_points() const {
   if (trump()) {
-    if (rank_ == TrumpRank::pagat ||
-        rank_ == TrumpRank::mond ||
-        rank_ == TrumpRank::skus)
+    auto rank = trump_rank();
+    if (rank == TrumpRank::pagat ||
+        rank == TrumpRank::mond ||
+        rank == TrumpRank::skus)
       return 13;
     return 1;
   } else {
-    switch (rank_) {
+    switch (suit_rank()) {
       case SuitRank::king:
         return 13;
       case SuitRank::queen:
