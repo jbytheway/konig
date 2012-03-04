@@ -15,6 +15,7 @@ class SuitRank {
       seven = 7,
       four = seven,
       low_pip = seven,
+      min = seven,
       eight = 8,
       three = eight,
       nine = 9,

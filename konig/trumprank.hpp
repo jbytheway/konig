@@ -10,6 +10,7 @@ class TrumpRank {
   public:
     enum internal_enum {
       pagat = 1,
+      min = pagat,
       uhu = 2,
       kakadu = 3,
       maribu = 4,
