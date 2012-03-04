@@ -80,7 +80,8 @@ namespace {
     for (size_t i=0; i<4; ++i) {
       auto& hand = hands[i];
       for (size_t talon_half=0; talon_half<2; ++talon_half) {
-        if (utility::intersects(talon[talon_half], hand)) {
+        using utility::intersects;
+        if (intersects(talon[talon_half], hand)) {
           talon_choice = talon_half;
           hand.insert(discard);
           hand.erase(talon[talon_half]);
