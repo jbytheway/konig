@@ -30,6 +30,7 @@ class SmallSet {
       "Max too large or negative"
     );
 
+    // Standard container typedefs
     typedef Value value_type;
     typedef value_type key_type;
     typedef value_type const& const_reference;
@@ -196,7 +197,9 @@ class SmallSet {
       return l.storage_ == r.storage_;
     }
   private:
+    // Typedefs specific to SmallSet
     typedef typename boost::uint_t<int(Max)>::least storage_type;
+
     static constexpr integer_value_type end_index =
       std::numeric_limits<storage_type>::digits;
 
