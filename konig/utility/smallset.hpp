@@ -40,7 +40,7 @@ class SmallSet {
         iterator,
         value_type,
         boost::bidirectional_traversal_tag,
-        typename std::add_const<value_type>::type&
+        value_type
       > {
       public:
         constexpr iterator(
@@ -51,7 +51,7 @@ class SmallSet {
       private:
         friend class boost::iterator_core_access;
 
-        value_type const& dereference() const {
+        value_type dereference() const {
           return index_;
         }
 

@@ -26,12 +26,17 @@ namespace {
 BOOST_AUTO_TEST_CASE(transformingset_concept_check)
 {
   typedef TransformingSet<std::set<char>, Upcast, Downcast> Set;
+#if 0
+  // This was a nice idea and it helped get the implementation right, but alas
+  // we cannot even satisfy ForwardContainer because our iterators don't
+  // dereference to an lvalue
   BOOST_CONCEPT_ASSERT((
       boost::SimpleAssociativeContainer<Set>));
   BOOST_CONCEPT_ASSERT((
       boost::UniqueAssociativeContainer<Set>));
   BOOST_CONCEPT_ASSERT((
       boost::SortedAssociativeContainer<Set>));
+#endif
 }
 
 BOOST_AUTO_TEST_CASE(transformingset_behaviour_matches_set)

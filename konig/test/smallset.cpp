@@ -21,12 +21,22 @@ BOOST_AUTO_TEST_CASE(concept_check)
     one = 1,
     max
   };
+#if 0
+  // This was a nice idea and it helped get the implementation right, but alas
+  // we cannot even satisfy ForwardContainer because our iterators don't
+  // dereference to an lvalue
   BOOST_CONCEPT_ASSERT((
       boost::SimpleAssociativeContainer<SmallSet<int, 7>>));
   BOOST_CONCEPT_ASSERT((
       boost::UniqueAssociativeContainer<SmallSet<int, 7>>));
   BOOST_CONCEPT_ASSERT((
       boost::SortedAssociativeContainer<SmallSet<int, 7>>));
+  BOOST_CONCEPT_ASSERT((
+      boost::SimpleAssociativeContainer<SmallSet<unsigned int, 64>>));
+  BOOST_CONCEPT_ASSERT((
+      boost::UniqueAssociativeContainer<SmallSet<unsigned int, 64>>));
+  BOOST_CONCEPT_ASSERT((
+      boost::SortedAssociativeContainer<SmallSet<unsigned int, 64>>));
   BOOST_CONCEPT_ASSERT((
       boost::SimpleAssociativeContainer<SmallSet<Test, max>>));
   BOOST_CONCEPT_ASSERT((
@@ -39,6 +49,7 @@ BOOST_AUTO_TEST_CASE(concept_check)
       boost::UniqueAssociativeContainer<SmallSet<Test2, Test2::max>>));
   BOOST_CONCEPT_ASSERT((
       boost::SortedAssociativeContainer<SmallSet<Test2, Test2::max>>));
+#endif
 }
 
 BOOST_AUTO_TEST_CASE(behaviour_64_matches_set)

@@ -41,10 +41,6 @@ template<
 >
 class TransformingSet {
   public:
-    BOOST_CONCEPT_ASSERT((boost::SimpleAssociativeContainer<UnderlyingSet>));
-    BOOST_CONCEPT_ASSERT((boost::UniqueAssociativeContainer<UnderlyingSet>));
-    BOOST_CONCEPT_ASSERT((boost::SortedAssociativeContainer<UnderlyingSet>));
-
     typedef typename UnderlyingSet::value_type underlying_value_type;
     typedef typename UnderlyingSet::iterator underlying_iterator;
     typedef typename std::result_of<
@@ -65,21 +61,20 @@ class TransformingSet {
         iterator,
         value_type,
         boost::bidirectional_traversal_tag,
-        typename std::add_const<value_type>::type&,
+        value_type,
         typename underlying_iterator::difference_type
       > {
       public:
         iterator(underlying_iterator i) :
-          underlying_{std::move(i)},
-          value_{out_cast(*underlying_)}
+          underlying_{std::move(i)}
         {}
 
         underlying_iterator const& underlying() const { return underlying_; }
       private:
         friend class boost::iterator_core_access;
 
-        value_type const& dereference() const {
-          return value_;
+        value_type dereference() const {
+          return out_cast(*underlying_);
         }
 
         bool equal(iterator const& other) const {
@@ -88,16 +83,13 @@ class TransformingSet {
 
         void increment() {
           ++underlying_;
-          value_ = out_cast(*underlying_);
         }
 
         void decrement() {
           --underlying_;
-          value_ = out_cast(*underlying_);
         }
 
         underlying_iterator underlying_;
-        value_type value_;
     };
 
     typedef iterator const_iterator;
