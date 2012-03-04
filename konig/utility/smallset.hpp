@@ -38,9 +38,9 @@ class SmallSet {
     class iterator :
       public boost::iterator_facade<
         iterator,
-        Value,
+        value_type,
         boost::bidirectional_traversal_tag,
-        typename std::add_const<Value>::type&
+        typename std::add_const<value_type>::type&
       > {
       public:
         constexpr iterator(
@@ -90,7 +90,7 @@ class SmallSet {
       insert(std::move(i1), std::move(i2));
     }
 
-    SmallSet(std::initializer_list<Value> l) :
+    SmallSet(std::initializer_list<value_type> l) :
       storage_{0}
     {
       insert(l.begin(), l.end());
