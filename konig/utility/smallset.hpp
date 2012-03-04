@@ -106,7 +106,7 @@ class SmallSet {
 
     bool empty() const { return storage_ == 0; }
     size_type size() const { return bitops::popcount(storage_); }
-    size_type max_size() const { return size_type(Max); }
+    static size_type max_size() { return size_type(Max); }
 
     iterator begin() const { return lower_bound(value_type(0)); }
     iterator end() const { return iterator(*this); }
@@ -201,14 +201,14 @@ class SmallSet {
       std::numeric_limits<storage_type>::digits;
 
     template<typename T>
-    storage_type mask(T const k) const {
+    static storage_type mask(T const k) {
       auto const i_k = integer_value_type(k);
       assert(i_k < max_size());
       return storage_type(1) << i_k;
     }
 
     template<typename T, typename U>
-    storage_type mask(T const k1, U const k2) const {
+    static storage_type mask(T const k1, U const k2) {
       auto const i_k1 = integer_value_type(k1);
       auto const i_k2 = integer_value_type(k2);
       assert(i_k2 <= max_size() || i_k2 == end_index);
