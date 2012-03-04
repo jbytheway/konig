@@ -10,14 +10,57 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/nvp.hpp>
 
+#include <konig/utility/smallset.hpp>
+#include <konig/utility/transformingset.hpp>
 #include <konig/card.hpp>
 #include <konig/cardpoints.hpp>
 
 namespace konig {
 
-class KONIG_API Cards : public std::set<Card> {
+namespace cards_detail {
+
+  typedef std::uint32_t CardInt;
+
+  struct IntToCard {
+    Card operator()(CardInt const c) const {
+      assert(c < 54);
+      if (c < 8*4) {
+        Suit const s(c/8);
+        auto const r = SuitRank::from_value(c%8+SuitRank::min);
+        return Card{s, r};
+      } else {
+        TrumpRank r(c-8*4+TrumpRank::min);
+        return Card{r};
+      }
+    }
+  };
+
+  struct CardToInt {
+    CardInt operator()(Card const c) const {
+      if (c.trump()) {
+        return c.trump_rank()+8*4-TrumpRank::min;
+      } else {
+        return c.suit()*8+c.suit_rank()-SuitRank::min;
+      }
+    }
+  };
+
+}
+
+class KONIG_API Cards :
+  public utility::TransformingSet<
+    utility::SmallSet<cards_detail::CardInt, 54>,
+    cards_detail::IntToCard,
+    cards_detail::CardToInt
+  > {
   friend class boost::serialization::access;
   public:
+    typedef utility::TransformingSet<
+      utility::SmallSet<cards_detail::CardInt, 54>,
+      cards_detail::IntToCard,
+      cards_detail::CardToInt
+    > base_class;
+
     static Cards make_deck();
     static Cards from_string(std::string const&);
     static bool from_string(Cards&, std::string const&);
@@ -26,7 +69,7 @@ class KONIG_API Cards : public std::set<Card> {
     Cards(Cards const&) = default;
 
     Cards(std::initializer_list<Card> const& list) :
-      std::set<Card>(list)
+      base_class(list)
     {
     }
 
@@ -37,11 +80,11 @@ class KONIG_API Cards : public std::set<Card> {
 
     template<typename InputIterator>
     Cards(InputIterator const start, InputIterator const finish) :
-      std::set<Card>(start, finish)
+      base_class(start, finish)
     {
     }
 
-    using std::set<Card>::lower_bound;
+    using base_class::lower_bound;
 
     iterator lower_bound(Suit suit) {
       if (suit == Suit::trumps) {
@@ -59,7 +102,7 @@ class KONIG_API Cards : public std::set<Card> {
       }
     }
 
-    using std::set<Card>::upper_bound;
+    using base_class::upper_bound;
 
     iterator upper_bound(Suit suit) {
       if (suit == Suit::trumps) {
@@ -77,7 +120,7 @@ class KONIG_API Cards : public std::set<Card> {
       }
     }
 
-    using std::set<Card>::equal_range;
+    using base_class::equal_range;
 
     std::pair<iterator, iterator> equal_range(Suit suit) {
       if (suit == Suit::trumps) {
@@ -107,7 +150,7 @@ class KONIG_API Cards : public std::set<Card> {
       }
     }
 
-    using std::set<Card>::count;
+    using base_class::count;
 
     size_t count(Suit suit) const {
       std::pair<iterator, iterator> range = equal_range(suit);
@@ -126,7 +169,7 @@ class KONIG_API Cards : public std::set<Card> {
       return tally;
     }
 
-    using std::set<Card>::find;
+    using base_class::find;
 
     iterator find(const Suit suit) {
       return std::find_if(
@@ -148,14 +191,14 @@ class KONIG_API Cards : public std::set<Card> {
         );
     }
 
-    using std::set<Card>::insert;
+    using base_class::insert;
 
     template<typename Range>
     void insert(Range const& r) {
       std::copy(boost::begin(r), boost::end(r), std::inserter(*this, end()));
     }
 
-    using std::set<Card>::erase;
+    using base_class::erase;
 
     void erase(const Cards& to_erase) {
       BOOST_FOREACH(const Card& c, to_erase) {
@@ -195,7 +238,7 @@ class KONIG_API Cards : public std::set<Card> {
     template<typename Archive>
     void serialize(Archive& archive, unsigned int) {
       archive & boost::serialization::make_nvp(
-          "set", boost::implicit_cast<std::set<Card>&>(*this)
+          "set", boost::implicit_cast<base_class&>(*this)
         );
     }
 };
