@@ -71,7 +71,7 @@ Card TAi::play_card(FateAi const& ai)
     // Try the pip of biggest rank
     auto end_pips = plays.lower_bound(Suit::trumps);
     if (end_pips != plays.begin()) {
-      return *std::max_element(plays.begin(), end_pips, Card::CompareRanks());
+      return *std::max_element(plays.begin(), end_pips, Card::CompareSuitRanks());
     }
 
     // Or finally a small trump
@@ -95,7 +95,7 @@ Card TAi::play_card(FateAi const& ai)
     } else {
       // and if we're not playing trumps we want the biggest rank
       best_to_get_rid_of =
-        std::max_element(plays.begin(), plays.end(), Card::CompareRanks());
+        std::max_element(plays.begin(), plays.end(), Card::CompareSuitRanks());
     }
 
     if (!will_rise) {

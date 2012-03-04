@@ -41,7 +41,7 @@ Card negative_offensive(FateAi const& ai)
     }
 
     // Nothing clever, simply play low
-    return *boost::range::min_element(plays, Card::CompareRanks());
+    return *boost::range::min_element(plays, Card::CompareSuitRanks());
   } else {
     // I am following
     Suit s = trick.suit();
@@ -55,7 +55,7 @@ Card negative_offensive(FateAi const& ai)
     if (!best_to_get_rid_of->trump()) {
       // If we're not playing trumps we want the biggest rank
       best_to_get_rid_of =
-        std::max_element(plays.begin(), plays.end(), Card::CompareRanks());
+        std::max_element(plays.begin(), plays.end(), Card::CompareSuitRanks());
     }
 
     if (!will_rise) {

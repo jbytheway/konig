@@ -106,7 +106,7 @@ Card negative_defensive_lead(FateAi const& ai, bool& tried_low_trump)
 
   if (!boost::empty(suit_cards)) {
     auto candidate =
-      boost::range::min_element(suit_cards, Card::CompareRanks());
+      boost::range::min_element(suit_cards, Card::CompareSuitRanks());
 
     if (!ai.guaranteed_to_win_against(*candidate, ai.declarer())) {
       return *candidate;

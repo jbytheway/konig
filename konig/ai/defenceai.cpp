@@ -3,6 +3,7 @@
 #include <tuple>
 
 #include <boost/range/empty.hpp>
+#include <boost/range/algorithm/min_element.hpp>
 #include <boost/range/size.hpp>
 #include <boost/spirit/home/phoenix/operator/comparison.hpp>
 
@@ -111,7 +112,7 @@ Card DefenceAi::play_card(FateAi const& ai) {
           /** \bug Discarding something valuable sometimes under these
            * circumstances is pretty vital */
           auto smallest_rank = std::min_element(
-            plays.begin(), plays.end(), Card::CompareRanks()
+            plays.begin(), plays.end(), Card::CompareSuitRanks()
           );
           return *smallest_rank;
         }
@@ -151,10 +152,13 @@ Card DefenceAi::play_card(FateAi const& ai) {
       } else {
         // Defence not guaranteed to win, so declarer probably will.  Play
         // something worthless
-        auto smallest_rank = std::min_element(
-          plays.begin(), plays.end(), Card::CompareRanks()
-        );
-        return *smallest_rank;
+        if (playing_trump) {
+          return *plays.begin();
+        } else {
+          return *boost::range::min_element(
+            plays, Card::CompareSuitRanks()
+          );
+        }
       }
     }
   }

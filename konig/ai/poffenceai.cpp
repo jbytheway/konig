@@ -105,14 +105,15 @@ Card POffenceAi::play_card(FateAi const& ai)
     std::vector<Card> candidates(plays.begin(), plays.end());
     erase_bad_candidates(candidates, [](Card const& c){ return c; });
     if (!candidates.empty()) {
-      return *boost::range::min_element(candidates, Card::CompareRanks());
+      return *boost::range::min_element(candidates, Card::CompareSuitRanks());
     }
   } else {
     // I am following
     Suit s = trick.suit();
+    bool const will_play_trump = plays.begin()->trump();
 
     bool const will_rise =
-      (plays.begin()->trump() && s != Suit::trumps) ||
+      (will_play_trump && s != Suit::trumps) ||
       (plays.begin()->suit() == s && *plays.begin() > trick.winning_card());
 
     if (will_rise) {
@@ -132,16 +133,26 @@ Card POffenceAi::play_card(FateAi const& ai)
     std::vector<Card> candidates(plays.begin(), plays.end());
     erase_bad_candidates(candidates, [](Card const& c){ return c; });
     if (!candidates.empty()) {
-      return *boost::range::max_element(candidates, Card::CompareRanks());
+      if (will_play_trump) {
+        return candidates.back();
+      } else {
+        return *boost::range::max_element(
+          candidates, Card::CompareSuitRanks()
+        );
+      }
     }
 
-    // Every play is potentially interfereing with our targets
+    // Every play is potentially interfering with our targets
     // TODO: this is probably the endgame, and we should really consider it
     // carefully; we might know something about which suits are held, etc.
     // But for now, be lazy and just play low (low rather than high because
     // there are probably few tricks left and we need to win one!  also, it
     // helps retain our targets).
-    return *boost::range::min_element(plays, Card::CompareRanks());
+    if (will_play_trump) {
+      return *plays.begin();
+    } else {
+      return *boost::range::min_element(plays, Card::CompareSuitRanks());
+    }
   }
   KONIG_FATAL("not implemented\ntrick " << trick << " hand " << hand);
 }

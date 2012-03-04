@@ -21,9 +21,9 @@ class KONIG_API Card {
 
     static bool from_string(Card&, std::string const&);
 
-    struct CompareRanks {
+    struct CompareSuitRanks {
       bool operator()(const Card& l, const Card& r) const {
-        return l.rank_ < r.rank_;
+        return l.suit_rank() < r.suit_rank();
       }
     };
 
