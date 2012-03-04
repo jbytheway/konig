@@ -1,4 +1,5 @@
 .*.swp
+.swp
 .libs
 .obj
 .makefrags
