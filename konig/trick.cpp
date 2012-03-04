@@ -33,7 +33,7 @@ Cards Trick::legal_plays(
   std::pair<Cards::iterator, Cards::iterator> legal_plays;
   if (played_ == 0) {
     // Leading card to the trick
-    legal_plays = make_pair(hand.begin(), hand.end());
+    legal_plays = {hand.begin(), hand.end()};
   } else {
     // Must follow suit or else trump or else anything
     Suit trick_suit = cards_[0].suit();
@@ -41,7 +41,7 @@ Cards Trick::legal_plays(
     if (boost::empty(legal_plays)) {
       legal_plays = hand.equal_range(Suit::trump);
       if (boost::empty(legal_plays)) {
-        legal_plays = make_pair(hand.begin(), hand.end());
+        legal_plays = {hand.begin(), hand.end()};
       }
     }
   }

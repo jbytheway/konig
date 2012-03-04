@@ -28,7 +28,7 @@ Deal CompleteDealer::deal()
   for (int i=0; i<6; ++i) {
     int num_cards = (i<4) ? 12 : 3;
     std::copy_n(
-        position, num_cards, inserter(*next_chunk, next_chunk->begin())
+        position, num_cards, std::inserter(*next_chunk, next_chunk->begin())
       );
     position += num_cards;
     ++next_chunk;
