@@ -45,7 +45,7 @@ class SmallSet {
       public:
         constexpr iterator(
           SmallSet const& set,
-          value_type index = value_type(max_max)
+          value_type index = value_type(end_index)
         ) :
           set_(&set), index_(index) {}
       private:
@@ -88,6 +88,12 @@ class SmallSet {
       storage_{0}
     {
       insert(std::move(i1), std::move(i2));
+    }
+
+    SmallSet(std::initializer_list<Value> l) :
+      storage_{0}
+    {
+      insert(l.begin(), l.end());
     }
 
     key_compare key_comp() const { return {}; }
@@ -172,8 +178,14 @@ class SmallSet {
       storage_ &= ~mask(*i1, *i2);
       return i2;
     }
+
+    friend inline bool intersects(SmallSet const& l, SmallSet const& r) {
+      return (l.storage_ & r.storage_) != 0;
+    }
   private:
     typedef typename boost::uint_t<int(Max)>::least storage_type;
+    static constexpr integer_value_type end_index =
+      std::numeric_limits<storage_type>::digits;
 
     storage_type mask(value_type k) const {
       return mask(integer_value_type(k));

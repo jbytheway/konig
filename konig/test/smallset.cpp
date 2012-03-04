@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(concept_check)
       boost::SortedAssociativeContainer<SmallSet<Test2, Test2::max>>));
 }
 
-BOOST_AUTO_TEST_CASE(behaviour_matches_set)
+BOOST_AUTO_TEST_CASE(behaviour_64_matches_set)
 {
   SmallSet<int, 64> s1;
   std::set<int> s2;
@@ -61,6 +61,16 @@ BOOST_AUTO_TEST_CASE(behaviour_matches_set)
   BOOST_CHECK_EQUAL(s1.erase(0), s2.erase(0));
   BOOST_CHECK(boost::range::equal(s1, s2));
   BOOST_CHECK_EQUAL(*s1.erase(s1.begin()), *s2.erase(s2.begin()));
+  BOOST_CHECK(boost::range::equal(s1, s2));
+}
+
+BOOST_AUTO_TEST_CASE(behaviour_8_matches_set)
+{
+  SmallSet<int, 8> s1;
+  std::set<int> s2;
+  BOOST_CHECK(boost::range::equal(s1, s2));
+  s1.insert(0);
+  s2.insert(0);
   BOOST_CHECK(boost::range::equal(s1, s2));
 }
 
