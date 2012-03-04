@@ -10,7 +10,7 @@
 namespace konig { namespace ai {
 
 FateAi::FateAi() :
-  fates_(card_int_max)
+  fates_(Card::index_max)
 {
 }
 
@@ -29,7 +29,7 @@ void FateAi::start_game(Ruleset rules, PlayPosition pos, Cards hand)
   other_places.erase(*my_hand.begin());
   assert(other_places.size() == 4);
 
-  for (CardInt c = 0; c != card_int_max; ++c) {
+  for (CardInt c = 0; c != Card::index_max; ++c) {
     if (this->hand().count(IntToCard()(c))) {
       fates_[c] = my_hand;
     } else {
@@ -60,7 +60,7 @@ void FateAi::notify_talon(const std::array<Cards, 2>& talon)
     fates_[CardToInt()(c)] = declarers_hand_or_discarded;
   }
 
-  for (CardInt i = 0; i != card_int_max; ++i) {
+  for (CardInt i = 0; i != Card::index_max; ++i) {
     auto& fates = fates_[i];
     auto const c = IntToCard()(i);
     if (fates.count(CardFate::talon)) {
@@ -108,7 +108,7 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
         }
       } else if (rising_rule && c < trick.winning_card()) {
         auto winners_start = CardToInt()(trick.winning_card());
-        for (auto i = winners_start; i != card_int_max; ++i) {
+        for (auto i = winners_start; i != Card::index_max; ++i) {
           fates_[i].erase(players_hand);
         }
       }
@@ -260,7 +260,7 @@ FateAi::fates_of(Suit const s) const
 Cards FateAi::trumps_in(CardFates const& places) const
 {
   Cards result;
-  for (auto i = CardToInt()(Card(TrumpRank::min)); i != card_int_max; ++i) {
+  for (auto i = CardToInt()(Card(TrumpRank::min)); i != Card::index_max; ++i) {
     CardFates const& fates = fates_[i];
     using utility::intersects;
     if (intersects(places, fates)) result.insert(IntToCard()(i));

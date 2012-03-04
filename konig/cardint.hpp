@@ -5,8 +5,6 @@ namespace konig {
 
 typedef Card::index_type CardInt;
 
-static constexpr Card::index_type card_int_max = Card::index_max;
-
 struct IntToCard {
   Card operator()(Card::index_type const i) const {
     return Card::from_index(i);
