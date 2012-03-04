@@ -4,6 +4,7 @@
 .obj
 .makefrags
 *.la
+callgrind.out.*
 /config.mk
 /user.mk
 /*/Makefile
