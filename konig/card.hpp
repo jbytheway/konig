@@ -16,10 +16,15 @@ namespace konig {
 class KONIG_API Card {
   friend class boost::serialization::access;
   public:
+    typedef uint8_t index_type;
+
     template<typename OutputIterator>
     static void make_deck(OutputIterator);
 
     static bool from_string(Card&, std::string const&);
+
+    static constexpr index_type index_first_trump = 8*4;
+    static constexpr index_type index_max = 54;
 
     struct CompareSuitRanks {
       bool operator()(const Card& l, const Card& r) const {
@@ -49,24 +54,21 @@ class KONIG_API Card {
       }
     };
 
-    Card() : suit_(Suit::trumps), rank_(TrumpRank::pagat) {}
+    Card() : index_(index_first_trump) {}
 
     explicit Card(Suit const s) :
-      suit_(s),
-      rank_(s == Suit::trumps ?
-        rank_type(TrumpRank::min) : rank_type(SuitRank::min))
+      index_(s * 8)
     {
       assert(s.valid());
     }
 
     explicit Card(const TrumpRank r) :
-      suit_(Suit::trumps),
-      rank_(r)
+      index_(r + index_first_trump - TrumpRank::min)
     {
       assert(r.valid());
     }
 
-    Card(const Suit s, const SuitRank r) : suit_(s), rank_(r) {
+    Card(const Suit s, const SuitRank r) : index_(s * 8 + r - SuitRank::min) {
       assert(s.valid());
       assert(r.valid());
       assert(!trump());
@@ -74,40 +76,48 @@ class KONIG_API Card {
 
     Card(const std::string&);
 
-    bool trump() const { return suit_ == Suit::trumps; }
+    index_type index() const { return index_; }
 
-    Suit suit() const { return Suit(Suit::internal_enum(suit_)); }
+    bool trump() const { return index_ >= index_first_trump; }
+
+    Suit suit() const {
+      if (trump()) {
+        return Suit::trumps;
+      } else {
+        return Suit(Suit::internal_enum(index_ / 8));
+      }
+    }
 
     TrumpRank trump_rank() const {
-      assert(trump()); return TrumpRank(TrumpRank::internal_enum(rank_));
+      assert(trump());
+      return TrumpRank(TrumpRank::internal_enum(
+          index_ - index_first_trump + TrumpRank::min
+        ));
     }
 
     SuitRank suit_rank() const {
-      assert(!trump()); return SuitRank(SuitRank::internal_enum(rank_));
+      assert(!trump());
+      return SuitRank(SuitRank::internal_enum(index_ % 8 + SuitRank::min));
     }
 
     unsigned int card_points() const;
 
     bool operator==(const Card& r) const {
-      return rank_ == r.rank_ && suit_ == r.suit_;
+      return index() == r.index();
     }
     bool operator<(const Card& r) const {
-      return suit_ < r.suit_ || (suit_ == r.suit_ && rank_ < r.rank_);
+      return index() < r.index();
     }
     bool operator>(const Card& r) const {
       return r < *this;
     }
   private:
-    typedef uint8_t rank_type;
-
     template<typename Archive>
     void serialize(Archive& ar, unsigned int) {
-      ar & BOOST_SERIALIZATION_NVP(suit_);
-      ar & BOOST_SERIALIZATION_NVP(rank_);
+      ar & BOOST_SERIALIZATION_NVP(index_);
     }
 
-    uint8_t suit_;
-    rank_type rank_;
+    index_type index_;
 };
 
 template<typename OutputIterator>
