@@ -139,7 +139,7 @@ std::ostream& operator<<(std::ostream& o, const Cards& c)
   ReverseRange trumps = c.equal_range(Suit::trumps);
   std::transform(
       trumps.second, trumps.first, std::ostream_iterator<TrumpRank>(o, " "),
-      boost::bind(&Card::trump_rank, _1)
+      [](Card const& c) { return c.trump_rank(); }
     );
 
   for (Suit s = Suit::min; s<Suit::trumps; ++s) {
@@ -148,11 +148,7 @@ std::ostream& operator<<(std::ostream& o, const Cards& c)
       o << s << ':';
       std::transform(
           suit.second, suit.first, std::ostream_iterator<char>(o),
-          px::bind(
-            &SuitRank::to_char,
-            px::bind(&Card::suit_rank, arg1),
-            s.is_red()
-          )
+          [s](Card const& c) { return c.suit_rank().to_char(s.is_red()); }
         );
       o << ' ';
     }

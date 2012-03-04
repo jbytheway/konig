@@ -50,7 +50,8 @@ Cards Trick::legal_plays(
     if (legal_plays.first->trump() ||
         legal_plays.first->suit() == suit()) {
       auto first_winner = std::find_if(
-        legal_plays.first, legal_plays.second, arg1 > winning_card()
+        legal_plays.first, legal_plays.second,
+        [this](Card const& c) { return c > winning_card(); }
       );
       if (first_winner != legal_plays.second) {
         legal_plays.first = first_winner;
