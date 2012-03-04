@@ -13,54 +13,17 @@
 #include <konig/utility/smallset.hpp>
 #include <konig/utility/transformingset.hpp>
 #include <konig/card.hpp>
+#include <konig/cardint.hpp>
 #include <konig/cardpoints.hpp>
 
 namespace konig {
 
-namespace cards_detail {
-
-  typedef std::uint32_t CardInt;
-
-  struct IntToCard {
-    Card operator()(CardInt const c) const {
-      assert(c < 54);
-      if (c < 8*4) {
-        Suit const s(c/8);
-        auto const r = SuitRank::from_value(c%8+SuitRank::min);
-        return Card{s, r};
-      } else {
-        TrumpRank r(c-8*4+TrumpRank::min);
-        return Card{r};
-      }
-    }
-  };
-
-  struct CardToInt {
-    CardInt operator()(Card const c) const {
-      if (c.trump()) {
-        return c.trump_rank()+8*4-TrumpRank::min;
-      } else {
-        return c.suit()*8+c.suit_rank()-SuitRank::min;
-      }
-    }
-  };
-
-  typedef utility::SmallSet<cards_detail::CardInt, 54> CardIntSet;
-
-}
-
 class KONIG_API Cards :
-  public utility::TransformingSet<
-    cards_detail::CardIntSet,
-    cards_detail::IntToCard,
-    cards_detail::CardToInt
-  > {
+  public utility::TransformingSet<CardIntSet, IntToCard, CardToInt> {
   friend class boost::serialization::access;
   public:
     typedef utility::TransformingSet<
-      cards_detail::CardIntSet,
-      cards_detail::IntToCard,
-      cards_detail::CardToInt
+      CardIntSet, IntToCard, CardToInt
     > base_class;
 
     static Cards make_deck();

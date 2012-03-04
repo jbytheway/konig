@@ -12,7 +12,7 @@ namespace konig { namespace ai {
 class KONIG_AI_API FateAi : public Ai {
   public:
     typedef utility::SmallSet<CardFate::internal_enum, CardFate::max> CardFates;
-    typedef std::map<Card, CardFates> CardsFates;
+    typedef std::vector<CardFates> CardsFates;
 
     FateAi();
 
