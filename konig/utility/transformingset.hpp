@@ -6,6 +6,8 @@
 #include <boost/concept/assert.hpp>
 #include <boost/concept_check.hpp>
 
+#include <konig/utility/intersects.hpp>
+
 namespace konig { namespace utility {
 
 namespace detail {
@@ -178,6 +180,21 @@ class TransformingSet {
 
     iterator erase(iterator const& i1, iterator const& i2) {
       return {underlying_.erase(i1.underlying(), i2.underlying())};
+    }
+
+    friend inline bool intersects(
+      TransformingSet const& l,
+      TransformingSet const& r
+    ) {
+      using utility::intersects;
+      return intersects(l.underlying_, r.underlying_);
+    }
+
+    friend inline bool operator==(
+      TransformingSet const& l,
+      TransformingSet const& r
+    ) {
+      return l.underlying_ == r.underlying_;
     }
   private:
     static underlying_value_type in_cast(value_type const& v) {

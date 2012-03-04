@@ -184,6 +184,10 @@ class SmallSet {
     friend inline bool intersects(SmallSet const& l, SmallSet const& r) {
       return (l.storage_ & r.storage_) != 0;
     }
+
+    friend inline bool operator==(SmallSet const& l, SmallSet const& r) {
+      return l.storage_ == r.storage_;
+    }
   private:
     typedef typename boost::uint_t<int(Max)>::least storage_type;
     static constexpr integer_value_type end_index =
