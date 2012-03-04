@@ -73,6 +73,9 @@ BOOST_AUTO_TEST_CASE(behaviour_64_matches_set)
   BOOST_CHECK(boost::range::equal(s1, s2));
   BOOST_CHECK_EQUAL(*s1.erase(s1.begin()), *s2.erase(s2.begin()));
   BOOST_CHECK(boost::range::equal(s1, s2));
+  s1.clear();
+  s2.clear();
+  BOOST_CHECK(boost::range::equal(s1, s2));
 }
 
 BOOST_AUTO_TEST_CASE(behaviour_8_matches_set)

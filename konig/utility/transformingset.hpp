@@ -157,6 +157,10 @@ class TransformingSet {
       return {{r.first}, {r.second}};
     }
 
+    void clear() {
+      underlying_.clear();
+    }
+
     std::pair<iterator, bool> insert(value_type const& v) {
       auto r = underlying_.insert(in_cast(v));
       return {{r.first}, r.second};

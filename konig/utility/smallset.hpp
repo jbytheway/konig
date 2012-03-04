@@ -148,6 +148,10 @@ class SmallSet {
       }
     }
 
+    void clear() {
+      storage_ = 0;
+    }
+
     std::pair<iterator, bool> insert(value_type const v) {
       bool inserted = !count(v);
       storage_ |= mask(v);
