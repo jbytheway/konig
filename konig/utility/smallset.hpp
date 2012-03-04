@@ -43,6 +43,8 @@ class SmallSet {
         value_type
       > {
       public:
+        iterator() = default;
+
         constexpr iterator(
           SmallSet const& set,
           value_type index = value_type(end_index)

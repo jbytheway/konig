@@ -65,6 +65,8 @@ class TransformingSet {
         typename underlying_iterator::difference_type
       > {
       public:
+        iterator() = default;
+
         iterator(underlying_iterator i) :
           underlying_{std::move(i)}
         {}
