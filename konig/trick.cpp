@@ -30,39 +30,36 @@ Cards Trick::legal_plays(
     const ContractAndAnnouncements& whole_contract
   ) const
 {
-  std::pair<Cards::iterator, Cards::iterator> legal_plays;
+  Cards legal_plays;
+  bool following_suit_or_roughing = false;
   if (played_ == 0) {
     // Leading card to the trick
-    legal_plays = {hand.begin(), hand.end()};
+    legal_plays = hand;
   } else {
     // Must follow suit or else trump or else anything
+    following_suit_or_roughing = true;
     Suit trick_suit = cards_[0].suit();
-    legal_plays = hand.equal_range(trick_suit);
+    legal_plays = hand.subset(trick_suit);
     if (boost::empty(legal_plays)) {
-      legal_plays = hand.equal_range(Suit::trump);
+      legal_plays = hand.subset(Suit::trump);
       if (boost::empty(legal_plays)) {
-        legal_plays = {hand.begin(), hand.end()};
+        legal_plays = hand;
+        following_suit_or_roughing = false;
       }
     }
   }
   // Apply rising rule
-  if (played_ != 0 && rising_rule_) {
-    if (legal_plays.first->trump() ||
-        legal_plays.first->suit() == suit()) {
-      auto first_winner = std::find_if(
-        legal_plays.first, legal_plays.second,
-        [this](Card const& c) { return c > winning_card(); }
-      );
-      if (first_winner != legal_plays.second) {
-        legal_plays.first = first_winner;
-      }
+  if (following_suit_or_roughing && rising_rule_) {
+    auto first_winner = legal_plays.upper_bound(winning_card());
+    if (first_winner != legal_plays.end()) {
+      legal_plays = legal_plays.subset(first_winner, legal_plays.end());
     }
   }
   // Apply hold-pagat rule
   Card pagat(TrumpRank::pagat);
-  if (hold_pagat_ && *legal_plays.first == pagat &&
-      boost::next(legal_plays.first) != legal_plays.second) {
-    ++legal_plays.first;
+  if (hold_pagat_ && *legal_plays.begin() == pagat &&
+      legal_plays.size() != 1) {
+    legal_plays.erase(pagat);
   }
   std::array<Cards, 3> constraint_levels;
   BOOST_FOREACH(Card legal_play, legal_plays) {
