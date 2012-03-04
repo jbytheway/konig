@@ -1,6 +1,8 @@
 #ifndef KONIG_UTILITY_BITOPS_HPP
 #define KONIG_UTILITY_BITOPS_HPP
 
+#include <cassert>
+
 namespace konig { namespace utility { namespace bitops {
 
 template<typename T>
