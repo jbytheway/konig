@@ -115,14 +115,14 @@ class SmallSet {
 
     iterator lower_bound(key_type const k) const {
       storage_type const not_smaller_bits =
-        storage_ & ~mask(integer_value_type(0), integer_value_type(k));
+        storage_ & ~mask(0, k);
       auto const index = bitops::trailing_zeros(not_smaller_bits);
       return iterator(*this, value_type(index));
     }
 
     iterator upper_bound(key_type const k) const {
       storage_type const larger_bits =
-        storage_ & ~mask(integer_value_type(0), integer_value_type(k)+1);
+        storage_ & ~mask(0, integer_value_type(k)+1);
       auto const index = bitops::trailing_zeros(larger_bits);
       return iterator(*this, value_type(index));
     }
@@ -187,16 +187,21 @@ class SmallSet {
     static constexpr integer_value_type end_index =
       std::numeric_limits<storage_type>::digits;
 
-    storage_type mask(value_type k) const {
-      return mask(integer_value_type(k));
+    template<typename T>
+    storage_type mask(T const k) const {
+      auto const i_k = integer_value_type(k);
+      assert(i_k < max_size());
+      return storage_type(1) << i_k;
     }
 
-    storage_type mask(integer_value_type k) const {
-      return storage_type(1) << k;
-    }
-
-    storage_type mask(value_type k1, value_type k2) const {
-      return mask(integer_value_type(k1), integer_value_type(k2));
+    template<typename T, typename U>
+    storage_type mask(T const k1, U const k2) const {
+      auto const i_k1 = integer_value_type(k1);
+      auto const i_k2 = integer_value_type(k2);
+      assert(i_k2 <= max_size() || i_k2 == end_index);
+      assert(i_k1 <= i_k2);
+      integer_value_type const span = i_k2 - i_k1;
+      return bitops::ones<storage_type>(span) << i_k1;
     }
 
     storage_type mask(integer_value_type k1, integer_value_type k2) const {
