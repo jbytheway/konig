@@ -3,36 +3,23 @@
 
 namespace konig {
 
-// It's handy sometimes to look at cards as integers instead of structs
-typedef std::uint32_t CardInt;
+typedef Card::index_type CardInt;
 
-static constexpr CardInt card_int_max = 54;
+static constexpr Card::index_type card_int_max = Card::index_max;
 
 struct IntToCard {
-  Card operator()(CardInt const c) const {
-    assert(c < card_int_max);
-    if (c < 8*4) {
-      Suit const s(c/8);
-      auto const r = SuitRank::from_value(c%8+SuitRank::min);
-      return Card{s, r};
-    } else {
-      TrumpRank r(c-8*4+TrumpRank::min);
-      return Card{r};
-    }
+  Card operator()(Card::index_type const i) const {
+    return Card::from_index(i);
   }
 };
 
 struct CardToInt {
-  CardInt operator()(Card const c) const {
-    if (c.trump()) {
-      return c.trump_rank()+8*4-TrumpRank::min;
-    } else {
-      return c.suit()*8+c.suit_rank()-SuitRank::min;
-    }
+  Card::index_type operator()(Card const c) const {
+    return c.index();
   }
 };
 
-typedef utility::SmallSet<CardInt, card_int_max> CardIntSet;
+typedef utility::SmallSet<Card::index_type, Card::index_max> CardIntSet;
 
 }
 
