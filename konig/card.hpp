@@ -56,6 +56,10 @@ class KONIG_API Card {
 
     Card() : index_(index_first_trump) {}
 
+    static Card from_index(index_type i) {
+      return Card(i, construct_from_index());
+    }
+
     explicit Card(Suit const s) :
       index_(s * 8)
     {
@@ -112,6 +116,11 @@ class KONIG_API Card {
       return r < *this;
     }
   private:
+    struct construct_from_index {};
+    explicit Card(index_type const i, construct_from_index) : index_(i) {
+      assert(i < index_max);
+    }
+
     template<typename Archive>
     void serialize(Archive& ar, unsigned int) {
       ar & BOOST_SERIALIZATION_NVP(index_);
