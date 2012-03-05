@@ -364,26 +364,30 @@ PlayResult PositiveContract::play(
 Announcednesses PositiveContract::initial_announcednesses() const
 {
   Announcednesses result;
+  // Note that announcements should be inserted in order for maximum
+  // performance
+  result.reserve(12);
+
   // Game
-  result.insert(Feat::game, true, Announcedness::announced);
+  result.insert(result.end(), Feat::game, true, Announcedness::announced);
 
   // Birds (offensive and defensive)
-  result.insert(Feat::pagat, true);
-  result.insert(Feat::uhu, true);
-  result.insert(Feat::kakadu, true);
-  result.insert(Feat::pagat, false);
-  result.insert(Feat::uhu, false);
-  result.insert(Feat::kakadu, false);
+  result.insert(result.end(), Feat::pagat, false);
+  result.insert(result.end(), Feat::pagat, true);
+  result.insert(result.end(), Feat::uhu, false);
+  result.insert(result.end(), Feat::uhu, true);
+  result.insert(result.end(), Feat::kakadu, false);
+  result.insert(result.end(), Feat::kakadu, true);
 
   // 45 and valat (offensive and defensive)
-  result.insert(Feat::forty_five, true);
-  result.insert(Feat::valat, true);
-  result.insert(Feat::forty_five, false);
-  result.insert(Feat::valat, false);
+  result.insert(result.end(), Feat::forty_five, false);
+  result.insert(result.end(), Feat::forty_five, true);
+  result.insert(result.end(), Feat::valat, false);
+  result.insert(result.end(), Feat::valat, true);
 
   // King ultimo
   if (partnership_) {
-    result.insert(Feat::king_ultimo, true);
+    result.insert(result.end(), Feat::king_ultimo, true);
   }
 
   return result;
