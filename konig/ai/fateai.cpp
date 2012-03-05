@@ -133,7 +133,7 @@ void FateAi::notify_play_card(PlayPosition p, Card c)
     }
   }
 
-  if (contract().contract().hold_pagat() && c == Card(TrumpRank::pagat)) {
+  if (c == Card(TrumpRank::pagat) && contract().contract().hold_pagat()) {
     BOOST_FOREACH(auto& fates, fates_of(Suit::trumps)) {
       fates.erase(players_hand);
     }
