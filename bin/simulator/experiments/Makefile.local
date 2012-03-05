@@ -10,7 +10,8 @@ MODELS := $(addsuffix .model,$(BASES))
 
 NUM_TRIALS := 100
 NUM_STD_HANDS := 1000
-NUMS := $(shell seq -w 0 $$(($(NUM_STD_HANDS)-1)))
+NUMS_CMD := seq -w 0 $$(($(NUM_STD_HANDS)-1))
+NUMS := $(shell $(NUMS_CMD))
 
 HAND_NUMS := $(addprefix hands/,$(NUMS))
 RESULTS_NUMS := $(foreach result,$(RESULTS),$(addprefix $(result).,$(NUMS)))
@@ -30,8 +31,10 @@ $(HAND_NUMS): hands/%: $(SIM)
 	{ printf "%s " "$*"; \
 		$< -p- -m -s $* | cut -d , -f 1 | sed 's/ $$//' | tr ' ' '_' ; } > $@
 
-hands_all: $(HAND_NUMS)
-	cat $^ > $@
+hands_all: $(SIM)
+	$(SIM) -p- -m -C <($(NUMS_CMD) | sed 's/$$/ /') | \
+		cut -d , -f 1 | sed 's/ $$//' | paste <($(NUMS_CMD)) - | \
+		tr ' \t' '_ ' > $@
 
 hands_features: hands_all $(FEAT)
 	$(FEAT) $< > $@
