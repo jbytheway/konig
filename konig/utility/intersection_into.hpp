@@ -3,13 +3,10 @@
 
 namespace konig { namespace utility {
 
-template<typename SimpleAssociativeContainer>
-void intersection_into(
-  SimpleAssociativeContainer& lhs,
-  SimpleAssociativeContainer const& rhs
-)
+template<typename T>
+void intersection_into(std::set<T>& lhs, std::set<T> const& rhs)
 {
-  SimpleAssociativeContainer result;
+  std::set<T> result;
   std::set_intersection(
     lhs.begin(), lhs.end(), rhs.begin(), rhs.end(),
     std::inserter(result, result.begin())
