@@ -145,8 +145,7 @@ class KONIG_API Cards :
     using base_class::count;
 
     size_t count(Suit suit) const {
-      std::pair<iterator, iterator> range = equal_range(suit);
-      return std::distance(range.first, range.second);
+      return subset(suit).size();
     }
 
     size_t count(TrumpRank rank) const {
