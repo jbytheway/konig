@@ -9,6 +9,8 @@
 #include <boost/serialization/nvp.hpp>
 
 #include <konig/utility/intersects.hpp>
+#include <konig/utility/intersection_into.hpp>
+#include <konig/utility/union_into.hpp>
 
 namespace konig { namespace utility {
 
@@ -215,6 +217,22 @@ class TransformingSet {
     ) {
       using utility::intersects;
       return intersects(l.underlying_, r.underlying_);
+    }
+
+    friend inline void intersection_into(
+      TransformingSet& l,
+      TransformingSet const& r
+    ) {
+      using utility::intersection_into;
+      return intersection_into(l.underlying_, r.underlying_);
+    }
+
+    friend inline void union_into(
+      TransformingSet& l,
+      TransformingSet const& r
+    ) {
+      using utility::union_into;
+      return union_into(l.underlying_, r.underlying_);
     }
 
     friend inline bool operator==(

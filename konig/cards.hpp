@@ -226,11 +226,10 @@ class KONIG_API Cards :
       }
     }
 
-    bool contains(const Cards& c) {
-      BOOST_FOREACH(const Card card, c) {
-        if (!count(card)) return false;
-      }
-      return true;
+    bool contains(const Cards& c) const {
+      Cards i(c);
+      intersection_into(i, *this);
+      return i == c;
     }
 
     CardPoints total_card_points() const {
