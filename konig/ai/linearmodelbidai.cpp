@@ -69,31 +69,37 @@ LinearModelBidAi::LinearModelBidAi(std::string const& description)
 
 void LinearModelBidAi::reset(Ai const& ai)
 {
-  // Set up the predictors again
-  std::map<Bid, LinearPredictor> predictors;
   auto const& contracts = ai.rules().contracts();
-
-  for (auto const& line : lines_) {
-    auto fields = utility::split(
-      line, ' ', boost::algorithm::token_compress_on);
-    if (fields.size() != features_.size()+2) {
-      throw AiError("Wrong numer of fields");
-    }
-    auto const contract_name = fields[0];
-    Bid const contract = contracts.index_by_bid_name(contract_name);
-    auto const intercept = boost::lexical_cast<double>(fields[1]);
-    LinearPredictor p(intercept);
-    for (size_t i=2; i<fields.size(); ++i) {
-      auto const feature = features_[i-2];
-      auto const coefficient = boost::lexical_cast<double>(fields[i]);
-      p.add(feature, coefficient);
-    }
-    predictors.insert({contract, p});
-  }
   Bid const rufer = contracts.index_by_bid_name("r");
-  auto it = predictors.find(rufer);
-  if (it == predictors.end()) {
-    throw AiError("No rufer predictor provided");
+
+  if (predictors_.empty()) {
+    // Set up the predictors the first time only
+    // We have to wait for first call because we need the contracts from the
+    // Ai.  However, it makes no sense to use this class if the rules are
+    // changing from one hand to the next, so we assume that they don't, and
+    // won't reload things every time.
+
+    for (auto const& line : lines_) {
+      auto fields = utility::split(
+        line, ' ', boost::algorithm::token_compress_on);
+      if (fields.size() != features_.size()+2) {
+        throw AiError("Wrong numer of fields");
+      }
+      auto const contract_name = fields[0];
+      Bid const contract = contracts.index_by_bid_name(contract_name);
+      auto const intercept = boost::lexical_cast<double>(fields[1]);
+      LinearPredictor p(intercept);
+      for (size_t i=2; i<fields.size(); ++i) {
+        auto const feature = features_[i-2];
+        auto const coefficient = boost::lexical_cast<double>(fields[i]);
+        p.add(feature, coefficient);
+      }
+      predictors_.insert({contract, p});
+    }
+    auto it = predictors_.find(rufer);
+    if (it == predictors_.end()) {
+      throw AiError("No rufer predictor provided");
+    }
   }
 
   // Figure out what it is we want to bid for this time around
@@ -101,7 +107,7 @@ void LinearModelBidAi::reset(Ai const& ai)
   assert(hand.size() == 12);
   Bid best_bid = Bid::pass;
   double best_prediction{};
-  for (auto const& p : predictors) {
+  for (auto const& p : predictors_) {
     Bid const contract = p.first;
     auto const& predictor = p.second;
 

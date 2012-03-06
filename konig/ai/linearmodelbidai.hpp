@@ -17,6 +17,7 @@ class LinearModelBidAi : public BidAi {
   private:
     std::vector<Feature::Ptr> features_;
     std::list<std::string> lines_;
+    std::map<Bid, LinearPredictor> predictors_;
     Bid bid_;
 };
 
