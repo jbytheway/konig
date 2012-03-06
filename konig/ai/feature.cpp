@@ -4,6 +4,8 @@
 
 namespace konig { namespace ai {
 
+namespace features {
+
 struct NumTrumps : Feature {
   virtual std::string name() const { return "numtrumps"; }
   virtual double compute(Cards const& hand) const {
@@ -68,17 +70,19 @@ struct Pagat : Feature {
   }
 };
 
+} // end namespace features
+
 std::vector<Feature::Ptr> Feature::default_feature_sequence()
 {
   using konig::utility::make_unique;
   std::vector<Feature::Ptr> result;
-  result.push_back(std::make_shared<NumTrumps>());
-  result.push_back(std::make_shared<NumKings>());
-  result.push_back(std::make_shared<NumVoids>());
-  result.push_back(std::make_shared<NumTopTrumps>());
-  result.push_back(std::make_shared<TotalTrumpRank>());
-  result.push_back(std::make_shared<CardPoints>());
-  result.push_back(std::make_shared<Pagat>());
+  result.push_back(std::make_shared<features::NumTrumps>());
+  result.push_back(std::make_shared<features::NumKings>());
+  result.push_back(std::make_shared<features::NumVoids>());
+  result.push_back(std::make_shared<features::NumTopTrumps>());
+  result.push_back(std::make_shared<features::TotalTrumpRank>());
+  result.push_back(std::make_shared<features::CardPoints>());
+  result.push_back(std::make_shared<features::Pagat>());
   return result;
 }
 
