@@ -231,13 +231,7 @@ class KONIG_API Cards :
       return i == c;
     }
 
-    CardPoints total_card_points() const {
-      CardPoints tally = 0;
-      BOOST_FOREACH(const Card& card, *this) {
-        tally += card.card_points();
-      }
-      return tally;
-    }
+    CardPoints total_card_points() const;
   private:
     template<typename Archive>
     void serialize(Archive& archive, unsigned int) {

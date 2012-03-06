@@ -131,6 +131,41 @@ bool Cards::from_string(Cards& cards, std::string const& description)
   return true;
 }
 
+namespace {
+
+  struct PointsHelper {
+    static constexpr CardPoints max_card_points = 4;
+    PointsHelper() {
+      for (Card::index_type i = 0; i != Card::index_max; ++i) {
+        auto c = Card::from_index(i);
+        auto p = c.card_points();
+        assert(p >= 1);
+        p -= 1;
+        assert(p % 3 == 0);
+        p /= 3;
+        assert(p <= max_card_points);
+        for (CardPoints q = 0; q < p; ++q) {
+          cards_worth_at_least[q].insert(c);
+        }
+      }
+    }
+    std::array<Cards, max_card_points> cards_worth_at_least;
+  };
+
+  PointsHelper points_helper;
+
+}
+
+CardPoints Cards::total_card_points() const {
+  CardPoints tally = 0;
+  for (CardPoints p = 0; p < PointsHelper::max_card_points; ++p) {
+    Cards tmp(*this);
+    intersection_into(tmp, points_helper.cards_worth_at_least[p]);
+    tally += tmp.size();
+  }
+  return tally*3+size();
+}
+
 std::ostream& operator<<(std::ostream& o, const Cards& c)
 {
   typedef std::pair<Cards::const_iterator, Cards::const_iterator> Range;
