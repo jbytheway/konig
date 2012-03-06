@@ -62,10 +62,25 @@ Cards Trick::legal_plays(
     legal_plays.erase(pagat);
   }
   std::array<Cards, 3> constraint_levels;
-  BOOST_FOREACH(Card legal_play, legal_plays) {
-    constraint_levels[
-        whole_contract.play_constraint(legal_play, offence, trick)
-      ].insert(legal_play);
+  constraint_levels[PlayConstraint::neutral] = legal_plays;
+  for (auto const& p : whole_contract.play_constraints()) {
+    bool const constrains_offence = p.first.first;
+    if (constrains_offence == offence) {
+      Card const card = p.first.second.get_card();
+      if (legal_plays.count(card)) {
+        auto const constrained_trick = p.second;
+
+        if (trick == constrained_trick) {
+          // Try to play the card
+          constraint_levels[PlayConstraint::neutral].erase(card);
+          constraint_levels[PlayConstraint::try_to_play].insert(card);
+        } else if (trick > constrained_trick) {
+          // Try to avoid playing the card
+          constraint_levels[PlayConstraint::neutral].erase(card);
+          constraint_levels[PlayConstraint::avoid_playing].insert(card);
+        }
+      }
+    }
   }
   Cards real_plays;
   if (!constraint_levels[PlayConstraint::try_to_play].empty()) {

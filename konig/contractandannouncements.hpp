@@ -15,6 +15,9 @@ namespace konig {
 
 class KONIG_API ContractAndAnnouncements {
   public:
+    typedef std::map<std::pair<bool, ConstrainedCard>, unsigned int>
+      PlayConstraints;
+
     ContractAndAnnouncements(
       Contract const&,
       boost::optional<Card> called_king = boost::optional<Card>()
@@ -51,6 +54,10 @@ class KONIG_API ContractAndAnnouncements {
 
     void add(std::vector<Announcement>);
 
+    PlayConstraints const& play_constraints() const {
+      return play_constraints_;
+    }
+
     PlayConstraint play_constraint(
         Card,
         bool offence,
@@ -77,8 +84,6 @@ class KONIG_API ContractAndAnnouncements {
     Announcednesses announcednesses_;
     bool had_first_announcements_;
     uint8_t num_passes_;
-    typedef std::map<std::pair<bool, ConstrainedCard>, unsigned int>
-      PlayConstraints;
     PlayConstraints play_constraints_;
 };
 
