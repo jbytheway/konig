@@ -25,7 +25,7 @@ struct NumVoids : Feature {
   virtual double compute(Cards const& hand) const {
     int result = 0;
     for (Suit s = Suit::min; s < Suit::trumps; ++s) {
-      result += 0 == hand.count(s);
+      result += hand.subset(s).empty();
     }
     return result;
   }
