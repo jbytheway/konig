@@ -57,8 +57,8 @@ Cards Trick::legal_plays(
   }
   // Apply hold-pagat rule
   Card pagat(TrumpRank::pagat);
-  if (hold_pagat_ && *legal_plays.begin() == pagat &&
-      legal_plays.size() != 1) {
+  if (hold_pagat_ && legal_plays.count(pagat) &&
+      legal_plays.count(Suit::trumps) != 1) {
     legal_plays.erase(pagat);
   }
   std::array<Cards, 3> constraint_levels;
