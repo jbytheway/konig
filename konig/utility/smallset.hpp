@@ -211,6 +211,14 @@ class SmallSet {
       return (l.storage_ & r.storage_) != 0;
     }
 
+    friend inline void intersection_into(SmallSet& l, SmallSet const& r) {
+      l.storage_ &= r.storage_;
+    }
+
+    friend inline void union_into(SmallSet& l, SmallSet const& r) {
+      l.storage_ |= r.storage_;
+    }
+
     friend inline bool operator==(SmallSet const& l, SmallSet const& r) {
       return l.storage_ == r.storage_;
     }

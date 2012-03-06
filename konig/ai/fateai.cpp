@@ -283,12 +283,14 @@ size_t FateAi::num_players_known_out_of_trumps() const
 {
   CardFates result;
   BOOST_FOREACH(auto const& fates, fates_of(Suit::trumps)) {
-    utility::union_into(result, fates);
+    using utility::union_into;
+    union_into(result, fates);
   }
   CardFates hands{
     CardFate::hand0, CardFate::hand1, CardFate::hand2, CardFate::hand3
   };
-  utility::intersection_into(result, hands);
+  using utility::intersection_into;
+  intersection_into(result, hands);
   return 4-result.size();
 }
 
