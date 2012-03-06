@@ -220,8 +220,10 @@ int main(int argc, char const* const* const argv) {
 
     if (options.summary) {
       auto chunks_s = boost::algorithm::join(chunks_orig, ",");
-      std::cout << boost::format("%03d %s %1.6f") % (seed ? *seed : -1) %
-        chunks_s % (total_score/double(options.num_deals));
+      std::cout <<
+        (seed ? (boost::format("%03d") % *seed) : boost::format("---")) <<
+        boost::format(" %s %1.6f") % chunks_s %
+        (total_score/double(options.num_deals));
       BOOST_FOREACH(auto const& p, outcome_counts) {
         std::cout << ' ' << p.second << ' ' << p.first;
       }
