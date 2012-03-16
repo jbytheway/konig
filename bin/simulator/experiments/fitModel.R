@@ -1,4 +1,4 @@
-#!/bin/env Rscript
+#!/usr/bin/env Rscript
 
 args = commandArgs(TRUE)
 dataFilename = args[1]
