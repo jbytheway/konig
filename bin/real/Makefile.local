@@ -1,3 +1,4 @@
 BIN := konig-real
-LIB_DEP_NAMES := konig-ai konig-terminal
+LIB_DEP_NAMES := konig-ai konig-terminal konig
+LIBS := -loptimal -lrelasio -lboost_filesystem-mt -lboost_system-mt
 

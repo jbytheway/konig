@@ -1,4 +1,4 @@
 SUBDIRS = experiments
 BIN = konig-simulator
-LIBS = -loptimal -lboost_system-mt
+LIBS = -loptimal -lboost_filesystem-mt -lboost_system-mt
 LIB_DEP_NAMES = konig konig-ai
