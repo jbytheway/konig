@@ -10,6 +10,7 @@ callgrind.out.*
 /*/Makefile
 /*/*/Makefile
 /*/*/*/Makefile
+/*/*/*/*/Makefile
 /release
 /optimised
 /random-stuff
