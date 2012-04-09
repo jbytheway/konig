@@ -1,19 +1,13 @@
 NO_AUTO_COMPILING = yes
-SHELL = bash # for pipefail
 EXPS := $(wildcard $(this_srcdir)*.exp)
 BASES := $(notdir $(basename $(EXPS)))
 RESULTS := $(addsuffix .results,$(BASES))
 ESTABLISHED := $(foreach base,$(BASES),$(this_srcdir)$(base).established)
 COMPARES := $(addsuffix .compare,$(BASES))
-TRAININGS := $(addsuffix .training,$(BASES))
-MODELS := $(addsuffix .model,$(BASES))
-
-SIM := ../../bin/simulator/konig-simulator
-FEAT := ../../bin/features/konig-features
 
 include $(this_srcdir)../common.mk
 
-test: merged.model
+test: $(RESULTS)
 
 compare: $(COMPARES)
 	wc $(COMPARES)
@@ -27,13 +21,13 @@ define MAKE_RESULTS
 $(1)_FULL_NUMS := $(addprefix $(1).full.,$(NUMS))
 
 $$($(1)_FULL_NUMS): $(1).full.%: \
-		$(this_srcdir)$(1).exp ../hands_all $(this_srcdir)Makefile.local
+		$(this_srcdir)$(1).exp ../$(HANDS)_all $(this_srcdir)Makefile.local
 	$(SIM) -a "`cat $$<`" -c "`awk '/^$$*/ {print $$$$2}' ../hands_all`" \
 		-n $(NUM_TRIALS) -s "$$*" -f -g -t- -# > $$@
 endef
 
-$(RESULTS): %.results: %.exp ../hands_all
-	$(SIM) -a "`cat $<`" -C ../hands_all -n $(NUM_TRIALS) \
+$(RESULTS): %.results: %.exp ../$(HANDS)_all
+	$(SIM) -a "`cat $<`" -C ../$(HANDS)_all -n $(NUM_TRIALS) \
 		-d- -t- -r- -u > $@
 
 $(foreach base,$(BASES),$(eval $(call MAKE_RESULTS,$(base))))
@@ -44,20 +38,4 @@ $(ESTABLISHED): $(this_srcdir)%.established: %.results
 $(COMPARES): %.compare: %.results $(this_srcdir)../compare.awk
 	awk -v results=$< -f $(this_srcdir)../compare.awk \
 		$< $(this_srcdir)$*.established > $@
-
-$(TRAININGS): %.training: %.results ../hands_features
-	{ echo score; cut -d ' ' -f 3 $<; } | paste -d ' ' - ../hands_features > $@
-
-$(MODELS): %.model: %.training ../fitModel.R
-	../fitModel.R $< $@ $*.residuals
-
-merged.model: $(MODELS) Makefile.local
-	{ \
-		printf "contract (Intercept) "; \
-		head -n 1 ../hands_features | cut -d ' ' -f 2-; \
-		for i in $(MODELS); do \
-			printf "$${i%.model} "; \
-			tail -n 1 $$i; \
-		done \
-	} | column -t > $@
 

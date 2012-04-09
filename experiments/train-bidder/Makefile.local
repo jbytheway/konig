@@ -1,0 +1,28 @@
+HANDS := hands
+
+include ../experiments.mk
+
+TRAININGS := $(addsuffix .training,$(BASES))
+MODELS := $(addsuffix .model,$(BASES))
+
+test: merged.model
+
+hands_features: ../hands_all $(FEAT)
+	$(FEAT) $< > $@
+
+$(TRAININGS): %.training: %.results hands_features
+	{ echo score; cut -d ' ' -f 3 $<; } | paste -d ' ' - hands_features > $@
+
+$(MODELS): %.model: %.training ../fitModel.R
+	../fitModel.R $< $@ $*.residuals
+
+merged.model: $(MODELS) Makefile.local
+	{ \
+		printf "contract (Intercept) "; \
+		head -n 1 hands_features | cut -d ' ' -f 2-; \
+		for i in $(MODELS); do \
+			printf "$${i%.model} "; \
+			tail -n 1 $$i; \
+		done \
+	} | column -t > $@
+

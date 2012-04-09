@@ -1,16 +1,24 @@
 NO_AUTO_COMPILING = yes
-SUBDIRS := single-bid-no-announce
+SUBDIRS := train-announcer train-bidder
 
 include $(this_srcdir)common.mk
 
-all-recurse-single-bid-no-announce test-recurse-single-bid-no-announce: \
-	hands_features
+clean:
+	rm -f hand*
 
-hands_all: $(SIM)
+all-recurse-train-announcer test-recurse-train-announcer: \
+	hands_all hand_and_talons_all
+
+test-recurse-train-bidder: test-recurse-train-announcer
+
+hands_all: $(SIM) $(this_srcdir)Makefile.local
 	$(SIM) -p- -m -C <($(NUMS_CMD) | sed 's/$$/ /') | \
 		cut -d , -f 1 | sed 's/ $$//' | paste <($(NUMS_CMD)) - | \
 		tr ' \t' '_ ' > $@
 
-hands_features: hands_all $(FEAT)
-	$(FEAT) $< > $@
+hand_and_talons_all: $(SIM) $(this_srcdir)Makefile.local
+	$(SIM) -p- -m -C <($(NUMS_CMD) | sed 's/$$/ /') | \
+		cut -d , -f 1,5,6 | sed 's/,/,,,,/;s/ $$//;s/ ,/,/g' | \
+		paste <($(NUMS_CMD)) - | \
+		tr ' \t' '_ ' > $@
 
