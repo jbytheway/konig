@@ -8,8 +8,8 @@ COMPARES := $(addsuffix .compare,$(BASES))
 TRAININGS := $(addsuffix .training,$(BASES))
 MODELS := $(addsuffix .model,$(BASES))
 
-SIM := ../../konig-simulator
-FEAT := ../../features/konig-features
+SIM := ../../bin/simulator/konig-simulator
+FEAT := ../../bin/features/konig-features
 
 include $(this_srcdir)../common.mk
 

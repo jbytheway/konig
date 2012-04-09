@@ -1,6 +1,10 @@
-SUBDIRS := konig bin
+SUBDIRS := konig bin experiments
 
 all-recurse-bin: all-recurse-konig
 
 test-recurse-bin: test-recurse-konig
+
+all-recurse-experiments: all-recurse-bin
+
+test-recurse-experiments: test-recurse-bin
 
