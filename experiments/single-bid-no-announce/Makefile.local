@@ -20,6 +20,9 @@ compare: $(COMPARES)
 
 reestablish: $(ESTABLISHED)
 
+clean:
+	rm -f *.results *.compare *.training *.model *.residuals *.full.*
+
 define MAKE_RESULTS
 $(1)_FULL_NUMS := $(addprefix $(1).full.,$(NUMS))
 
