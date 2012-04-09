@@ -1,6 +1,2 @@
 SUBDIRS := simulator server dterm real ai_client features
 
-all-recurse-simulator: all-recurse-features
-
-test-recurse-simulator: test-recurse-features
-
