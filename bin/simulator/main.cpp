@@ -226,8 +226,7 @@ int main(int argc, char const* const* const argv) {
 
     if (options.summary_format) {
       auto chunks_s = boost::algorithm::join(chunks_orig, ",");
-      auto seed_s = str(
-        seed ? (boost::format("%03d") % *seed) : boost::format("---"));
+      auto seed_s = seed ? str(boost::format("%03d") % *seed) : "---";
       auto f = *options.summary_format;
 
       auto pos = f.begin();
