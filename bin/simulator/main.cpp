@@ -28,8 +28,7 @@ struct Options {
     num_deals(1),
     play(true),
     show_results(true),
-    show_tricks(true),
-    summary(false)
+    show_tricks(true)
   {}
   bool show_scores;
   std::vector<std::string> ais;
@@ -45,7 +44,7 @@ struct Options {
   bool show_results;
   boost::optional<unsigned long> seed;
   bool show_tricks;
-  bool summary;
+  boost::optional<std::string> summary_format;
 };
 
 void usage(std::ostream& o)
@@ -78,8 +77,15 @@ void usage(std::ostream& o)
 "  -s, --seed N  Seed dealer with N (default seeds from /dev/urandom).\n"
 "  -t-, --no-show-tricks\n"
 "                Don't show the tricks.\n"
-"  -u, --summary Show a one-line summary of the games with average score and\n"
-"                frequency of each outcome.\n"
+"  -u, --summary FORMAT\n"
+"                Show a one-line summary of the games according to the given\n"
+"                format, with the following substitutions:\n"
+"                    %% %\n"
+"                    %f feats with frequencies\n"
+"                    %m mean score\n"
+"                    %c chunks\n"
+"                    %s seed\n"
+"                    %o outcomes with frequencies (with leading space)\n"
   << std::flush;
 }
 
@@ -100,7 +106,7 @@ Options get_options(int const argc, char const* const* const argv) {
   parser.addOption("show-results", 'r', &options.show_results);
   parser.addOption("seed",         's', &options.seed);
   parser.addOption("show-tricks",  't', &options.show_tricks);
-  parser.addOption("summary",      'u', &options.summary);
+  parser.addOption("summary",      'u', &options.summary_format);
 
   boost::filesystem::path options_file(std::getenv("HOME"));
   options_file /= ".konig";
@@ -218,14 +224,48 @@ int main(int argc, char const* const* const argv) {
       }
     }
 
-    if (options.summary) {
+    if (options.summary_format) {
       auto chunks_s = boost::algorithm::join(chunks_orig, ",");
-      std::cout <<
-        (seed ? (boost::format("%03d") % *seed) : boost::format("---")) <<
-        boost::format(" %s %1.6f") % chunks_s %
-        (total_score/double(options.num_deals));
-      BOOST_FOREACH(auto const& p, outcome_counts) {
-        std::cout << ' ' << p.second << ' ' << p.first;
+      auto seed_s = str(
+        seed ? (boost::format("%03d") % *seed) : boost::format("---"));
+      auto f = *options.summary_format;
+
+      auto pos = f.begin();
+      while (pos != f.end()) {
+        auto percent = std::find(pos, f.end(), '%');
+        std::cout << std::string(pos, percent);
+        if (percent != f.end()) {
+          ++percent;
+        }
+        if (percent == f.end()) {
+          break;
+        }
+        switch (*percent) {
+          case '%':
+            std::cout << '%';
+            break;
+          case 'f':
+            KONIG_FATAL("not implemented");
+            break;
+          case 'm':
+            std::cout << boost::format("%1.6f") %
+              (total_score/double(options.num_deals));
+            break;
+          case 'c':
+            std::cout << chunks_s;
+            break;
+          case 's':
+            std::cout << seed_s;
+            break;
+          case 'o':
+            BOOST_FOREACH(auto const& p, outcome_counts) {
+              std::cout << ' ' << p.second << ' ' << p.first;
+            }
+            break;
+          default:
+            std::cout << '%' << *percent;
+        }
+        pos = ++percent;
       }
       std::cout << std::endl;
     }

@@ -1,3 +1,4 @@
+SUMMARY_FORMAT := "%s %c %m%o"
 HANDS := hand_and_talons
 
 include ../experiments.mk

@@ -28,7 +28,7 @@ endef
 
 $(RESULTS): %.results: %.exp ../$(HANDS)_all
 	$(SIM) -a "`cat $<`" -C ../$(HANDS)_all -n $(NUM_TRIALS) \
-		-d- -t- -r- -u > $@
+		-d- -t- -r- -u $(SUMMARY_FORMAT) > $@
 
 $(foreach base,$(BASES),$(eval $(call MAKE_RESULTS,$(base))))
 
