@@ -78,7 +78,7 @@ PlayResult NegativeContract::play(
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, offence);
   std::array<int, 4> scores = outcome.compute_scores(offence);
-  return PlayResult{outcome, tricks, scores};
+  return PlayResult{outcome, tricks, Cards(), Cards(), scores};
 }
 
 PlayResult NegativeContract::play(
@@ -105,7 +105,7 @@ PlayResult NegativeContract::play(
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, offence);
   std::array<int, 4> scores = outcome.compute_scores(offence);
-  return PlayResult{outcome, tricks, scores};
+  return PlayResult{outcome, tricks, Cards(), Cards(), scores};
 }
 
 Announcednesses NegativeContract::initial_announcednesses() const

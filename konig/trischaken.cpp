@@ -105,7 +105,7 @@ PlayResult make_trischaken_play_result(
   Outcome outcome =
     whole_contract.score(tricks, declarers_cards, defences_cards, achievers);
   std::array<int, 4> scores = outcome.compute_scores(achievers);
-  return PlayResult{outcome, tricks, scores};
+  return PlayResult{outcome, tricks, {}, {}, scores};
 }
 
 }

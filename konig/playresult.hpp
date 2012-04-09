@@ -9,6 +9,8 @@ namespace konig {
 struct PlayResult {
   Outcome outcome;
   std::vector<Trick> tricks;
+  Cards rejected_half;
+  Cards discard;
   std::array<Score, 4> scores;
 
   void dump(std::ostream&) const;

@@ -126,6 +126,8 @@ PlayResult PositiveContract::play(
 
   Cards declarers_cards;
   Cards defences_cards;
+  Cards rejected_half;
+  Cards discard;
 
   if (talon_halves_ > 0) {
     std::for_each(
@@ -151,7 +153,7 @@ PlayResult PositiveContract::play(
 
         Outcome outcome = whole_contract.score_conceded(offence);
         std::array<int, 4> scores = outcome.compute_scores(offence);
-        return PlayResult{outcome, {}, scores};
+        return PlayResult{outcome, {}, {}, {}, scores};
       }
     }
 
@@ -179,7 +181,7 @@ PlayResult PositiveContract::play(
       }
 
       Cards& chosen_half = talon[talon_half];
-      Cards& rejected_half = talon[!talon_half];
+      rejected_half = talon[!talon_half];
       declarers_hand.insert(chosen_half);
       chosen_half.clear();
       defences_cards.insert(rejected_half);
@@ -187,8 +189,6 @@ PlayResult PositiveContract::play(
       declarers_hand.insert(talon[0]);
       declarers_hand.insert(talon[1]);
     }
-
-    Cards discard;
 
     while (true) {
       discard = declarer.discard();
@@ -263,7 +263,7 @@ PlayResult PositiveContract::play(
     tricks, declarers_cards, defences_cards, offence, called_king
   );
   std::array<int, 4> scores = outcome.compute_scores(offence);
-  return PlayResult{outcome, tricks, scores};
+  return PlayResult{outcome, tricks, rejected_half, discard, scores};
 }
 
 PlayResult PositiveContract::play(
@@ -287,6 +287,8 @@ PlayResult PositiveContract::play(
 
   Cards declarers_cards;
   Cards defences_cards;
+  Cards rejected_half;
+  Cards discard;
 
   if (talon_halves_ > 0) {
     std::array<Cards, 2> talon = oracle.get_talon();
@@ -325,7 +327,7 @@ PlayResult PositiveContract::play(
 
         Outcome outcome = whole_contract.score_conceded(offence);
         std::array<int, 4> scores = outcome.compute_scores(offence);
-        return PlayResult{outcome, {}, scores};
+        return PlayResult{outcome, {}, {}, {}, scores};
       }
     }
 
@@ -333,7 +335,7 @@ PlayResult PositiveContract::play(
       uint8_t talon_half = oracle.choose_talon_half(declarer_position);
       oracle.notify_talon_choice(talon_half);
 
-      Cards& rejected_half = talon[!talon_half];
+      rejected_half = talon[!talon_half];
       defences_cards.insert(rejected_half);
     }
 
@@ -358,7 +360,7 @@ PlayResult PositiveContract::play(
     tricks, declarers_cards, defences_cards, offence, called_king
   );
   std::array<int, 4> scores = outcome.compute_scores(offence);
-  return PlayResult{outcome, tricks, scores};
+  return PlayResult{outcome, tricks, rejected_half, discard, scores};
 }
 
 Announcednesses PositiveContract::initial_announcednesses() const
