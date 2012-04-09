@@ -81,7 +81,8 @@ void usage(std::ostream& o)
 "                Show a one-line summary of the games according to the given\n"
 "                format, with the following substitutions:\n"
 "                    %% %\n"
-"                    %f feats with frequencies\n"
+"                    %f feats with expected score if announced and perfectly\n"
+"                       kontraed by the defence (and leading space)\n"
 "                    %m mean score\n"
 "                    %c chunks\n"
 "                    %s seed\n"
@@ -187,7 +188,7 @@ int main(int argc, char const* const* const argv) {
     konig::Dealer::Ptr dealer = seed ?
       konig::Dealer::create(chunks, *seed) :
       konig::Dealer::create(chunks);
-    std::map<std::string, unsigned long> outcome_counts;
+    std::map<konig::Outcome, unsigned long> outcome_counts;
     konig::Score total_score{0};
 
     for (unsigned long i=0; i<options.num_deals; ++i) {
@@ -200,7 +201,7 @@ int main(int argc, char const* const* const argv) {
       auto result = play_game(rules, ais, deal, debug_stream);
 
       total_score += result.scores[0];
-      outcome_counts.insert({result.outcome.string(), 0}).first->second++;
+      outcome_counts.insert({result.outcome, 0}).first->second++;
 
       if (options.show_results) {
         std::cout << result.outcome << '\n';
@@ -244,7 +245,67 @@ int main(int argc, char const* const* const argv) {
             std::cout << '%';
             break;
           case 'f':
-            KONIG_FATAL("not implemented");
+            {
+              konig::Contract const* contract = nullptr;
+              std::map<std::pair<konig::Feat, bool>, unsigned long> feat_counts;
+
+              BOOST_FOREACH(auto const& p, outcome_counts) {
+                auto const count = p.second;
+                auto const& outcome = p.first;
+                if (!contract) {
+                  contract = &outcome.contract();
+                } else if (contract != &outcome.contract()) {
+                  KONIG_FATAL("mismatched contract");
+                }
+                for (auto const& feat_outcome : outcome.results()) {
+                  auto const feat_side = feat_outcome.first;
+                  konig::Achievement const achievement =
+                    feat_outcome.second.second;
+                  if (achievement == konig::Achievement::made) {
+                    feat_counts.insert({feat_side, 0}).first->second += count;
+                  }
+                }
+              }
+
+              if (contract) {
+                // FIXME: we have to make this silly Announcednesses object to
+                // pass to the value_of function.  Possibly we should refarctor
+                // that down to a bool.
+                konig::Announcednesses const announcednesses;
+                for (auto const& p : feat_counts) {
+                  konig::Feat const feat = p.first.first;
+                  if (feat == konig::Feat::game) {
+                    continue;
+                  }
+                  bool const defensive = !p.first.second;
+                  unsigned long const count = p.second;
+                  double probability = double(count)/options.num_deals;
+                  auto value_unannounced = contract->value_of(
+                    feat, konig::Announcedness::unannounced,
+                    konig::Achievement::made, false, announcednesses
+                  );
+                  auto value_announced = contract->value_of(
+                    feat, konig::Announcedness::announced,
+                    konig::Achievement::made, false, announcednesses
+                  );
+                  auto value_kontraed_and_off = contract->value_of(
+                    feat, konig::Announcedness::kontraed,
+                    konig::Achievement::off, false, announcednesses
+                  );
+                  double const expectation_unannounced =
+                    value_unannounced * probability;
+                  double const expectation_announced =
+                    value_announced * probability +
+                    value_kontraed_and_off * (1-probability);
+                  std::cout << ' ' << probability << ' ' <<
+                    expectation_unannounced << ' ' <<
+                    expectation_announced << ' ' << feat;
+                  if (defensive) {
+                    std::cout << '!';
+                  }
+                }
+              }
+            }
             break;
           case 'm':
             std::cout << boost::format("%1.6f") %
