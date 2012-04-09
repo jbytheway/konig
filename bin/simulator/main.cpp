@@ -81,10 +81,13 @@ void usage(std::ostream& o)
 "                Show a one-line summary of the games according to the given\n"
 "                format, with the following substitutions:\n"
 "                    %% %\n"
+"                    %d discard in first deal\n"
 "                    %f feats with expected score if announced and perfectly\n"
 "                       kontraed by the defence (and leading space)\n"
+"                    %h0 forehand's hand in first deal\n"
 "                    %m mean score\n"
 "                    %c chunks\n"
+"                    %r rejected half in first deal\n"
 "                    %s seed\n"
 "                    %o outcomes with frequencies (with leading space)\n"
   << std::flush;
@@ -190,6 +193,9 @@ int main(int argc, char const* const* const argv) {
       konig::Dealer::create(chunks);
     std::map<konig::Outcome, unsigned long> outcome_counts;
     konig::Score total_score{0};
+    std::array<konig::Cards, 4> hands;
+    konig::Cards rejected_half;
+    konig::Cards discard;
 
     for (unsigned long i=0; i<options.num_deals; ++i) {
       konig::Deal deal = dealer->deal();
@@ -202,6 +208,23 @@ int main(int argc, char const* const* const argv) {
 
       total_score += result.scores[0];
       outcome_counts.insert({result.outcome, 0}).first->second++;
+
+      // Save the cards from the first deal only
+      if (i == 0) {
+        for (auto const& trick : result.tricks) {
+          for (int i=0; i<4; ++i) {
+            hands[(i+trick.leader())%4].insert(trick.cards()[i]);
+          }
+        }
+        for (int i=0; i<4; ++i) {
+          if (hands[i].size() != 12) {
+            // (size zero can happen when game is conceded)
+            KONIG_FATAL("whoops; fix concession case");
+          }
+        }
+        rejected_half = result.rejected_half;
+        discard = result.discard;
+      }
 
       if (options.show_results) {
         std::cout << result.outcome << '\n';
@@ -243,6 +266,9 @@ int main(int argc, char const* const* const argv) {
         switch (*percent) {
           case '%':
             std::cout << '%';
+            break;
+          case 'd':
+            discard.dump(std::cout, true);
             break;
           case 'f':
             {
@@ -307,12 +333,24 @@ int main(int argc, char const* const* const argv) {
               }
             }
             break;
+          case 'h':
+            switch (*++percent) {
+              case '0':
+                hands[0].dump(std::cout, true);
+                break;
+              default:
+                std::cout << "%h" << *percent;
+            }
+            break;
           case 'm':
             std::cout << boost::format("%1.6f") %
               (total_score/double(options.num_deals));
             break;
           case 'c':
             std::cout << chunks_s;
+            break;
+          case 'r':
+            rejected_half.dump(std::cout, true);
             break;
           case 's':
             std::cout << seed_s;
