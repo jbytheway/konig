@@ -15,7 +15,7 @@ class Contract;
 class KONIG_API Outcome {
   public:
     typedef std::map<
-        std::pair<Feat, bool>,
+        std::pair<Feat, bool>, // bool is true if offensive
         std::pair<Announcedness, Achievement>
       > Results;
 
