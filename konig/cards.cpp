@@ -166,28 +166,41 @@ CardPoints Cards::total_card_points() const {
   return tally*3+size();
 }
 
-std::ostream& operator<<(std::ostream& o, const Cards& c)
+void Cards::dump(std::ostream& o, bool machine_readable) const
 {
+  if (empty()) {
+    if (machine_readable) {
+      o << '_';
+    }
+    return;
+  }
+
+  char const* const sep = machine_readable ? "_" : " ";
   typedef std::pair<Cards::const_iterator, Cards::const_iterator> Range;
   typedef Cards::const_reverse_iterator reverse_iterator;
   typedef std::pair<reverse_iterator, reverse_iterator> ReverseRange;
-  ReverseRange trumps = c.equal_range(Suit::trumps);
+  ReverseRange trumps = equal_range(Suit::trumps);
   std::transform(
-      trumps.second, trumps.first, std::ostream_iterator<TrumpRank>(o, " "),
+      trumps.second, trumps.first, std::ostream_iterator<TrumpRank>(o, sep),
       [](Card const& c) { return c.trump_rank(); }
     );
 
   for (Suit s = Suit::min; s<Suit::trumps; ++s) {
-    ReverseRange suit = c.equal_range(s);
+    ReverseRange suit = equal_range(s);
     if (!boost::empty(suit)) {
       o << s << ':';
       std::transform(
           suit.second, suit.first, std::ostream_iterator<char>(o),
           [s](Card const& c) { return c.suit_rank().to_char(s.is_red()); }
         );
-      o << ' ';
+      o << sep;
     }
   }
+}
+
+std::ostream& operator<<(std::ostream& o, const Cards& c)
+{
+  c.dump(o);
   return o;
 }
 

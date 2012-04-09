@@ -232,6 +232,8 @@ class KONIG_API Cards :
     }
 
     CardPoints total_card_points() const;
+
+    void dump(std::ostream&, bool machine_readable=false) const;
   private:
     template<typename Archive>
     void serialize(Archive& archive, unsigned int) {
