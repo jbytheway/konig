@@ -84,6 +84,11 @@ Outcome::compute_scores(std::array<bool, 4> const& achievers) const
   return scores;
 }
 
+bool operator<(Outcome const& l, Outcome const& r)
+{
+  return l.string() < r.string();
+}
+
 std::ostream& operator<<(std::ostream& o, const Outcome& outcome)
 {
   for (Outcome::Results::const_iterator i = outcome.results().begin();

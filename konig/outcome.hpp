@@ -55,6 +55,9 @@ class KONIG_API Outcome {
     Results results_;
 };
 
+// No guarantee is made as to the ordering except that it is total
+KONIG_API bool operator<(Outcome const&, Outcome const&);
+
 KONIG_API std::ostream& operator<<(std::ostream&, const Outcome&);
 
 }
