@@ -3,5 +3,5 @@
 /*.full.*
 /*.features
 /*.training
-/*.model
+/*model
 /*.predictions

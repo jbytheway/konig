@@ -10,7 +10,7 @@ FEAT_RESULTS := $(addsuffix .results,$(FEAT_BASES))
 TRAININGS := $(addsuffix .training,$(FEAT_BASES))
 MODELS := $(addsuffix .model,$(FEAT_BASES))
 
-test: $(MODELS)
+test: announcer-model
 
 $(FEATURES): %.features: %.results $(FEAT)
 	cut -d ' ' -f 1-2 $< | $(FEAT) - > $@
@@ -24,4 +24,14 @@ $(TRAININGS): %.training: %.results $(FEATURES)
 
 $(MODELS): %.model: %.training ../fitModel.R
 	../fitModel.R $< $@ $*.predictions decision
+
+announcer-model: $(MODELS) Makefile.local
+	{ \
+		printf "contract feat (Threshold) "; \
+		head -n 1 $(word 1,$(FEATURES)) | cut -d ' ' -f 2-; \
+		for i in $(MODELS); do \
+			printf "$${i%.model} " | sed 's/\./ /'; \
+			tail -n 1 $$i; \
+		done \
+	} | column -t > $@
 

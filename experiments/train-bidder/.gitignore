@@ -2,6 +2,6 @@
 /*.compare
 /*.full.*
 /*.training
-/*.model
+/*model
 /*.residuals
 /hands_features
