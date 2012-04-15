@@ -1,5 +1,21 @@
 SUMMARY_FORMAT := "%s %h0,%d,%r %m%f"
 HANDS := hand_and_talons
+FEATS := f
 
 include ../experiments.mk
 
+FEATURES := $(addsuffix .features,$(BASES))
+FEAT_RESULTS := $(foreach feat,$(FEATS),$(addsuffix .$(feat).results,$(BASES)))
+TRAININGS := $(foreach feat,$(FEATS),$(addsuffix .$(feat).training,$(BASES)))
+
+test: $(TRAININGS)
+
+$(FEATURES): %.features: %.results $(FEAT)
+	cut -d ' ' -f 1-2 $< | $(FEAT) - > $@
+
+$(FEAT_RESULTS): %.results: extract_feat_results.awk $(RESULTS)
+	awk -f $< -v feat=$(patsubst .%,%,$(suffix $*)) $(basename $*).results > $@
+
+$(TRAININGS): %.training: %.results $(FEATURES)
+	{ echo score; cut -d ' ' -f 2 $*.results; } | \
+		paste -d ' ' - $(basename $*).features | column -t > $@

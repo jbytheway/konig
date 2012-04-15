@@ -1,6 +1,7 @@
 /*.results
 /*.compare
 /*.full.*
+/*.features
 /*.training
 /*.model
 /*.residuals
