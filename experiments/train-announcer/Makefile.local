@@ -23,14 +23,18 @@ $(TRAININGS): %.training: %.results $(FEATURES)
 		paste -d ' ' - $(basename $*).features | column -t > $@
 
 $(MODELS): %.model: %.training ../fitModel.R
-	../fitModel.R $< $@ $*.predictions decision
+	if grep -q TRUE $<; then \
+		../fitModel.R $< $@ $*.predictions decision; \
+	else \
+		touch $@; \
+	fi
 
 announcer-model: $(MODELS) Makefile.local
 	{ \
 		printf "contract feat (Threshold) "; \
 		head -n 1 $(word 1,$(FEATURES)) | cut -d ' ' -f 2-; \
 		for i in $(MODELS); do \
-			printf "$${i%.model} " | sed 's/\./ /'; \
+			[ -s $$i ] && printf "$${i%.model} " | sed 's/\./ /'; \
 			tail -n 1 $$i; \
 		done \
 	} | column -t > $@
