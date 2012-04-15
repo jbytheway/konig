@@ -15,7 +15,7 @@ $(TRAININGS): %.training: %.results hands_features
 	{ echo score; cut -d ' ' -f 3 $<; } | paste -d ' ' - hands_features > $@
 
 $(MODELS): %.model: %.training ../fitModel.R
-	../fitModel.R $< $@ $*.residuals
+	../fitModel.R $< $@ $*.residuals regression
 
 merged.model: $(MODELS) Makefile.local
 	{ \

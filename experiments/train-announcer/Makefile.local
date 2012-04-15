@@ -5,10 +5,12 @@ FEATS := f
 include ../experiments.mk
 
 FEATURES := $(addsuffix .features,$(BASES))
-FEAT_RESULTS := $(foreach feat,$(FEATS),$(addsuffix .$(feat).results,$(BASES)))
-TRAININGS := $(foreach feat,$(FEATS),$(addsuffix .$(feat).training,$(BASES)))
+FEAT_BASES := $(foreach feat,$(FEATS),$(addsuffix .$(feat),$(BASES)))
+FEAT_RESULTS := $(addsuffix .results,$(FEAT_BASES))
+TRAININGS := $(addsuffix .training,$(FEAT_BASES))
+MODELS := $(addsuffix .model,$(FEAT_BASES))
 
-test: $(TRAININGS)
+test: $(MODELS)
 
 $(FEATURES): %.features: %.results $(FEAT)
 	cut -d ' ' -f 1-2 $< | $(FEAT) - > $@
@@ -19,3 +21,7 @@ $(FEAT_RESULTS): %.results: extract_feat_results.awk $(RESULTS)
 $(TRAININGS): %.training: %.results $(FEATURES)
 	{ echo score; cut -d ' ' -f 2 $*.results; } | \
 		paste -d ' ' - $(basename $*).features | column -t > $@
+
+$(MODELS): %.model: %.training ../fitModel.R
+	../fitModel.R $< $@ $*.predictions decision
+
