@@ -13,7 +13,11 @@ class Feature : boost::noncopyable {
     typedef std::shared_ptr<Feature const> Ptr;
 
     virtual std::string name() const = 0;
-    virtual double compute(Cards const&) const = 0;
+    virtual double compute(
+      Cards const& hand,
+      Cards const& discard,
+      Cards const& rejected_half
+    ) const = 0;
 
     static std::vector<Ptr> default_feature_sequence();
     static std::map<std::string, Ptr> default_feature_map();

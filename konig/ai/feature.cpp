@@ -6,23 +6,36 @@ namespace konig { namespace ai {
 
 namespace features {
 
-struct NumTrumps : Feature {
+class HandFeature : public Feature {
+  public:
+    virtual double computeOnHand(Cards const& hand) const = 0;
+
+    virtual double compute(
+      Cards const& hand,
+      Cards const& discard,
+      Cards const& rejected_half
+    ) const {
+      return computeOnHand(hand);
+    }
+};
+
+struct NumTrumps : HandFeature {
   virtual std::string name() const { return "numtrumps"; }
-  virtual double compute(Cards const& hand) const {
+  virtual double computeOnHand(Cards const& hand) const {
     return hand.count(Suit::trumps);
   }
 };
 
-struct NumKings : Feature {
+struct NumKings : HandFeature {
   virtual std::string name() const { return "numkings"; }
-  virtual double compute(Cards const& hand) const {
+  virtual double computeOnHand(Cards const& hand) const {
     return hand.count(SuitRank::king);
   }
 };
 
-struct NumVoids : Feature {
+struct NumVoids : HandFeature {
   virtual std::string name() const { return "numvoids"; }
-  virtual double compute(Cards const& hand) const {
+  virtual double computeOnHand(Cards const& hand) const {
     int result = 0;
     for (Suit s = Suit::min; s < Suit::trumps; ++s) {
       result += hand.subset(s).empty();
@@ -31,9 +44,9 @@ struct NumVoids : Feature {
   }
 };
 
-struct NumTopTrumps : Feature {
+struct NumTopTrumps : HandFeature {
   virtual std::string name() const { return "numtoptrumps"; }
-  virtual double compute(Cards const& hand) const {
+  virtual double computeOnHand(Cards const& hand) const {
     int result = 0;
     TrumpRank r = TrumpRank::skus;
     while (hand.count(Card(r))) {
@@ -45,9 +58,9 @@ struct NumTopTrumps : Feature {
   }
 };
 
-struct TotalTrumpRank : Feature {
+struct TotalTrumpRank : HandFeature {
   virtual std::string name() const { return "totaltrumprank"; }
-  virtual double compute(Cards const& hand) const {
+  virtual double computeOnHand(Cards const& hand) const {
     int result = 0;
     BOOST_FOREACH(auto const& c, hand.equal_range(Suit::trumps)) {
       result += c.trump_rank();
@@ -56,16 +69,16 @@ struct TotalTrumpRank : Feature {
   }
 };
 
-struct CardPoints : Feature {
+struct CardPoints : HandFeature {
   virtual std::string name() const { return "cardpoints"; }
-  virtual double compute(Cards const& hand) const {
+  virtual double computeOnHand(Cards const& hand) const {
     return hand.total_card_points();
   }
 };
 
-struct Pagat : Feature {
+struct Pagat : HandFeature {
   virtual std::string name() const { return "pagat"; }
-  virtual double compute(Cards const& hand) const {
+  virtual double computeOnHand(Cards const& hand) const {
     return hand.count(TrumpRank::pagat);
   }
 };

@@ -2,9 +2,12 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/range/algorithm/find.hpp>
+#include <boost/range/algorithm/transform.hpp>
+#include <boost/spirit/home/phoenix/bind.hpp>
 
 #include <optimal/optionsparser.hpp>
 
+#include <konig/utility/split.hpp>
 #include <konig/ai/feature.hpp>
 
 namespace konig { namespace features {
@@ -59,12 +62,9 @@ Options get_options(int const argc, char const* const* const argv) {
   return options;
 }
 
-}}
-
-int main(int argc, char const* const* const argv) {
-  auto options = konig::features::get_options(argc, argv);
-
-  boost::filesystem::ifstream is(options.hands_file);
+template<typename Stream>
+int process_stream(Stream&& is)
+{
   std::string line;
 
   auto features = konig::ai::Feature::default_feature_sequence();
@@ -80,22 +80,55 @@ int main(int argc, char const* const* const argv) {
   while (std::getline(is, line)) {
     auto space = boost::range::find(line, ' ');
     if (space == line.end()) {
-      std::cerr << "malformed line in chunks file\n";
+      std::cerr << "malformed line in chunks file:\n" << line << std::endl;
       return EXIT_FAILURE;
     }
     auto name = std::string(line.begin(), space);
-    auto hand_s = std::string(space+1, line.end());
-    auto hand = konig::Cards::from_string(hand_s);
+    auto chunks = std::string(space+1, line.end());
+    auto chunks_split = utility::split(chunks, ',');
+    std::vector<Cards> chunks_cards;
+    boost::range::transform(
+      chunks_split, std::back_inserter(chunks_cards),
+      px::bind(&konig::Cards::from_string, arg1)
+    );
+
+    if (chunks_cards.size() != 1 && chunks_cards.size() != 3) {
+      std::cerr << "line should give 1 or 3 chunks\n" << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    Cards const& hand = chunks_cards[0];
+    Cards discard;
+    Cards rejected_half;
+
+    if (chunks_cards.size() == 3) {
+      discard = chunks_cards[1];
+      rejected_half = chunks_cards[2];
+    }
 
     std::cout << name;
 
     for (auto const& fp : features) {
-      std::cout << ' ' << fp->compute(hand);
+      std::cout << ' ' << fp->compute(hand, discard, rejected_half);
     }
 
     std::cout << std::endl;
   }
 
   return EXIT_SUCCESS;
+}
+
+}}
+
+int main(int argc, char const* const* const argv) {
+  auto options = konig::features::get_options(argc, argv);
+
+  if (options.hands_file == "-") {
+    return konig::features::process_stream(std::cin);
+  } else {
+    return konig::features::process_stream(
+      boost::filesystem::ifstream(options.hands_file)
+    );
+  }
 }
 

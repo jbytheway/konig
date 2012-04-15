@@ -17,7 +17,7 @@ double LinearPredictor::predict(Cards const& hand) const
   for (auto const& p : coefficients_) {
     auto const& feature = p.first;
     double const coefficient = p.second;
-    tally += coefficient * feature->compute(hand);
+    tally += coefficient * feature->compute(hand, Cards(), Cards());
   }
   return tally;
 }
