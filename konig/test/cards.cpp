@@ -10,6 +10,9 @@ namespace konig {
 BOOST_AUTO_TEST_CASE(cards_parser)
 {
   //BOOST_CHECK_EQUAL(Cards::from_string(""), Cards());
+  BOOST_CHECK_EQUAL(Cards::from_string(""), Cards());
+  BOOST_CHECK_EQUAL(Cards::from_string(" "), Cards());
+  BOOST_CHECK_EQUAL(Cards::from_string("_"), Cards());
   BOOST_CHECK_EQUAL(Cards::from_string("Sk"), Cards{Card(TrumpRank::skus)});
   BOOST_CHECK_EQUAL(Cards::from_string("21"), Cards{Card(TrumpRank::mond)});
   BOOST_CHECK_EQUAL(Cards::from_string("1"), Cards{Card(TrumpRank::pagat)});

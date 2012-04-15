@@ -84,12 +84,13 @@ struct CardsGrammar :
       suit_ranks_parser[px::bind(&CardChunk::ranks, qi::_val) = qi::_1]
     );
 
-    start = *(
-      (
-        trump_parser[px::push_back(qi::_val, qi::_1)] |
-        chunk_parser[px::bind(&insert_cards, qi::_val, qi::_1)]
-      ) >> qi::omit[*(boost::spirit::ascii::space | qi::lit('_'))]
-    );
+    start = qi::omit[*(boost::spirit::ascii::space | qi::lit('_'))] >>
+      *(
+        (
+          trump_parser[px::push_back(qi::_val, qi::_1)] |
+          chunk_parser[px::bind(&insert_cards, qi::_val, qi::_1)]
+        ) >> qi::omit[*(boost::spirit::ascii::space | qi::lit('_'))]
+      );
   }
 
   qi::rule<Iterator, Suit()> suit_parser;
