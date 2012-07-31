@@ -12,8 +12,8 @@ class HandFeature : public Feature {
 
     virtual double compute(
       Cards const& hand,
-      Cards const& discard,
-      Cards const& rejected_half
+      Cards const& /*discard*/,
+      Cards const& /*rejected_half*/
     ) const {
       return computeOnHand(hand);
     }

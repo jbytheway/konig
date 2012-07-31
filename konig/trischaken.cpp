@@ -187,7 +187,7 @@ int Trischaken::value_of(
   Feat f,
   Announcedness an,
   Achievement ac,
-  bool against_three,
+  bool /*against_three*/,
   Announcednesses const&
 ) const
 {

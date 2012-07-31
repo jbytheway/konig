@@ -84,7 +84,7 @@ Bid ReplayOracle::bid(PlayPosition p)
   return result;
 }
 
-KingCall ReplayOracle::call_king(PlayPosition p)
+KingCall ReplayOracle::call_king(PlayPosition)
 {
   assert(king_call_);
   return *king_call_;
@@ -96,18 +96,18 @@ std::array<Cards, 2> ReplayOracle::get_talon()
   return talon_;
 }
 
-bool ReplayOracle::choose_concede(PlayPosition p)
+bool ReplayOracle::choose_concede(PlayPosition)
 {
   return concession_;
 }
 
-uint8_t ReplayOracle::choose_talon_half(PlayPosition p)
+uint8_t ReplayOracle::choose_talon_half(PlayPosition)
 {
   assert(talon_choice_ == 0 || talon_choice_ == 1);
   return talon_choice_;
 }
 
-Cards ReplayOracle::discard(PlayPosition p)
+Cards ReplayOracle::discard(PlayPosition)
 {
   return discard_;
 }
@@ -130,7 +130,7 @@ Card ReplayOracle::play_card(PlayPosition p)
   return result;
 }
 
-Cards ReplayOracle::get_ouvert(PlayPosition p)
+Cards ReplayOracle::get_ouvert(PlayPosition)
 {
   KONIG_FATAL("not implemented");
 }
@@ -141,9 +141,9 @@ void ReplayOracle::notify_invalid(PlayPosition, std::string const& m)
 }
 
 void ReplayOracle::notify_bid(PlayPosition, Bid) {}
-void ReplayOracle::notify_contract_established(Bid bid) {}
+void ReplayOracle::notify_contract_established(Bid) {}
 void ReplayOracle::notify_call_king(KingCall) {}
-void ReplayOracle::notify_talon(std::array<Cards, 2> const& talon) {}
+void ReplayOracle::notify_talon(std::array<Cards, 2> const& /*talon*/) {}
 void ReplayOracle::notify_concede() {}
 void ReplayOracle::notify_talon_choice(uint8_t) {}
 void ReplayOracle::notify_discard(Cards) {}

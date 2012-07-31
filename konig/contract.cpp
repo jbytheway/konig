@@ -88,7 +88,7 @@ std::vector<Trick> Contract::play_tricks(
   Oracle& oracle,
   Cards& declarers_cards,
   Cards& defenses_cards,
-  const ContractAndAnnouncements& whole_contract,
+  const ContractAndAnnouncements& /*whole_contract*/,
   boost::optional<Card>& called_king,
   PlayPosition declarer_position,
   std::array<bool, 4>& offence
