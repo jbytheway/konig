@@ -7,6 +7,7 @@
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
+#include <boost/implicit_cast.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/nvp.hpp>
 
