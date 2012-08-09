@@ -4,6 +4,8 @@
 
 #include <boost/bind.hpp>
 #include <boost/range/empty.hpp>
+#include <boost/range/algorithm/transform.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 #include <boost/spirit/home/phoenix/core/reference.hpp>
 #include <boost/spirit/home/phoenix/operator/self.hpp>
 #include <boost/spirit/home/phoenix/object/construct.hpp>
@@ -178,20 +180,20 @@ void Cards::dump(std::ostream& o, bool machine_readable) const
 
   char const* const sep = machine_readable ? "_" : " ";
   typedef std::pair<Cards::const_iterator, Cards::const_iterator> Range;
-  typedef Cards::const_reverse_iterator reverse_iterator;
-  typedef std::pair<reverse_iterator, reverse_iterator> ReverseRange;
-  ReverseRange trumps = equal_range(Suit::trumps);
-  std::transform(
-      trumps.second, trumps.first, std::ostream_iterator<TrumpRank>(o, sep),
+  auto const trumps = equal_range(Suit::trumps);
+
+  boost::range::transform(
+      boost::adaptors::reverse(trumps),
+      std::ostream_iterator<TrumpRank>(o, sep),
       [](Card const& c) { return c.trump_rank(); }
     );
 
   for (Suit s = Suit::min; s<Suit::trumps; ++s) {
-    ReverseRange suit = equal_range(s);
+    auto const suit = equal_range(s);
     if (!boost::empty(suit)) {
       o << s << ':';
-      std::transform(
-          suit.second, suit.first, std::ostream_iterator<char>(o),
+      boost::range::transform(
+          boost::adaptors::reverse(suit), std::ostream_iterator<char>(o),
           [s](Card const& c) { return c.suit_rank().to_char(s.is_red()); }
         );
       o << sep;
