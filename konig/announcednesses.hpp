@@ -16,6 +16,8 @@ typedef boost::container::flat_map<
 
 class Announcednesses : public AnnouncednessesImpl {
   public:
+    Announcednesses() = default;
+
     using AnnouncednessesImpl::insert;
 
     std::pair<iterator, bool> insert(
