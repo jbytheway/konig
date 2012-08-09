@@ -295,7 +295,7 @@ int main(int argc, char const* const* const argv) {
 
               if (contract) {
                 // FIXME: we have to make this silly Announcednesses object to
-                // pass to the value_of function.  Possibly we should refarctor
+                // pass to the value_of function.  Possibly we should refactor
                 // that down to a bool.
                 konig::Announcednesses const announcednesses;
                 for (auto const& p : feat_counts) {
