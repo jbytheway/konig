@@ -77,7 +77,7 @@ PlayConstraint ContractAndAnnouncements::play_constraint(
   ) const
 {
   PlayConstraints::const_iterator constraint =
-    play_constraints_.find(std::make_pair(offence, card));
+    play_constraints_.find({offence, ConstrainedCard{card}});
   if (constraint != play_constraints_.end()) {
     if (trick > constraint->second) {
       return PlayConstraint::avoid_playing;
