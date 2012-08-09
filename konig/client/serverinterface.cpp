@@ -158,7 +158,7 @@ KONIG_CLIENT_SERVERINTERFACE_REQUEST(requestPlayCard, playCard, play_card)
 #undef KONIG_CLIENT_SERVERINTERFACE_REQUEST
 
 #define KONIG_CLIENT_SERVERINTERFACE_NOTIFY_0(type, member)        \
-void ServerInterface::message(Message<MessageType::type> const& m) \
+void ServerInterface::message(Message<MessageType::type> const&) \
 {                                                                  \
   client_.player().member();                                       \
 }
