@@ -1,0 +1,105 @@
+Switch to std::tuple
+Use .config, etc
+Look for s/shared_ptr/unique_ptr
+Logging of play
+Seats and table rotation
+Prompt compression
+Server asyncronicity
+Fix redundancy in Outcome / ContractAndAnnouncements printout
+Awful, awful partner play ripping declarer
+CommandHandler parser crashes on non-ASCII
+Factor out std::pair<Feat, bool>
+Rename the unsigned longs in simulator/main.cpp
+Scrap all the offensive/defensive bools in favour of a proper enum
+Distinguish CardPoints from CardSubPoints
+Port to Phoenix v3 headers
+
+== Stuff for konig-real
+
+Feedback on final results
+Feedback on legal plays
+tricks on completion
+names of bidders, etc. in real prompts
+
+== Crazy plays
+
+Lead DK inseat of D9?:
+18 17 16 15 12 8 C:Nt7 D:Q9 H:9 
+21 20 10 5 2 C:98 D:NJ H:K87 
+Sk 11 4 3 C:QJ D:7 H:J S:KN98 
+19 14 13 9 7 6 1 C:K D:8 H:t S:t7 
+D:Kt S:Q 
+H:QN S:J 
+
+contract is rufer by 0
+called king is H
+C7 C8 CQ CK*
+ 8 10*SK S7 
+Ct C9 CJ  1*
+12* 2 S8 St 
+D9 DJ*D7 D8 
+Dt DN  3  6*
+H9 HK*HJ Ht 
+15* 5  4  7 
+16 20*11  9 
+17 H7 Sk*13 
+18 21*S9 14 
+DK H8 SN 19*
+r/
+-1 -1 1 1 
+
+
+Play 20 instead of 1?
+Sk 21 19 11 9 7 C:9 D:QJ S:KQt 
+20 12 5 2 1 C:Jt D:t H:K98 S:7 
+16 10 8 C:N87 D:KN H:Jt7 S:N 
+18 15 13 4 C:KQ D:987 H:Q S:98 
+17 6 S:J 
+14 3 H:N 
+
+rf+
+
+C9 CJ CN CK*
+ 6*Dt DN D7 
+ 9 12  8 13*
+19* 1 DK D8 
+11 20*10  4 
+ 7*H8 H7 HQ 
+Sk* 2 16 15 
+21* 5 C7 18 
+17*S7 C8 CQ 
+SK*H9 SN S8 
+SQ*Ct Ht S9 
+St*HK HJ D9 
+
+
+How did he go off in king?
+19 17 14 8 6 4 C:Q D:2 H:KJ3 S:Q 
+21 13 11 9 1 C:N8 D:KQJ3 S:8 
+Sk 20 18 16 12 7 2 C:t D:1 H:Q S:t9 
+15 10 5 3 C:7 D:N H:N4 S:KNJ7 
+C:K9 H:1 
+C:J D:4 H:2 
+
+rt/f!k/
+
+How did this Piccolo go off?
+20 19 18 17 13 10 8 5 4 C:8 H:K S:N 
+16 12 11 7 6 2 1 D:4 H:NJ S:t7 
+3 C:t9 D:QN1 H:124 S:K98 
+21 14 C:KQNJ7 D:J2 H:Q3 S:Q 
+Sk 15 D:3 
+9 D:K S:J 
+
+p/
+
+Why not br?
+20 17 16 14 9 6 4 D:1 H:KQ S:Q7 
+21 19 15 13 7 2 1 C:Kt D:K3 H:2 
+Sk 11 10 C:QN97 D:24 H:N S:KJ 
+12 5 3 C:J D:QNJ H:134 S:N9 
+18 C:8 S:t 
+8 H:J S:8 
+
+6d/2!
+
