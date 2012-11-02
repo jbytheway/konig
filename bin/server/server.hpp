@@ -81,7 +81,7 @@ class Server {
     settingstree::tree::ptr settings_;
     std::array<Process, TablePosition::max> ai_;
 
-    struct Callbacks;
+    class Callbacks;
     std::unique_ptr<Callbacks> callbacks_;
 };
 
