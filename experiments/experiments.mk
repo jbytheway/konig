@@ -26,7 +26,7 @@ $$($(1)_FULL_NUMS): $(1).full.%: \
 		-n $(NUM_TRIALS) -s "$$*" -f -g -t- -# > $$@
 endef
 
-$(RESULTS): %.results: %.exp ../$(HANDS)_all
+$(RESULTS): %.results: $(this_srcdir)%.exp ../$(HANDS)_all
 	$(SIM) -a "`cat $<`" -C ../$(HANDS)_all -n $(NUM_TRIALS) \
 		-d- -t- -r- -u $(SUMMARY_FORMAT) > $@
 

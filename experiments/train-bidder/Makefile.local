@@ -1,7 +1,7 @@
 HANDS := hands
 SUMMARY_FORMAT := "%s %c %m%o"
 
-include ../experiments.mk
+include $(this_srcdir)../experiments.mk
 
 TRAININGS := $(addsuffix .training,$(BASES))
 MODELS := $(addsuffix .model,$(BASES))
@@ -14,10 +14,10 @@ hands_features: ../hands_all $(FEAT)
 $(TRAININGS): %.training: %.results hands_features
 	{ echo score; cut -d ' ' -f 3 $<; } | paste -d ' ' - hands_features > $@
 
-$(MODELS): %.model: %.training ../fitModel.R
-	../fitModel.R $< $@ $*.residuals regression
+$(MODELS): %.model: %.training $(this_srcdir)../fitModel.R
+	$(this_srcdir)../fitModel.R $< $@ $*.residuals regression
 
-bidder-model: $(MODELS) Makefile.local
+bidder-model: $(MODELS) $(this_srcdir)Makefile.local
 	{ \
 		printf "contract (Intercept) "; \
 		head -n 1 hands_features | cut -d ' ' -f 2-; \

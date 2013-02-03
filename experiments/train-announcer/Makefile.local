@@ -2,7 +2,7 @@ SUMMARY_FORMAT := "%s %h0,%d,%r %m%f"
 HANDS := hand_and_talons
 FEATS := f
 
-include ../experiments.mk
+include $(this_srcdir)../experiments.mk
 
 FEATURES := $(addsuffix .features,$(BASES))
 FEAT_BASES := $(foreach feat,$(FEATS),$(addsuffix .$(feat),$(BASES)))
@@ -15,21 +15,21 @@ test: announcer-model
 $(FEATURES): %.features: %.results $(FEAT)
 	cut -d ' ' -f 1-2 $< | $(FEAT) - > $@
 
-$(FEAT_RESULTS): %.results: extract_feat_results.awk $(RESULTS)
+$(FEAT_RESULTS): %.results: $(this_srcdir)extract_feat_results.awk $(RESULTS)
 	awk -f $< -v feat=$(patsubst .%,%,$(suffix $*)) $(basename $*).results > $@
 
 $(TRAININGS): %.training: %.results $(FEATURES)
 	{ echo score; cut -d ' ' -f 2 $*.results; } | \
 		paste -d ' ' - $(basename $*).features | column -t > $@
 
-$(MODELS): %.model: %.training ../fitModel.R
+$(MODELS): %.model: %.training $(this_srcdir)../fitModel.R
 	if grep -q TRUE $<; then \
-		../fitModel.R $< $@ $*.predictions decision; \
+		$(this_srcdir)../fitModel.R $< $@ $*.predictions decision; \
 	else \
 		touch $@; \
 	fi
 
-announcer-model: $(MODELS) Makefile.local
+announcer-model: $(MODELS) $(this_srcdir)Makefile.local
 	{ \
 		printf "contract feat (Threshold) "; \
 		head -n 1 $(word 1,$(FEATURES)) | cut -d ' ' -f 2-; \
