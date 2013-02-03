@@ -1,0 +1,48 @@
+Disclaimer: this program is unlikely to be easy to get working for someone
+unfamiliar, because of mild dependency hell.
+
+This project uses makeshift to build.  If the makeshift directory is empty then
+you probably need to run
+
+$ git submodule update --init
+
+Next you will need some dependencies:
+
+- gcc (this code uses relatively new C++11 features so a recent compiler is
+  required.  clang might work)
+- boost
+- Various libraries of mine, which can be found at http://github.com/jbytheway
+  - optimal, my options parsing library
+  - relasio, a Boostified readline wrapper library
+  - settingstree, which provides a convenient data structure for managing game
+    settings
+  - messaging, a network protocol helper library
+
+You may need to add some things to user.mk, e.g. to get the right g++ version
+or allow it to find the others of my libraries if you didn't install them
+(which you shouldn't need to).  Here for example is my user.mk:
+
+  BUILD_CPPFLAGS += \
+          -I$(top_srcdir)../messaging/include \
+          -I$(top_srcdir)../settingstree \
+          -I$(top_srcdir)../relasio \
+          -I$(top_srcdir)../optimal
+
+  BUILD_LDFLAGS += \
+          -L$(top_srcdir)../settingstree/settingstree \
+          -L$(top_srcdir)../relasio/relasio \
+          -L$(top_srcdir)../optimal/optimal
+
+See makeshift/INSTALL for details of what goes in user.mk.
+
+Then to get a debug version it should be simply
+
+$ make
+
+You can run tests with
+
+$ make test
+
+though this will run quite a lot of trial games, which might take a while
+(parallel make should be safe and is advisable where multiple cores are
+available).
