@@ -24,6 +24,9 @@ LinearModelBidAi::LinearModelBidAi(std::string const& description)
   }
 
   {
+    if (file_name.empty()) {
+      throw AiError("no file name given for LinearModelBidAi");
+    }
     boost::filesystem::ifstream file(file_name);
     if (!file.is_open()) {
       throw AiError("couldn't open file "+file_name.string());
